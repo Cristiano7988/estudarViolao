@@ -10903,3 +10903,34 @@ a.text-dark:focus {
   }
 }
 
+body {
+  background-color: #A6540D;
+}
+
+body .login a {
+  text-decoration: none;
+  color: black;
+}
+
+body .make-login {
+  margin: auto;
+}
+
+body .card-header {
+  background-color: unset;
+}
+
+body main .container .col-md-6 .card {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+body main .container .col-md-6 .card svg {
+  height: 240px;
+}
+
+body main .container .col-md-6 .card p,
+body main .container .col-md-6 .card h1 {
+  margin: 5% 0;
+}
+
