@@ -65933,9 +65933,22 @@ var Decifrar = /*#__PURE__*/function (_Component) {
     key: "verificarResposta",
     value: function verificarResposta(gabarito) {
       var resposta = document.querySelector(".input-group input").value;
+      var resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
+      var formData = new FormData();
+      var token = document.querySelector('input[name=_token]').value;
+      formData.append('resultado', resultado);
+      formData.append('_token', token);
       this.setState({
         respondido: true,
-        respostaCerta: resposta.toUpperCase() == gabarito.toUpperCase()
+        respostaCerta: resultado
+      });
+      fetch('/decifrar', {
+        method: 'post',
+        body: formData
+      }).then(function (r) {
+        return r;
+      }).then(function (r) {
+        console.log(r);
       });
     }
   }, {

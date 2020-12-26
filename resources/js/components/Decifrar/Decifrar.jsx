@@ -42,10 +42,24 @@ class Decifrar extends Component {
 
     verificarResposta(gabarito) {
         const resposta = document.querySelector(".input-group input").value;
+        const resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
+        const formData = new FormData();
+        const token = document.querySelector('input[name=_token]').value;
+        formData.append('resultado',resultado);
+        formData.append('_token',token);
 
         this.setState({
             respondido: true,
-            respostaCerta: resposta.toUpperCase() == gabarito.toUpperCase()
+            respostaCerta: resultado
+        })
+
+        fetch('/decifrar', {
+            method: 'post',
+            body: formData
+        }).then(r=>{
+            return r;
+        }).then(r=>{
+            console.log(r)
         })
     }
 
