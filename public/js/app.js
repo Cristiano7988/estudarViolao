@@ -65891,22 +65891,90 @@ var Decifrar = /*#__PURE__*/function (_Component) {
 
   var _super = _createSuper(Decifrar);
 
-  function Decifrar() {
+  function Decifrar(props) {
     var _this;
 
     _classCallCheck(this, Decifrar);
 
-    _this = _super.call(this);
+    _this = _super.call(this, props);
     _this.state = {
       respondido: null,
       respostaCerta: null,
-      mensagemErro: null
+      mensagemErro: null,
+      nivel: _this.props.usuario.nivel,
+      subNivel: _this.props.usuario.sub_nivel,
+      avatar: {
+        nome: _this.props.usuario.avatar_name
+      }
     };
     _this.escala = new _dados_EscalaDiatonica__WEBPACK_IMPORTED_MODULE_1__["default"]();
+
+    _this.escala.reordenarEscalaDiatonica();
+
     return _this;
   }
 
   _createClass(Decifrar, [{
+    key: "atualizaNivel",
+    value: function atualizaNivel(novoSubNivel, acertos, erros) {
+      var _this2 = this;
+
+      var nivel = parseInt(novoSubNivel / 10);
+      var nomeAvatar = this.geraNomeAvatar(acertos, erros, nivel);
+      var token = document.querySelector('input[name=_token]').value;
+      var formData = new FormData();
+      formData.append('id', this.props.usuario.id);
+      formData.append('nivel', nivel);
+      formData.append('sub_nivel', novoSubNivel);
+      formData.append('nome_avatar', nomeAvatar);
+      formData.append('_token', token);
+      fetch('/atualiza-nivel', {
+        method: 'post',
+        body: formData
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+      }).then(function (r) {
+        _this2.setState({
+          subNivel: r.sub_nivel,
+          nivel: r.nivel,
+          avatar: {
+            nome: r.avatar_name
+          }
+        });
+      });
+    }
+  }, {
+    key: "geraNomeAvatar",
+    value: function geraNomeAvatar(acertos, erros, nivel) {
+      // cada item representa um nível
+      var substantivos = ['Iniciante ', 'Estudante ', 'Violonista ', 'Musicista ', 'Mestre ', 'Bacharel ']; // cada item representa uma qualidade de acordo com a quantidade de acertos e erros
+
+      var adjetivosPositivos = ['adorável', 'cordial', 'decente', 'doce', 'eficiente', 'eloquente', 'entusiasta', 'excelente', 'exigente', 'fiel', 'forte', 'gentil', 'humilde', 'independente', 'inteligente', 'leal', 'legal', 'livre', 'otimista', 'paciente', 'perfeccionista', 'perseverante', 'persistente', 'pontual', 'prudente', 'racional', 'responsável', 'sagaz', 'sensível', 'tolerante', 'valente', 'calculista'];
+      var adjetivosNegativos = ['desobediente', 'impaciente', 'imprudente', 'inconstante', 'inconveniente', 'negligente', 'pessimista', 'pé-frio']; // cada item representa uma atualização no avatar
+
+      var complementos = [// acessorios musical
+      'do violão de 6 cordas', 'do vassourolão', 'das cordas estouradas', 'da viola de luthier', 'na palhetada', 'das unhas grandes', // acessório dia-a-dia
+      'da cabeleira marrenta', 'do oclinho estiloso', 'de roupinha nova', 'do sapato velho', 'da blusa emprestada', // lugar (plano de fundo pro avatar)
+      'da casa', 'da rua do lado do sol fa mi', 'do beco dos perdidos', // comportamento
+      'do cacuete engraçado', 'da tremedeira na perninha', 'das ideias boas'];
+      var nomeAvatar = substantivos[parseInt(nivel / 10)];
+      nomeAvatar += ' ' + this.geraTextoAletorio(acertos > erros ? adjetivosPositivos : adjetivosNegativos);
+
+      if (nivel >= 10) {
+        nomeAvatar += ' ' + this.geraTextoAletorio(complementos);
+      }
+
+      return nomeAvatar;
+    }
+  }, {
+    key: "geraTextoAletorio",
+    value: function geraTextoAletorio(array) {
+      var num = parseInt(1 + Math.random() * (array.length - 1));
+      return array[num];
+    }
+  }, {
     key: "proximaQuestao",
     value: function proximaQuestao() {
       this.state.respondido ? (this.resetarMensagens(), document.querySelector(".input-group input").value = "", this.escala.reordenarEscalaDiatonica()) : this.setState({
@@ -65932,10 +66000,13 @@ var Decifrar = /*#__PURE__*/function (_Component) {
   }, {
     key: "verificarResposta",
     value: function verificarResposta(gabarito) {
+      var _this3 = this;
+
       var resposta = document.querySelector(".input-group input").value;
       var resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
       var formData = new FormData();
       var token = document.querySelector('input[name=_token]').value;
+      formData.append('id', this.props.usuario.id);
       formData.append('resultado', resultado);
       formData.append('_token', token);
       this.setState({
@@ -65946,33 +66017,56 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         method: 'post',
         body: formData
       }).then(function (r) {
-        return r;
+        if (r.ok) {
+          return r.json();
+        }
       }).then(function (r) {
-        console.log(r);
+        var novoSubNivel = parseInt(r.exercicio.acertos / 3);
+
+        if (novoSubNivel !== parseInt(r.sub_nivel)) {
+          _this3.atualizaNivel(novoSubNivel, r.exercicio.acertos, r.exercicio.erros);
+        }
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this4 = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.avatar.nome ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert",
+        style: {
+          background: 'lightsteelblue'
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.avatar.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "m-0",
+        title: 'Nível: ' + this.state.nivel + '\n' + parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + '%',
+        style: {
+          width: parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + '%',
+          height: '2px',
+          background: 'deepskyblue'
+        }
+      })) : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "list-group"
       }, this.escala.notas.map(function (nota, index) {
-        return index <= 2 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        var limite = _this4.state.subNivel == 0 ? 2 : _this4.state.subNivel == 1 ? 1 : 0;
+        return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: index,
           className: "list-group-item"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "row d-flex justify-content-center"
+          className: "row d-flex justify-content-center align-items-center"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "col-2"
         }, nota.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "="), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "col-3"
-        }, index == 2 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, index == limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "input-group"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           type: "text",
           className: "form-control",
+          onChange: function onChange(e) {
+            return e.target.value = e.target.value.toUpperCase();
+          },
           style: {
             width: "50px",
             textAlign: "center"
@@ -65980,7 +66074,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
           placeholder: "?"
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           onClick: function onClick() {
-            return _this2.resposta(nota.cifra);
+            return _this4.resposta(nota.cifra);
           },
           className: "btn btn-outline-primary",
           type: "button"
@@ -66084,11 +66178,9 @@ var Sistema = /*#__PURE__*/function (_Component) {
         className: "col-md-6"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-header"
-      }, "Seja Bem-Vindo!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-body"
-      }, "Em breve teremos mais novidades por aqui. Fique ligado!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Decifrar__WEBPACK_IMPORTED_MODULE_2__["default"], null)))));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Bem-Vindo!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Decifrar__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        usuario: JSON.parse(document.querySelector('[data-user]').dataset.user)
+      })))));
     }
   }]);
 

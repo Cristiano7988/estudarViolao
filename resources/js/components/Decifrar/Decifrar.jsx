@@ -2,16 +2,87 @@ import React, { Component } from "react";
 import EscalaDiatonica from "../../dados/EscalaDiatonica";
 
 class Decifrar extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.escala = new EscalaDiatonica();
+        this.escala.reordenarEscalaDiatonica();
     }
-    
+
     state = {
         respondido: null,
         respostaCerta: null,
-        mensagemErro: null
+        mensagemErro: null,
+        nivel: this.props.usuario.nivel,
+        subNivel: this.props.usuario.sub_nivel,
+        avatar: {
+            nome: this.props.usuario.avatar_name
+        }
     };
+
+    atualizaNivel(novoSubNivel, acertos, erros) {
+        let nivel = parseInt(novoSubNivel / 10);
+        let nomeAvatar = this.geraNomeAvatar(acertos, erros, nivel);
+        const token = document.querySelector('input[name=_token]').value;
+        const formData = new FormData();
+        formData.append('id', this.props.usuario.id);
+        formData.append('nivel', nivel);
+        formData.append('sub_nivel', novoSubNivel);
+        formData.append('nome_avatar', nomeAvatar);
+        formData.append('_token',token);
+
+        fetch('/atualiza-nivel', {
+            method: 'post',
+            body: formData
+        }).then((r) => {
+            if (r.ok) {
+                return r.json();
+            }
+        }).then((r) => {
+            this.setState({
+                subNivel: r.sub_nivel,
+                nivel: r.nivel,
+                avatar: {
+                    nome: r.avatar_name
+                }
+            });
+        })
+    }
+
+    geraNomeAvatar(acertos, erros, nivel) {
+        // cada item representa um nível
+        const substantivos = ['Iniciante ','Estudante ','Violonista ','Musicista ', 'Mestre ', 'Bacharel '];
+
+        // cada item representa uma qualidade de acordo com a quantidade de acertos e erros
+        const adjetivosPositivos = ['adorável', 'cordial', 'decente', 'doce', 'eficiente', 'eloquente', 'entusiasta', 'excelente', 'exigente', 'fiel', 'forte', 'gentil', 'humilde', 'independente', 'inteligente', 'leal', 'legal', 'livre', 'otimista', 'paciente', 'perfeccionista', 'perseverante', 'persistente', 'pontual', 'prudente', 'racional', 'responsável', 'sagaz', 'sensível', 'tolerante', 'valente', 'calculista'];
+        const adjetivosNegativos = ['desobediente', 'impaciente', 'imprudente', 'inconstante', 'inconveniente', 'negligente', 'pessimista', 'pé-frio'];
+
+        // cada item representa uma atualização no avatar
+        const complementos = [
+            // acessorios musical
+            'do violão de 6 cordas', 'do vassourolão', 'das cordas estouradas', 'da viola de luthier', 'na palhetada', 'das unhas grandes',
+            // acessório dia-a-dia
+            'da cabeleira marrenta', 'do oclinho estiloso', 'de roupinha nova', 'do sapato velho', 'da blusa emprestada',
+            // lugar (plano de fundo pro avatar)
+            'da casa', 'da rua do lado do sol fa mi', 'do beco dos perdidos', 
+            // comportamento
+            'do cacuete engraçado', 'da tremedeira na perninha', 'das ideias boas'
+        ];
+
+        let nomeAvatar = substantivos[parseInt(nivel / 10)];
+
+        nomeAvatar += ' ' + this.geraTextoAletorio(acertos > erros ? adjetivosPositivos : adjetivosNegativos);
+
+        if (nivel >= 10) {
+            nomeAvatar += ' ' + this.geraTextoAletorio(complementos);
+        }
+
+        return nomeAvatar;
+    }
+
+    geraTextoAletorio(array) {
+        const num = parseInt(1 + Math.random() * (array.length - 1));
+        return array[num];
+    }
 
     proximaQuestao() {
         this.state.respondido ? (
@@ -45,6 +116,7 @@ class Decifrar extends Component {
         const resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
         const formData = new FormData();
         const token = document.querySelector('input[name=_token]').value;
+        formData.append('id', this.props.usuario.id);
         formData.append('resultado',resultado);
         formData.append('_token',token);
 
@@ -56,28 +128,45 @@ class Decifrar extends Component {
         fetch('/decifrar', {
             method: 'post',
             body: formData
-        }).then(r=>{
-            return r;
-        }).then(r=>{
-            console.log(r)
+        }).then((r) => {
+            if (r.ok) {
+                return r.json();
+            }
+        }).then((r) => {
+            let novoSubNivel = parseInt(r.exercicio.acertos / 3);
+            if (novoSubNivel !== parseInt(r.sub_nivel)) {
+                this.atualizaNivel(novoSubNivel, r.exercicio.acertos, r.exercicio.erros);
+            }
         })
     }
 
     render() {
         return (
             <div>
+                {this.state.avatar.nome ?
+                    <div className="alert" style={{background: 'lightsteelblue'}}>
+                        <p>{this.state.avatar.nome}</p>
+                        <hr className="m-0"
+                            title={'Nível: ' + this.state.nivel + '\n' + parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10)+'%'}
+                            style={{width: parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10)+'%', height: '2px', background: 'deepskyblue' }}
+                        />
+                    </div>
+                : ''}
                 <p>Qual é a cifra desta nota?</p>
                 <ul className="list-group">
                     {this.escala.notas.map((nota, index) => {
-                        return index <= 2 ? (
+                        let limite =
+                            this.state.subNivel == 0 ? 2
+                                : this.state.subNivel == 1 ? 1 : 0
+                        return index <= limite ? (
                             <li key={index} className="list-group-item">
-                                <div className="row d-flex justify-content-center">
+                                <div className="row d-flex justify-content-center align-items-center">
                                     <span className="col-2">{nota.nome}</span>
                                     <span>=</span>
                                     <span className="col-3">
-                                        {index == 2 ? (
+                                        {index == limite ? (
                                             <div className="input-group">
-                                                <input type="text" className="form-control" style={{ width: "50px", textAlign: "center" }} placeholder="?" />
+                                                <input type="text" className="form-control" onChange={(e)=>e.target.value = e.target.value.toUpperCase()} style={{ width: "50px", textAlign: "center" }} placeholder="?" />
                                                 <button onClick={() => this.resposta(nota.cifra)} className="btn btn-outline-primary" type="button">
                                                     <i className="fas fa-check"></i>
                                                 </button>
@@ -113,7 +202,6 @@ class Decifrar extends Component {
                 ) : (
                     ""
                 )}
-
             </div>
         );
     }
