@@ -10934,3 +10934,12 @@ body main .container .col-md-6 .card h1 {
   margin: 5% 0;
 }
 
+.avatar-container {
+  background: lightsteelblue;
+}
+
+.barra-sub-nivel {
+  height: 2px;
+  background: deepskyblue;
+}
+

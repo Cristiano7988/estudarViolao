@@ -32,14 +32,13 @@ export default class EscalaDiatonica {
         ];
     }
 
-    reordenarEscalaDiatonica() {
-        const notas = this.notas;
+    reordenarEscalaDiatonica(indice) {
         const escalaReordenada = [];
-        const indice = this.geraNumeroAleatorio();
-
-        this.mudarFundamental(indice, escalaReordenada, notas);
-
-        this.notas = escalaReordenada;
+        this.notas = this.mudarFundamental(
+            indice,
+            escalaReordenada,
+            this.notas
+        );
     }
 
     geraNumeroAleatorio() {
@@ -49,11 +48,9 @@ export default class EscalaDiatonica {
     // Indice % base = indice na base
     mudarFundamental(indiceFundamental, escalaNova, notas) {
         for (var i = indiceFundamental; i < indiceFundamental + 7; i++) {
-            if (i > 6) {
-                escalaNova.push(notas[i % 7]);
-            } else {
-                escalaNova.push(notas[i]);
-            }
+            i > 6 ? escalaNova.push(notas[i % 7]) : escalaNova.push(notas[i]);
         }
+
+        return escalaNova;
     }
 }
