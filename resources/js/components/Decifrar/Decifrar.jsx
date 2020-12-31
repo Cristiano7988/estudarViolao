@@ -5,7 +5,8 @@ class Decifrar extends Component {
     constructor(props) {
         super(props);
         this.escala = new EscalaDiatonica();
-        this.escala.reordenarEscalaDiatonica(this.escala.geraNumeroAleatorio());
+        this.escalaManipulavel =
+            this.escala.modulaEscalaMaior( this.escala.notas[ this.escala.geraNumeroAleatorio() ] )
         this.barra =
             parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + "%";
     }
@@ -152,10 +153,12 @@ class Decifrar extends Component {
     proximaQuestao() {
         this.state.respondido
             ? (this.resetarMensagens(),
-            this.escala.reordenarEscalaDiatonica(
-                this.escala.geraNumeroAleatorio()
-            ))
-            : this.setState({ mensagemErro: "Responda a Pergunta" });
+                this.escala.modulaEscalaMaior(
+                    this.escala.notas[
+                        this.escala.geraNumeroAleatorio()
+                    ]
+                )
+            ) : this.setState({ mensagemErro: "Responda a Pergunta" });
     }
 
     resposta(gabarito) {
@@ -229,13 +232,13 @@ class Decifrar extends Component {
                 </div>
                 <p>Qual é a cifra desta nota?</p>
                 <ul className="list-group">
-                    {this.escala.notas.map((nota, index) => {
+                    {this.escalaManipulavel.map((nota, index) => {
                         let limite = this.limite(this.state.subNivel);
 
                         return index <= limite ? (
                             <li key={index} className="list-group-item">
                                 <div className="row d-flex justify-content-center align-items-center">
-                                    <span className="col-2">{nota.nome}</span>
+                                    <span className="col-3">{nota.nome}</span>
                                     <span>=</span>
                                     <span className="col-3">
                                         {index == limite ? (

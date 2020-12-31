@@ -65908,9 +65908,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
       }
     };
     _this.escala = new _dados_EscalaDiatonica__WEBPACK_IMPORTED_MODULE_1__["default"]();
-
-    _this.escala.reordenarEscalaDiatonica(_this.escala.geraNumeroAleatorio());
-
+    _this.escalaManipulavel = _this.escala.modulaEscalaMaior(_this.escala.notas[_this.escala.geraNumeroAleatorio()]);
     _this.barra = parseInt(_this.state.subNivel[_this.state.subNivel.length - 1] * 10) + "%";
     return _this;
   }
@@ -65974,7 +65972,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
   }, {
     key: "proximaQuestao",
     value: function proximaQuestao() {
-      this.state.respondido ? (this.resetarMensagens(), this.escala.reordenarEscalaDiatonica(this.escala.geraNumeroAleatorio())) : this.setState({
+      this.state.respondido ? (this.resetarMensagens(), this.escala.modulaEscalaMaior(this.escala.notas[this.escala.geraNumeroAleatorio()])) : this.setState({
         mensagemErro: "Responda a Pergunta"
       });
     }
@@ -66044,7 +66042,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         }
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "list-group"
-      }, this.escala.notas.map(function (nota, index) {
+      }, this.escalaManipulavel.map(function (nota, index) {
         var limite = _this4.limite(_this4.state.subNivel);
 
         return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
@@ -66053,7 +66051,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "row d-flex justify-content-center align-items-center"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "col-2"
+          className: "col-3"
         }, nota.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "="), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "col-3"
         }, index == limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -66230,15 +66228,13 @@ var EscalaDiatonica = /*#__PURE__*/function () {
       cifra: "G",
       nome: "Sol"
     }];
+    this.escalaAleatoria = this.notas;
+    this.escalaManipulavel = this.notas.map(function (nota) {
+      return nota;
+    });
   }
 
   _createClass(EscalaDiatonica, [{
-    key: "reordenarEscalaDiatonica",
-    value: function reordenarEscalaDiatonica(indice) {
-      var escalaReordenada = [];
-      this.notas = this.mudarFundamental(indice, escalaReordenada, this.notas);
-    }
-  }, {
     key: "geraNumeroAleatorio",
     value: function geraNumeroAleatorio() {
       return parseInt(1 + Math.random() * (7 - 1));
@@ -66246,12 +66242,58 @@ var EscalaDiatonica = /*#__PURE__*/function () {
 
   }, {
     key: "mudarFundamental",
-    value: function mudarFundamental(indiceFundamental, escalaNova, notas) {
+    value: function mudarFundamental(indiceFundamental, notas) {
+      var escalaNova = [];
+
       for (var i = indiceFundamental; i < indiceFundamental + 7; i++) {
         i > 6 ? escalaNova.push(notas[i % 7]) : escalaNova.push(notas[i]);
       }
 
       return escalaNova;
+    }
+  }, {
+    key: "ordemDosSustenitos",
+    value: function ordemDosSustenitos() {
+      var ordem = [];
+      var escala = this.mudarFundamental(5, this.notas);
+      escala.forEach(function (nota, i) {
+        ordem.push(escala[4 * i % 7]);
+      });
+      return ordem;
+    }
+  }, {
+    key: "aumentaUmaOitava",
+    value: function aumentaUmaOitava(escala) {
+      escala.forEach(function (nota) {
+        escala.push(nota);
+      });
+    }
+  }, {
+    key: "modulaEscalaMaior",
+    value: function modulaEscalaMaior(fundamental) {
+      var indice = this.notas.findIndex(function (e) {
+        return e.cifra == fundamental.cifra[0];
+      });
+      var encontrouSensivel, encontrouFundamental;
+      var escala = this.mudarFundamental(indice, this.notas);
+      var ordem = this.ordemDosSustenitos();
+      this.aumentaUmaOitava(escala);
+      this.aumentaUmaOitava(ordem);
+      ordem.map(function (nota) {
+        if (!(encontrouFundamental && encontrouSensivel)) {
+          escala[escala.indexOf(nota)].cifra += '#';
+          escala[escala.indexOf(nota)].nome = !!nota.nome.match(/sustenido/) ? nota.nome.replace(' ', ' dobrado ') : escala[escala.indexOf(nota)].nome + ' sustenido';
+        }
+
+        if (nota.cifra == escala[escala.length - 1].cifra) {
+          encontrouSensivel = true;
+        }
+
+        if (escala[escala.indexOf(nota) + 1].cifra === fundamental.cifra) {
+          encontrouFundamental = true;
+        }
+      });
+      return escala;
     }
   }]);
 
