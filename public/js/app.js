@@ -65860,7 +65860,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _dados_EscalaDiatonica__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/EscalaDiatonica */ "./resources/js/dados/EscalaDiatonica.js");
+/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -65907,8 +65907,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         nome: _this.props.usuario.avatar_name
       }
     };
-    _this.escala = new _dados_EscalaDiatonica__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    _this.escalaManipulavel = _this.escala.modulaEscalaMaior(_this.escala.notas[_this.escala.geraNumeroAleatorio()]);
+    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
     _this.barra = parseInt(_this.state.subNivel[_this.state.subNivel.length - 1] * 10) + "%";
     return _this;
   }
@@ -65972,7 +65971,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
   }, {
     key: "proximaQuestao",
     value: function proximaQuestao() {
-      this.state.respondido ? (this.resetarMensagens(), this.escala.modulaEscalaMaior(this.escala.notas[this.escala.geraNumeroAleatorio()])) : this.setState({
+      this.state.respondido ? (this.resetarMensagens(), this.escala.nova_escala = this.escala.modulaEscalaMaior(this.escala.diatonica.notas[this.escala.geraNumeroAleatorio()])) : this.setState({
         mensagemErro: "Responda a Pergunta"
       });
     }
@@ -66042,7 +66041,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         }
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "list-group"
-      }, this.escalaManipulavel.map(function (nota, index) {
+      }, this.escala.nova_escala.map(function (nota, index) {
         var limite = _this4.limite(_this4.state.subNivel);
 
         return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
@@ -66186,58 +66185,38 @@ if (document.getElementById("Sistema")) {
 
 /***/ }),
 
-/***/ "./resources/js/dados/EscalaDiatonica.js":
-/*!***********************************************!*\
-  !*** ./resources/js/dados/EscalaDiatonica.js ***!
-  \***********************************************/
+/***/ "./resources/js/dados/Escalas.js":
+/*!***************************************!*\
+  !*** ./resources/js/dados/Escalas.js ***!
+  \***************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EscalaDiatonica; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Escalas; });
+/* harmony import */ var _Notas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Notas */ "./resources/js/dados/Notas.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var EscalaDiatonica = /*#__PURE__*/function () {
-  function EscalaDiatonica() {
-    _classCallCheck(this, EscalaDiatonica);
 
-    this.notas = [{
-      cifra: "A",
-      nome: "Lá"
-    }, {
-      cifra: "B",
-      nome: "Si"
-    }, {
-      cifra: "C",
-      nome: "Dó"
-    }, {
-      cifra: "D",
-      nome: "Ré"
-    }, {
-      cifra: "E",
-      nome: "Mi"
-    }, {
-      cifra: "F",
-      nome: "Fá"
-    }, {
-      cifra: "G",
-      nome: "Sol"
-    }];
-    this.escalaAleatoria = this.notas;
-    this.escalaManipulavel = this.notas.map(function (nota) {
-      return nota;
-    });
+
+var Escalas = /*#__PURE__*/function () {
+  function Escalas() {
+    _classCallCheck(this, Escalas);
+
+    this.diatonica = new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.nova_escala = this.modulaEscalaMaior(new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas[this.geraNumeroAleatorio()]);
   }
 
-  _createClass(EscalaDiatonica, [{
+  _createClass(Escalas, [{
     key: "geraNumeroAleatorio",
     value: function geraNumeroAleatorio() {
-      return parseInt(1 + Math.random() * (7 - 1));
+      var random = parseInt(1 + Math.random() * (7 - 1));
+      return random;
     } // Indice % base = indice na base
 
   }, {
@@ -66255,7 +66234,7 @@ var EscalaDiatonica = /*#__PURE__*/function () {
     key: "ordemDosSustenitos",
     value: function ordemDosSustenitos() {
       var ordem = [];
-      var escala = this.mudarFundamental(5, this.notas);
+      var escala = this.mudarFundamental(5, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
       escala.forEach(function (nota, i) {
         ordem.push(escala[4 * i % 7]);
       });
@@ -66271,34 +66250,91 @@ var EscalaDiatonica = /*#__PURE__*/function () {
   }, {
     key: "modulaEscalaMaior",
     value: function modulaEscalaMaior(fundamental) {
-      var indice = this.notas.findIndex(function (e) {
+      var indice = this.diatonica.notas.findIndex(function (e) {
         return e.cifra == fundamental.cifra[0];
       });
-      var encontrouSensivel, encontrouFundamental;
-      var escala = this.mudarFundamental(indice, this.notas);
+      var encontrouSensivel = false;
+      var encontrouFundamental = false;
+      var escala = this.mudarFundamental(indice, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
       var ordem = this.ordemDosSustenitos();
       this.aumentaUmaOitava(escala);
       this.aumentaUmaOitava(ordem);
-      ordem.map(function (nota) {
-        if (!(encontrouFundamental && encontrouSensivel)) {
-          escala[escala.indexOf(nota)].cifra += '#';
-          escala[escala.indexOf(nota)].nome = !!nota.nome.match(/sustenido/) ? nota.nome.replace(' ', ' dobrado ') : escala[escala.indexOf(nota)].nome + ' sustenido';
-        }
 
-        if (nota.cifra == escala[escala.length - 1].cifra) {
-          encontrouSensivel = true;
-        }
+      if (![0, 1].includes(ordem.findIndex(function (o) {
+        return o.cifra == fundamental.cifra;
+      }))) {
+        ordem.every(function (nota, i) {
+          var index = escala.findIndex(function (n) {
+            return n.cifra[0] == nota.cifra[0];
+          });
 
-        if (escala[escala.indexOf(nota) + 1].cifra === fundamental.cifra) {
-          encontrouFundamental = true;
-        }
-      });
+          if (!(encontrouFundamental && encontrouSensivel)) {
+            escala[index].cifra += '#';
+            nota.cifra += '#';
+            escala[index].nome = !!escala[index].nome.match(/sustenido/) ? escala[index].nome.replace(' ', ' dobrado ') : escala[index].nome + ' sustenido';
+          }
+
+          if (nota.cifra == escala[escala.length - 1].cifra) {
+            encontrouSensivel = true;
+          }
+
+          if (escala[index + 1].cifra === fundamental.cifra) {
+            encontrouFundamental = true;
+          }
+
+          return nota;
+        });
+      }
+
       return escala;
     }
   }]);
 
-  return EscalaDiatonica;
+  return Escalas;
 }();
+
+
+
+/***/ }),
+
+/***/ "./resources/js/dados/Notas.js":
+/*!*************************************!*\
+  !*** ./resources/js/dados/Notas.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Notas; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Notas = function Notas() {
+  _classCallCheck(this, Notas);
+
+  this.notas = [{
+    cifra: "A",
+    nome: "Lá"
+  }, {
+    cifra: "B",
+    nome: "Si"
+  }, {
+    cifra: "C",
+    nome: "Dó"
+  }, {
+    cifra: "D",
+    nome: "Ré"
+  }, {
+    cifra: "E",
+    nome: "Mi"
+  }, {
+    cifra: "F",
+    nome: "Fá"
+  }, {
+    cifra: "G",
+    nome: "Sol"
+  }];
+};
 
 
 
