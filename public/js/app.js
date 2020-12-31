@@ -65908,28 +65908,23 @@ var Decifrar = /*#__PURE__*/function (_Component) {
       }
     };
     _this.escala = new _dados_EscalaDiatonica__WEBPACK_IMPORTED_MODULE_1__["default"]();
-
-    _this.escala.reordenarEscalaDiatonica();
-
+    _this.escalaManipulavel = _this.escala.modulaEscalaMaior(_this.escala.notas[_this.escala.geraNumeroAleatorio()]);
+    _this.barra = parseInt(_this.state.subNivel[_this.state.subNivel.length - 1] * 10) + "%";
     return _this;
   }
 
   _createClass(Decifrar, [{
     key: "atualizaNivel",
-    value: function atualizaNivel(novoSubNivel, acertos, erros) {
+    value: function atualizaNivel(formData, nivel, novoSubNivel, acertos, erros, token) {
       var _this2 = this;
 
-      var nivel = parseInt(novoSubNivel / 10);
-      var nomeAvatar = this.geraNomeAvatar(acertos, erros, nivel);
-      var token = document.querySelector('input[name=_token]').value;
-      var formData = new FormData();
-      formData.append('id', this.props.usuario.id);
-      formData.append('nivel', nivel);
-      formData.append('sub_nivel', novoSubNivel);
-      formData.append('nome_avatar', nomeAvatar);
-      formData.append('_token', token);
-      fetch('/atualiza-nivel', {
-        method: 'post',
+      formData.append("id", this.props.usuario.id);
+      formData.append("nivel", nivel);
+      formData.append("sub_nivel", novoSubNivel);
+      formData.append("_token", token);
+      formData.append("nome_avatar", this.geraNomeAvatar(acertos, erros, nivel));
+      fetch("/atualiza-nivel", {
+        method: "post",
         body: formData
       }).then(function (r) {
         if (r.ok) {
@@ -65949,16 +65944,16 @@ var Decifrar = /*#__PURE__*/function (_Component) {
     key: "geraNomeAvatar",
     value: function geraNomeAvatar(acertos, erros, nivel) {
       // cada item representa um nível
-      var substantivos = ['Iniciante ', 'Estudante ', 'Violonista ', 'Musicista ', 'Mestre ', 'Bacharel ']; // cada item representa uma qualidade de acordo com a quantidade de acertos e erros
+      var substantivos = ["Iniciante ", "Estudante ", "Violonista ", "Musicista ", "Mestre ", "Bacharel "]; // cada item representa uma qualidade de acordo com a quantidade de acertos e erros
 
-      var adjetivosPositivos = ['adorável', 'cordial', 'decente', 'doce', 'eficiente', 'eloquente', 'entusiasta', 'excelente', 'exigente', 'fiel', 'forte', 'gentil', 'humilde', 'independente', 'inteligente', 'leal', 'legal', 'livre', 'otimista', 'paciente', 'perfeccionista', 'perseverante', 'persistente', 'pontual', 'prudente', 'racional', 'responsável', 'sagaz', 'sensível', 'tolerante', 'valente', 'calculista'];
-      var adjetivosNegativos = ['desobediente', 'impaciente', 'imprudente', 'inconstante', 'inconveniente', 'negligente', 'pessimista', 'pé-frio']; // cada item representa uma atualização no avatar
+      var adjetivosPositivos = ["adorável", "cordial", "decente", "doce", "eficiente", "eloquente", "entusiasta", "excelente", "exigente", "fiel", "forte", "gentil", "humilde", "independente", "inteligente", "leal", "legal", "livre", "otimista", "paciente", "perfeccionista", "perseverante", "persistente", "pontual", "prudente", "racional", "responsável", "sagaz", "sensível", "tolerante", "valente", "calculista"];
+      var adjetivosNegativos = ["desobediente", "impaciente", "imprudente", "inconstante", "inconveniente", "negligente", "pessimista", "pé-frio"]; // cada item representa uma atualização no avatar
 
       var complementos = [// acessorios musical
-      'do violão de 6 cordas', 'do vassourolão', 'das cordas estouradas', 'da viola de luthier', 'na palhetada', 'das unhas grandes', // acessório dia-a-dia
-      'da cabeleira marrenta', 'do oclinho estiloso', 'de roupinha nova', 'do sapato velho', 'da blusa emprestada', // lugar (plano de fundo pro avatar)
-      'da casa', 'da rua do lado do sol fa mi', 'do beco dos perdidos', // comportamento
-      'do cacuete engraçado', 'da tremedeira na perninha', 'das ideias boas'];
+      "do violão de 6 cordas", "do vassourolão", "das cordas estouradas", "da viola de luthier", "na palhetada", "das unhas grandes", // acessório dia-a-dia
+      "da cabeleira marrenta", "do oclinho estiloso", "de roupinha nova", "do sapato velho", "da blusa emprestada", // lugar (plano de fundo pro avatar)
+      "da casa", "da rua do lado do sol fa mi", "do beco dos perdidos", // comportamento
+      "do cacuete engraçado", "da tremedeira na perninha", "das ideias boas"];
       var nomeAvatar = substantivos[parseInt(nivel / 10)];
       nomeAvatar += ' ' + this.geraTextoAletorio(acertos > erros ? adjetivosPositivos : adjetivosNegativos);
 
@@ -65977,15 +65972,15 @@ var Decifrar = /*#__PURE__*/function (_Component) {
   }, {
     key: "proximaQuestao",
     value: function proximaQuestao() {
-      this.state.respondido ? (this.resetarMensagens(), document.querySelector(".input-group input").value = "", this.escala.reordenarEscalaDiatonica()) : this.setState({
-        mensagemErro: 'Responda a Pergunta'
+      this.state.respondido ? (this.resetarMensagens(), this.escala.modulaEscalaMaior(this.escala.notas[this.escala.geraNumeroAleatorio()])) : this.setState({
+        mensagemErro: "Responda a Pergunta"
       });
     }
   }, {
     key: "resposta",
     value: function resposta(gabarito) {
-      !this.state.respondido ? (this.resetarMensagens(), this.verificarResposta(gabarito)) : this.setState({
-        mensagemErro: 'Pergunta já respondida'
+      !this.state.respondido ? (this.resetarMensagens(), this.verificarResposta(gabarito, new FormData()), document.querySelector(".input-group input").value = "") : this.setState({
+        mensagemErro: "Pergunta já respondida"
       });
     }
   }, {
@@ -65999,22 +65994,21 @@ var Decifrar = /*#__PURE__*/function (_Component) {
     }
   }, {
     key: "verificarResposta",
-    value: function verificarResposta(gabarito) {
+    value: function verificarResposta(gabarito, formData) {
       var _this3 = this;
 
       var resposta = document.querySelector(".input-group input").value;
       var resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
-      var formData = new FormData();
-      var token = document.querySelector('input[name=_token]').value;
-      formData.append('id', this.props.usuario.id);
-      formData.append('resultado', resultado);
-      formData.append('_token', token);
+      var token = document.querySelector("input[name=_token]").value;
+      formData.append("id", this.props.usuario.id);
+      formData.append("resultado", resultado);
+      formData.append("_token", token);
       this.setState({
         respondido: true,
         respostaCerta: resultado
       });
-      fetch('/decifrar', {
-        method: 'post',
+      fetch("/decifrar", {
+        method: "post",
         body: formData
       }).then(function (r) {
         if (r.ok) {
@@ -66024,52 +66018,49 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         var novoSubNivel = parseInt(r.exercicio.acertos / 3);
 
         if (novoSubNivel !== parseInt(r.sub_nivel)) {
-          _this3.atualizaNivel(novoSubNivel, r.exercicio.acertos, r.exercicio.erros);
+          _this3.atualizaNivel(new FormData(), parseInt(novoSubNivel / 10), novoSubNivel, r.exercicio.acertos, r.exercicio.erros, token);
         }
       });
+    }
+  }, {
+    key: "limite",
+    value: function limite(subNivel) {
+      return subNivel == 0 ? 2 : this.state.subNivel == 1 ? 1 : 0;
     }
   }, {
     key: "render",
     value: function render() {
       var _this4 = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.avatar.nome ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "alert",
-        style: {
-          background: 'lightsteelblue'
-        }
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "avatar-container alert"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.avatar.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
-        className: "m-0",
-        title: 'Nível: ' + this.state.nivel + '\n' + parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + '%',
+        className: "barra-sub-nivel m-0",
+        title: "N\xEDvel: ".concat(this.state.nivel, " \n ").concat(this.barra),
         style: {
-          width: parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + '%',
-          height: '2px',
-          background: 'deepskyblue'
+          width: this.barra
         }
-      })) : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "list-group"
-      }, this.escala.notas.map(function (nota, index) {
-        var limite = _this4.state.subNivel == 0 ? 2 : _this4.state.subNivel == 1 ? 1 : 0;
+      }, this.escalaManipulavel.map(function (nota, index) {
+        var limite = _this4.limite(_this4.state.subNivel);
+
         return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: index,
           className: "list-group-item"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "row d-flex justify-content-center align-items-center"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "col-2"
+          className: "col-3"
         }, nota.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "="), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "col-3"
         }, index == limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "input-group"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           type: "text",
-          className: "form-control",
+          className: "form-control text-center",
           onChange: function onChange(e) {
             return e.target.value = e.target.value.toUpperCase();
-          },
-          style: {
-            width: "50px",
-            textAlign: "center"
           },
           placeholder: "?"
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -66237,18 +66228,13 @@ var EscalaDiatonica = /*#__PURE__*/function () {
       cifra: "G",
       nome: "Sol"
     }];
+    this.escalaAleatoria = this.notas;
+    this.escalaManipulavel = this.notas.map(function (nota) {
+      return nota;
+    });
   }
 
   _createClass(EscalaDiatonica, [{
-    key: "reordenarEscalaDiatonica",
-    value: function reordenarEscalaDiatonica() {
-      var notas = this.notas;
-      var escalaReordenada = [];
-      var indice = this.geraNumeroAleatorio();
-      this.mudarFundamental(indice, escalaReordenada, notas);
-      this.notas = escalaReordenada;
-    }
-  }, {
     key: "geraNumeroAleatorio",
     value: function geraNumeroAleatorio() {
       return parseInt(1 + Math.random() * (7 - 1));
@@ -66256,14 +66242,58 @@ var EscalaDiatonica = /*#__PURE__*/function () {
 
   }, {
     key: "mudarFundamental",
-    value: function mudarFundamental(indiceFundamental, escalaNova, notas) {
+    value: function mudarFundamental(indiceFundamental, notas) {
+      var escalaNova = [];
+
       for (var i = indiceFundamental; i < indiceFundamental + 7; i++) {
-        if (i > 6) {
-          escalaNova.push(notas[i % 7]);
-        } else {
-          escalaNova.push(notas[i]);
-        }
+        i > 6 ? escalaNova.push(notas[i % 7]) : escalaNova.push(notas[i]);
       }
+
+      return escalaNova;
+    }
+  }, {
+    key: "ordemDosSustenitos",
+    value: function ordemDosSustenitos() {
+      var ordem = [];
+      var escala = this.mudarFundamental(5, this.notas);
+      escala.forEach(function (nota, i) {
+        ordem.push(escala[4 * i % 7]);
+      });
+      return ordem;
+    }
+  }, {
+    key: "aumentaUmaOitava",
+    value: function aumentaUmaOitava(escala) {
+      escala.forEach(function (nota) {
+        escala.push(nota);
+      });
+    }
+  }, {
+    key: "modulaEscalaMaior",
+    value: function modulaEscalaMaior(fundamental) {
+      var indice = this.notas.findIndex(function (e) {
+        return e.cifra == fundamental.cifra[0];
+      });
+      var encontrouSensivel, encontrouFundamental;
+      var escala = this.mudarFundamental(indice, this.notas);
+      var ordem = this.ordemDosSustenitos();
+      this.aumentaUmaOitava(escala);
+      this.aumentaUmaOitava(ordem);
+      ordem.map(function (nota) {
+        if (!(encontrouFundamental && encontrouSensivel)) {
+          escala[escala.indexOf(nota)].cifra += '#';
+          escala[escala.indexOf(nota)].nome = !!nota.nome.match(/sustenido/) ? nota.nome.replace(' ', ' dobrado ') : escala[escala.indexOf(nota)].nome + ' sustenido';
+        }
+
+        if (nota.cifra == escala[escala.length - 1].cifra) {
+          encontrouSensivel = true;
+        }
+
+        if (escala[escala.indexOf(nota) + 1].cifra === fundamental.cifra) {
+          encontrouFundamental = true;
+        }
+      });
+      return escala;
     }
   }]);
 

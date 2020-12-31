@@ -5,7 +5,10 @@ class Decifrar extends Component {
     constructor(props) {
         super(props);
         this.escala = new EscalaDiatonica();
-        this.escala.reordenarEscalaDiatonica();
+        this.escalaManipulavel =
+            this.escala.modulaEscalaMaior( this.escala.notas[ this.escala.geraNumeroAleatorio() ] )
+        this.barra =
+            parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + "%";
     }
 
     state = {
@@ -19,25 +22,26 @@ class Decifrar extends Component {
         }
     };
 
-    atualizaNivel(novoSubNivel, acertos, erros) {
-        let nivel = parseInt(novoSubNivel / 10);
-        let nomeAvatar = this.geraNomeAvatar(acertos, erros, nivel);
-        const token = document.querySelector('input[name=_token]').value;
-        const formData = new FormData();
-        formData.append('id', this.props.usuario.id);
-        formData.append('nivel', nivel);
-        formData.append('sub_nivel', novoSubNivel);
-        formData.append('nome_avatar', nomeAvatar);
-        formData.append('_token',token);
+    atualizaNivel(formData, nivel, novoSubNivel, acertos, erros, token) {
+        formData.append("id", this.props.usuario.id);
+        formData.append("nivel", nivel);
+        formData.append("sub_nivel", novoSubNivel);
+        formData.append("_token", token);
+        formData.append(
+            "nome_avatar",
+            this.geraNomeAvatar(acertos, erros, nivel)
+        );
 
-        fetch('/atualiza-nivel', {
-            method: 'post',
+        fetch("/atualiza-nivel", {
+            method: "post",
             body: formData
-        }).then((r) => {
+        })
+        .then(r => {
             if (r.ok) {
                 return r.json();
             }
-        }).then((r) => {
+        })
+        .then(r => {
             this.setState({
                 subNivel: r.sub_nivel,
                 nivel: r.nivel,
@@ -45,27 +49,89 @@ class Decifrar extends Component {
                     nome: r.avatar_name
                 }
             });
-        })
+        });
     }
 
     geraNomeAvatar(acertos, erros, nivel) {
         // cada item representa um nível
-        const substantivos = ['Iniciante ','Estudante ','Violonista ','Musicista ', 'Mestre ', 'Bacharel '];
+        const substantivos = [
+            "Iniciante ",
+            "Estudante ",
+            "Violonista ",
+            "Musicista ",
+            "Mestre ",
+            "Bacharel "
+        ];
 
         // cada item representa uma qualidade de acordo com a quantidade de acertos e erros
-        const adjetivosPositivos = ['adorável', 'cordial', 'decente', 'doce', 'eficiente', 'eloquente', 'entusiasta', 'excelente', 'exigente', 'fiel', 'forte', 'gentil', 'humilde', 'independente', 'inteligente', 'leal', 'legal', 'livre', 'otimista', 'paciente', 'perfeccionista', 'perseverante', 'persistente', 'pontual', 'prudente', 'racional', 'responsável', 'sagaz', 'sensível', 'tolerante', 'valente', 'calculista'];
-        const adjetivosNegativos = ['desobediente', 'impaciente', 'imprudente', 'inconstante', 'inconveniente', 'negligente', 'pessimista', 'pé-frio'];
+        const adjetivosPositivos = [
+            "adorável",
+            "cordial",
+            "decente",
+            "doce",
+            "eficiente",
+            "eloquente",
+            "entusiasta",
+            "excelente",
+            "exigente",
+            "fiel",
+            "forte",
+            "gentil",
+            "humilde",
+            "independente",
+            "inteligente",
+            "leal",
+            "legal",
+            "livre",
+            "otimista",
+            "paciente",
+            "perfeccionista",
+            "perseverante",
+            "persistente",
+            "pontual",
+            "prudente",
+            "racional",
+            "responsável",
+            "sagaz",
+            "sensível",
+            "tolerante",
+            "valente",
+            "calculista"
+        ];
+        const adjetivosNegativos = [
+            "desobediente",
+            "impaciente",
+            "imprudente",
+            "inconstante",
+            "inconveniente",
+            "negligente",
+            "pessimista",
+            "pé-frio"
+        ];
 
         // cada item representa uma atualização no avatar
         const complementos = [
             // acessorios musical
-            'do violão de 6 cordas', 'do vassourolão', 'das cordas estouradas', 'da viola de luthier', 'na palhetada', 'das unhas grandes',
+            "do violão de 6 cordas",
+            "do vassourolão",
+            "das cordas estouradas",
+            "da viola de luthier",
+            "na palhetada",
+            "das unhas grandes",
             // acessório dia-a-dia
-            'da cabeleira marrenta', 'do oclinho estiloso', 'de roupinha nova', 'do sapato velho', 'da blusa emprestada',
+            "da cabeleira marrenta",
+            "do oclinho estiloso",
+            "de roupinha nova",
+            "do sapato velho",
+            "da blusa emprestada",
             // lugar (plano de fundo pro avatar)
-            'da casa', 'da rua do lado do sol fa mi', 'do beco dos perdidos', 
+            "da casa",
+            "da rua do lado do sol fa mi",
+            "do beco dos perdidos",
             // comportamento
-            'do cacuete engraçado', 'da tremedeira na perninha', 'das ideias boas'
+            "do cacuete engraçado",
+            "da tremedeira na perninha",
+            "das ideias boas"
         ];
 
         let nomeAvatar = substantivos[parseInt(nivel / 10)];
@@ -78,29 +144,29 @@ class Decifrar extends Component {
 
         return nomeAvatar;
     }
-
+    
     geraTextoAletorio(array) {
         const num = parseInt(1 + Math.random() * (array.length - 1));
         return array[num];
     }
 
     proximaQuestao() {
-        this.state.respondido ? (
-            this.resetarMensagens(),
-            document.querySelector(".input-group input").value = "",
-            this.escala.reordenarEscalaDiatonica()
-        ) : (
-            this.setState({mensagemErro: 'Responda a Pergunta'})
-        )
+        this.state.respondido
+            ? (this.resetarMensagens(),
+                this.escala.modulaEscalaMaior(
+                    this.escala.notas[
+                        this.escala.geraNumeroAleatorio()
+                    ]
+                )
+            ) : this.setState({ mensagemErro: "Responda a Pergunta" });
     }
 
     resposta(gabarito) {
-        !this.state.respondido ? (
-            this.resetarMensagens(),
-            this.verificarResposta(gabarito)
-        ) : (
-            this.setState({mensagemErro: 'Pergunta já respondida'})
-        )
+        !this.state.respondido
+            ? (this.resetarMensagens(),
+              this.verificarResposta(gabarito, new FormData()),
+              document.querySelector(".input-group input").value = "")
+            : this.setState({ mensagemErro: "Pergunta já respondida" });
     }
 
     resetarMensagens() {
@@ -111,63 +177,83 @@ class Decifrar extends Component {
         });
     }
 
-    verificarResposta(gabarito) {
+    verificarResposta(gabarito, formData) {
         const resposta = document.querySelector(".input-group input").value;
-        const resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
-        const formData = new FormData();
-        const token = document.querySelector('input[name=_token]').value;
-        formData.append('id', this.props.usuario.id);
-        formData.append('resultado',resultado);
-        formData.append('_token',token);
+        const resultado =
+            resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
+        const token = document.querySelector("input[name=_token]").value;
+        formData.append("id", this.props.usuario.id);
+        formData.append("resultado", resultado);
+        formData.append("_token", token);
 
         this.setState({
             respondido: true,
             respostaCerta: resultado
-        })
+        });
 
-        fetch('/decifrar', {
-            method: 'post',
+        fetch("/decifrar", {
+            method: "post",
             body: formData
-        }).then((r) => {
-            if (r.ok) {
-                return r.json();
-            }
-        }).then((r) => {
-            let novoSubNivel = parseInt(r.exercicio.acertos / 3);
-            if (novoSubNivel !== parseInt(r.sub_nivel)) {
-                this.atualizaNivel(novoSubNivel, r.exercicio.acertos, r.exercicio.erros);
-            }
         })
+            .then(r => {
+                if (r.ok) {
+                    return r.json();
+                }
+            })
+            .then(r => {
+                let novoSubNivel = parseInt(r.exercicio.acertos / 3);
+                if (novoSubNivel !== parseInt(r.sub_nivel)) {
+                    this.atualizaNivel(
+                        new FormData(),
+                        parseInt(novoSubNivel / 10),
+                        novoSubNivel,
+                        r.exercicio.acertos,
+                        r.exercicio.erros,
+                        token
+                    );
+                }
+            });
+    }
+    
+    limite(subNivel) {
+        return subNivel == 0 ? 2 : this.state.subNivel == 1 ? 1 : 0;
     }
 
     render() {
         return (
             <div>
-                {this.state.avatar.nome ?
-                    <div className="alert" style={{background: 'lightsteelblue'}}>
-                        <p>{this.state.avatar.nome}</p>
-                        <hr className="m-0"
-                            title={'Nível: ' + this.state.nivel + '\n' + parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10)+'%'}
-                            style={{width: parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10)+'%', height: '2px', background: 'deepskyblue' }}
-                        />
-                    </div>
-                : ''}
+                <div className="avatar-container alert">
+                    <p>{this.state.avatar.nome}</p>
+                    <hr
+                        className="barra-sub-nivel m-0"
+                        title={`Nível: ${this.state.nivel} \n ${this.barra}`}
+                        style={{ width: this.barra }}
+                    />
+                </div>
                 <p>Qual é a cifra desta nota?</p>
                 <ul className="list-group">
-                    {this.escala.notas.map((nota, index) => {
-                        let limite =
-                            this.state.subNivel == 0 ? 2
-                                : this.state.subNivel == 1 ? 1 : 0
+                    {this.escalaManipulavel.map((nota, index) => {
+                        let limite = this.limite(this.state.subNivel);
+
                         return index <= limite ? (
                             <li key={index} className="list-group-item">
                                 <div className="row d-flex justify-content-center align-items-center">
-                                    <span className="col-2">{nota.nome}</span>
+                                    <span className="col-3">{nota.nome}</span>
                                     <span>=</span>
                                     <span className="col-3">
                                         {index == limite ? (
                                             <div className="input-group">
-                                                <input type="text" className="form-control" onChange={(e)=>e.target.value = e.target.value.toUpperCase()} style={{ width: "50px", textAlign: "center" }} placeholder="?" />
-                                                <button onClick={() => this.resposta(nota.cifra)} className="btn btn-outline-primary" type="button">
+                                                <input
+                                                    type="text"
+                                                    className="form-control text-center"
+                                                    onChange={e => e.target.value = e.target.value.toUpperCase()}
+                                                    placeholder="?"
+                                                />
+                                                <button
+                                                    onClick={() => this.resposta(nota.cifra)}
+                                                    className="btn btn-outline-primary"
+                                                    type="button"
+                                                >
                                                     <i className="fas fa-check"></i>
                                                 </button>
                                             </div>
