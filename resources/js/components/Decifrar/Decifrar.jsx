@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import EscalaDiatonica from "../../dados/EscalaDiatonica";
+import Escalas from "../../dados/Escalas";
 
 class Decifrar extends Component {
     constructor(props) {
         super(props);
-        this.escala = new EscalaDiatonica();
-        this.escalaManipulavel =
-            this.escala.modulaEscalaMaior( this.escala.notas[ this.escala.geraNumeroAleatorio() ] )
+        this.escala = new Escalas();
         this.barra =
             parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + "%";
     }
@@ -153,8 +151,8 @@ class Decifrar extends Component {
     proximaQuestao() {
         this.state.respondido
             ? (this.resetarMensagens(),
-                this.escala.modulaEscalaMaior(
-                    this.escala.notas[
+                this.escala.nova_escala = this.escala.modulaEscalaMaior(
+                    this.escala.diatonica.notas[
                         this.escala.geraNumeroAleatorio()
                     ]
                 )
@@ -232,7 +230,7 @@ class Decifrar extends Component {
                 </div>
                 <p>Qual é a cifra desta nota?</p>
                 <ul className="list-group">
-                    {this.escalaManipulavel.map((nota, index) => {
+                    {this.escala.nova_escala.map((nota, index) => {
                         let limite = this.limite(this.state.subNivel);
 
                         return index <= limite ? (
