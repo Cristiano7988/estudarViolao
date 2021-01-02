@@ -4,7 +4,7 @@ import Escalas from "../../dados/Escalas";
 class Decifrar extends Component {
     constructor(props) {
         super(props);
-        this.escala = new Escalas();
+        this.escala = new Escalas(this.state.nivel);
         this.barra =
             parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + "%";
     }
@@ -150,21 +150,19 @@ class Decifrar extends Component {
 
     proximaQuestao() {
         this.state.respondido
-            ? (this.resetarMensagens(),
-                this.escala.nova_escala = this.escala.modulaEscalaMaior(
-                    this.escala.diatonica.notas[
-                        this.escala.geraNumeroAleatorio()
-                    ]
-                )
+            ? (
+                this.resetarMensagens(),
+                document.querySelector(".input-group input").value = "",
+                this.escala.nova_escala = this.escala.geraEscalaAleatoria()
             ) : this.setState({ mensagemErro: "Responda a Pergunta" });
     }
 
     resposta(gabarito) {
         !this.state.respondido
-            ? (this.resetarMensagens(),
-              this.verificarResposta(gabarito, new FormData()),
-              document.querySelector(".input-group input").value = "")
-            : this.setState({ mensagemErro: "Pergunta já respondida" });
+            ? (
+                this.resetarMensagens(),
+                this.verificarResposta(gabarito, new FormData())
+            ) : this.setState({ mensagemErro: "Pergunta já respondida" });
     }
 
     resetarMensagens() {

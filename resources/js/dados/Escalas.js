@@ -1,13 +1,14 @@
 import Notas from "./Notas";
 
 export default class Escalas {
-    constructor() {
+    constructor(nivel) {
+        this.nivel = nivel
         this.diatonica = new Notas();
-        this.nova_escala = this.modulaEscalaMaior( new Notas().notas[ this.geraNumeroAleatorio() ] );
+        this.nova_escala = this.geraEscalaAleatoria();
     }
 
-    geraNumeroAleatorio() {
-        const random = parseInt(1 + Math.random() * (7 - 1));
+    geraNumeroAleatorio(escala) {
+        const random = parseInt(1 + Math.random() * (escala.length - 1));
         return random;
     }
 
@@ -46,7 +47,7 @@ export default class Escalas {
     
         this.aumentaUmaOitava(escala);
         this.aumentaUmaOitava(ordem);
-        
+
         if(![0,1].includes(ordem.findIndex((o)=>{ return o.cifra == fundamental.cifra}))) {
             ordem.every( (nota,i ) => {
                 let index = escala.findIndex( (n)=> { return n.cifra[0] == nota.cifra[0]})
@@ -66,5 +67,25 @@ export default class Escalas {
         }
 
         return escala
+    }
+
+    geraEscalaAleatoria() {
+        let ordem = this.ordemDosSustenitos();
+
+        // gera tonalidade
+        if(this.nivel >= 2) {
+            ordem.map(nota=>{ ordem.push({cifra:nota.cifra + '#', nome: nota.nome + ' sustenido'}) })
+        }
+
+        let nova_escala = this.modulaEscalaMaior( ordem[ this.geraNumeroAleatorio(ordem) ] );
+        let reordena = [];
+        
+        let random = this.geraNumeroAleatorio(nova_escala);
+        
+        nova_escala.map((nota,index)=> {
+            reordena.push(nova_escala[(index + random) % nova_escala.length])
+        })
+
+        return reordena;
     }
 }

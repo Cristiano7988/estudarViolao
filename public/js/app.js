@@ -65907,7 +65907,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         nome: _this.props.usuario.avatar_name
       }
     };
-    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"](_this.state.nivel);
     _this.barra = parseInt(_this.state.subNivel[_this.state.subNivel.length - 1] * 10) + "%";
     return _this;
   }
@@ -65971,14 +65971,14 @@ var Decifrar = /*#__PURE__*/function (_Component) {
   }, {
     key: "proximaQuestao",
     value: function proximaQuestao() {
-      this.state.respondido ? (this.resetarMensagens(), this.escala.nova_escala = this.escala.modulaEscalaMaior(this.escala.diatonica.notas[this.escala.geraNumeroAleatorio()])) : this.setState({
+      this.state.respondido ? (this.resetarMensagens(), document.querySelector(".input-group input").value = "", this.escala.nova_escala = this.escala.geraEscalaAleatoria()) : this.setState({
         mensagemErro: "Responda a Pergunta"
       });
     }
   }, {
     key: "resposta",
     value: function resposta(gabarito) {
-      !this.state.respondido ? (this.resetarMensagens(), this.verificarResposta(gabarito, new FormData()), document.querySelector(".input-group input").value = "") : this.setState({
+      !this.state.respondido ? (this.resetarMensagens(), this.verificarResposta(gabarito, new FormData())) : this.setState({
         mensagemErro: "Pergunta já respondida"
       });
     }
@@ -66205,17 +66205,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var Escalas = /*#__PURE__*/function () {
-  function Escalas() {
+  function Escalas(nivel) {
     _classCallCheck(this, Escalas);
 
+    this.nivel = nivel;
     this.diatonica = new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]();
-    this.nova_escala = this.modulaEscalaMaior(new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas[this.geraNumeroAleatorio()]);
+    this.nova_escala = this.geraEscalaAleatoria();
   }
 
   _createClass(Escalas, [{
     key: "geraNumeroAleatorio",
-    value: function geraNumeroAleatorio() {
-      var random = parseInt(1 + Math.random() * (7 - 1));
+    value: function geraNumeroAleatorio(escala) {
+      var random = parseInt(1 + Math.random() * (escala.length - 1));
       return random;
     } // Indice % base = indice na base
 
@@ -66287,6 +66288,28 @@ var Escalas = /*#__PURE__*/function () {
       }
 
       return escala;
+    }
+  }, {
+    key: "geraEscalaAleatoria",
+    value: function geraEscalaAleatoria() {
+      var ordem = this.ordemDosSustenitos(); // gera tonalidade
+
+      if (this.nivel >= 2) {
+        ordem.map(function (nota) {
+          ordem.push({
+            cifra: nota.cifra + '#',
+            nome: nota.nome + ' sustenido'
+          });
+        });
+      }
+
+      var nova_escala = this.modulaEscalaMaior(ordem[this.geraNumeroAleatorio(ordem)]);
+      var reordena = [];
+      var random = this.geraNumeroAleatorio(nova_escala);
+      nova_escala.map(function (nota, index) {
+        reordena.push(nova_escala[(index + random) % nova_escala.length]);
+      });
+      return reordena;
     }
   }]);
 
