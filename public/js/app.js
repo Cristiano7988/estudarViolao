@@ -65908,11 +65908,15 @@ var Decifrar = /*#__PURE__*/function (_Component) {
       }
     };
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"](_this.state.nivel);
-    _this.barra = parseInt(_this.state.subNivel[_this.state.subNivel.length - 1] * 10) + "%";
     return _this;
   }
 
   _createClass(Decifrar, [{
+    key: "porcentagem",
+    value: function porcentagem(string) {
+      return parseInt(string[string.length - 1] * 10) + "%";
+    }
+  }, {
     key: "atualizaNivel",
     value: function atualizaNivel(formData, nivel, novoSubNivel, acertos, erros, token) {
       var _this2 = this;
@@ -66035,9 +66039,9 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         className: "avatar-container alert"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.avatar.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
         className: "barra-sub-nivel m-0",
-        title: "N\xEDvel: ".concat(this.state.nivel, " \n ").concat(this.barra),
+        title: "N\xEDvel: ".concat(this.state.nivel, " \n ").concat(this.porcentagem(this.state.subNivel)),
         style: {
-          width: this.barra
+          width: this.porcentagem(this.state.subNivel)
         }
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "list-group"

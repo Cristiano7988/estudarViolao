@@ -10941,5 +10941,6 @@ body main .container .col-md-6 .card h1 {
 .barra-sub-nivel {
   height: 2px;
   background: deepskyblue;
+  transition: width 2s;
 }
 

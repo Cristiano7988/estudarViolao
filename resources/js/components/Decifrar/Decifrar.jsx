@@ -5,8 +5,6 @@ class Decifrar extends Component {
     constructor(props) {
         super(props);
         this.escala = new Escalas(this.state.nivel);
-        this.barra =
-            parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + "%";
     }
 
     state = {
@@ -19,6 +17,10 @@ class Decifrar extends Component {
             nome: this.props.usuario.avatar_name
         }
     };
+
+    porcentagem(string) {
+        return parseInt(string[string.length - 1] * 10) + "%";
+    }
 
     atualizaNivel(formData, nivel, novoSubNivel, acertos, erros, token) {
         formData.append("id", this.props.usuario.id);
@@ -222,8 +224,8 @@ class Decifrar extends Component {
                     <p>{this.state.avatar.nome}</p>
                     <hr
                         className="barra-sub-nivel m-0"
-                        title={`Nível: ${this.state.nivel} \n ${this.barra}`}
-                        style={{ width: this.barra }}
+                        title={`Nível: ${this.state.nivel} \n ${this.porcentagem(this.state.subNivel)}`}
+                        style={{ width: this.porcentagem(this.state.subNivel) }}
                     />
                 </div>
                 <p>Qual é a cifra desta nota?</p>
