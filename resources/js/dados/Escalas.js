@@ -1,70 +1,68 @@
 import Notas from "./Notas";
+import Ordens from "./Ordens";
 
 export default class Escalas {
-    constructor() {
+    constructor(nivel) {
+        this.nivel = nivel;
         this.diatonica = new Notas();
-        this.nova_escala = this.modulaEscalaMaior( new Notas().notas[ this.geraNumeroAleatorio() ] );
+        this.ordem = new Ordens();
+        this.nova = this.geraEscalaAleatoria();
     }
 
-    geraNumeroAleatorio() {
-        const random = parseInt(1 + Math.random() * (7 - 1));
+    geraNumeroAleatorio(escala) {
+        const random = parseInt(1 + Math.random() * (escala.length - 1));
         return random;
     }
 
-    // Indice % base = indice na base
-    mudarFundamental(indiceFundamental, notas) {
-        let escalaNova = [];
-        for (var i = indiceFundamental; i < indiceFundamental + 7; i++) {
-            i > 6 ? escalaNova.push(notas[i % 7]) : escalaNova.push(notas[i]);
-        }
-
-        return escalaNova;
-    }
-
-    ordemDosSustenitos() {
-        let ordem = [];
-        let escala = this.mudarFundamental(5, new Notas().notas);
-        escala.forEach((nota, i)=> {
-            ordem.push(escala[(4 * i) % 7])
-        })
-
-        return ordem;
-    }
-
     aumentaUmaOitava(escala) {
-        escala.forEach(nota=>{ escala.push(nota); })
+        escala.forEach(nota => {
+            escala.push(nota);
+        });
     }
 
-    modulaEscalaMaior(fundamental) {
-        let indice = this.diatonica.notas.findIndex( (e)=>{ return e.cifra == fundamental.cifra[0] });
-        
-        let encontrouSensivel = false;
-        let encontrouFundamental = false;
-            
-        let escala = this.mudarFundamental(indice, new Notas().notas);
-        let ordem = this.ordemDosSustenitos();
-    
-        this.aumentaUmaOitava(escala);
-        this.aumentaUmaOitava(ordem);
-        
-        if(![0,1].includes(ordem.findIndex((o)=>{ return o.cifra == fundamental.cifra}))) {
-            ordem.every( (nota,i ) => {
-                let index = escala.findIndex( (n)=> { return n.cifra[0] == nota.cifra[0]})
-                if( !(encontrouFundamental && encontrouSensivel) ) {
-                    escala[ index ].cifra += '#';
-                    nota.cifra += '#'
-                    escala[ index ].nome =
-                        !!escala[ index ].nome.match(/sustenido/)
-                            ? escala[ index ].nome.replace(' ',' dobrado ')
-                            : escala[ index ].nome + ' sustenido';
-                }
-                if( nota.cifra == escala[escala.length - 1].cifra ) { encontrouSensivel = true; }
-                if( escala[ index + 1 ].cifra === fundamental.cifra) { encontrouFundamental = true; }
-
-                return nota;
-            })
+    // Verifica a ordem utilizada e adiciona os acidentes
+    maior(tom, escala) {
+        if (this.ordem.usariaSustenidos(tom.cifra)) {
+            this.ordem.usarSustenidos(tom, escala);
         }
 
-        return escala
+        return escala;
+    }
+
+    // Ordena a escala de acordo com sua fundamental
+    ordena(fundamental) {
+        let indice = this.diatonica.notas.findIndex(e => {
+            return e.cifra == fundamental;
+        });
+
+        return this.ordem.mudar(indice, new Notas().notas);
+    }
+
+    // Interpreta o modo (Maior ou Menor) de acordo com o tom
+    modula(tom) {
+        let escala = this.ordena(tom.cifra[0]);
+
+        this.aumentaUmaOitava(escala);
+
+        if (!tom.cifra.match(/m/)) {
+            return this.maior(tom, escala);
+        }
+    }
+
+    // Escolhe uma ordem (bemol ou sustenido)
+    // Escolhe um modo (Maior ou menor)
+    // Escolhe um sistema (Tonal ou modal)
+    geraEscalaAleatoria() {
+        let nova_escala = this.modula(
+            this.ordem.sustenidos[
+                this.geraNumeroAleatorio(this.ordem.sustenidos)
+            ]
+        );
+
+        let random = this.geraNumeroAleatorio(nova_escala);
+
+        let reordena = this.ordem.mudar(random, nova_escala);
+
+        return reordena;
     }
 }

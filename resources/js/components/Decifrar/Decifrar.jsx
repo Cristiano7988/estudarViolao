@@ -4,9 +4,7 @@ import Escalas from "../../dados/Escalas";
 class Decifrar extends Component {
     constructor(props) {
         super(props);
-        this.escala = new Escalas();
-        this.barra =
-            parseInt(this.state.subNivel[this.state.subNivel.length - 1] * 10) + "%";
+        this.escala = new Escalas(this.state.nivel);
     }
 
     state = {
@@ -19,6 +17,10 @@ class Decifrar extends Component {
             nome: this.props.usuario.avatar_name
         }
     };
+
+    porcentagem(string) {
+        return parseInt(string[string.length - 1] * 10) + "%";
+    }
 
     atualizaNivel(formData, nivel, novoSubNivel, acertos, erros, token) {
         formData.append("id", this.props.usuario.id);
@@ -150,21 +152,19 @@ class Decifrar extends Component {
 
     proximaQuestao() {
         this.state.respondido
-            ? (this.resetarMensagens(),
-                this.escala.nova_escala = this.escala.modulaEscalaMaior(
-                    this.escala.diatonica.notas[
-                        this.escala.geraNumeroAleatorio()
-                    ]
-                )
+            ? (
+                this.resetarMensagens(),
+                document.querySelector(".input-group input").value = "",
+                this.escala.nova = this.escala.geraEscalaAleatoria()
             ) : this.setState({ mensagemErro: "Responda a Pergunta" });
     }
 
     resposta(gabarito) {
         !this.state.respondido
-            ? (this.resetarMensagens(),
-              this.verificarResposta(gabarito, new FormData()),
-              document.querySelector(".input-group input").value = "")
-            : this.setState({ mensagemErro: "Pergunta já respondida" });
+            ? (
+                this.resetarMensagens(),
+                this.verificarResposta(gabarito, new FormData())
+            ) : this.setState({ mensagemErro: "Pergunta já respondida" });
     }
 
     resetarMensagens() {
@@ -224,13 +224,13 @@ class Decifrar extends Component {
                     <p>{this.state.avatar.nome}</p>
                     <hr
                         className="barra-sub-nivel m-0"
-                        title={`Nível: ${this.state.nivel} \n ${this.barra}`}
-                        style={{ width: this.barra }}
+                        title={`Nível: ${this.state.nivel} \n ${this.porcentagem(this.state.subNivel)}`}
+                        style={{ width: this.porcentagem(this.state.subNivel) }}
                     />
                 </div>
                 <p>Qual é a cifra desta nota?</p>
                 <ul className="list-group">
-                    {this.escala.nova_escala.map((nota, index) => {
+                    {this.escala.nova.map((nota, index) => {
                         let limite = this.limite(this.state.subNivel);
 
                         return index <= limite ? (
