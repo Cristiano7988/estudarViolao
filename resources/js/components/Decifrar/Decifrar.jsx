@@ -155,7 +155,7 @@ class Decifrar extends Component {
             ? (
                 this.resetarMensagens(),
                 document.querySelector(".input-group input").value = "",
-                this.escala.nova_escala = this.escala.geraEscalaAleatoria()
+                this.escala.nova = this.escala.geraEscalaAleatoria()
             ) : this.setState({ mensagemErro: "Responda a Pergunta" });
     }
 
@@ -230,7 +230,7 @@ class Decifrar extends Component {
                 </div>
                 <p>Qual é a cifra desta nota?</p>
                 <ul className="list-group">
-                    {this.escala.nova_escala.map((nota, index) => {
+                    {this.escala.nova.map((nota, index) => {
                         let limite = this.limite(this.state.subNivel);
 
                         return index <= limite ? (

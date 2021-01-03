@@ -65975,7 +65975,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
   }, {
     key: "proximaQuestao",
     value: function proximaQuestao() {
-      this.state.respondido ? (this.resetarMensagens(), document.querySelector(".input-group input").value = "", this.escala.nova_escala = this.escala.geraEscalaAleatoria()) : this.setState({
+      this.state.respondido ? (this.resetarMensagens(), document.querySelector(".input-group input").value = "", this.escala.nova = this.escala.geraEscalaAleatoria()) : this.setState({
         mensagemErro: "Responda a Pergunta"
       });
     }
@@ -66045,7 +66045,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
         }
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "list-group"
-      }, this.escala.nova_escala.map(function (nota, index) {
+      }, this.escala.nova.map(function (nota, index) {
         var limite = _this4.limite(_this4.state.subNivel);
 
         return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
@@ -66200,11 +66200,13 @@ if (document.getElementById("Sistema")) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Escalas; });
 /* harmony import */ var _Notas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Notas */ "./resources/js/dados/Notas.js");
+/* harmony import */ var _Ordens__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Ordens */ "./resources/js/dados/Ordens.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -66214,7 +66216,8 @@ var Escalas = /*#__PURE__*/function () {
 
     this.nivel = nivel;
     this.diatonica = new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]();
-    this.nova_escala = this.geraEscalaAleatoria();
+    this.ordem = new _Ordens__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.nova = this.geraEscalaAleatoria();
   }
 
   _createClass(Escalas, [{
@@ -66222,28 +66225,6 @@ var Escalas = /*#__PURE__*/function () {
     value: function geraNumeroAleatorio(escala) {
       var random = parseInt(1 + Math.random() * (escala.length - 1));
       return random;
-    } // Indice % base = indice na base
-
-  }, {
-    key: "mudarFundamental",
-    value: function mudarFundamental(indiceFundamental, notas) {
-      var escalaNova = [];
-
-      for (var i = indiceFundamental; i < indiceFundamental + 7; i++) {
-        i > 6 ? escalaNova.push(notas[i % 7]) : escalaNova.push(notas[i]);
-      }
-
-      return escalaNova;
-    }
-  }, {
-    key: "ordemDosSustenitos",
-    value: function ordemDosSustenitos() {
-      var ordem = [];
-      var escala = this.mudarFundamental(5, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
-      escala.forEach(function (nota, i) {
-        ordem.push(escala[4 * i % 7]);
-      });
-      return ordem;
     }
   }, {
     key: "aumentaUmaOitava",
@@ -66251,68 +66232,46 @@ var Escalas = /*#__PURE__*/function () {
       escala.forEach(function (nota) {
         escala.push(nota);
       });
-    }
+    } // Verifica a ordem utilizada e adiciona os acidentes
+
   }, {
-    key: "modulaEscalaMaior",
-    value: function modulaEscalaMaior(fundamental) {
-      var indice = this.diatonica.notas.findIndex(function (e) {
-        return e.cifra == fundamental.cifra[0];
-      });
-      var encontrouSensivel = false;
-      var encontrouFundamental = false;
-      var escala = this.mudarFundamental(indice, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
-      var ordem = this.ordemDosSustenitos();
-      this.aumentaUmaOitava(escala);
-      this.aumentaUmaOitava(ordem);
-
-      if (![0, 1].includes(ordem.findIndex(function (o) {
-        return o.cifra == fundamental.cifra;
-      }))) {
-        ordem.every(function (nota, i) {
-          var index = escala.findIndex(function (n) {
-            return n.cifra[0] == nota.cifra[0];
-          });
-
-          if (!(encontrouFundamental && encontrouSensivel)) {
-            escala[index].cifra += '#';
-            nota.cifra += '#';
-            escala[index].nome = !!escala[index].nome.match(/sustenido/) ? escala[index].nome.replace(' ', ' dobrado ') : escala[index].nome + ' sustenido';
-          }
-
-          if (nota.cifra == escala[escala.length - 1].cifra) {
-            encontrouSensivel = true;
-          }
-
-          if (escala[index + 1].cifra === fundamental.cifra) {
-            encontrouFundamental = true;
-          }
-
-          return nota;
-        });
+    key: "maior",
+    value: function maior(tom, escala) {
+      if (this.ordem.usariaSustenidos(tom.cifra)) {
+        this.ordem.usarSustenidos(tom, escala);
       }
 
       return escala;
-    }
+    } // Ordena a escala de acordo com sua fundamental
+
+  }, {
+    key: "ordena",
+    value: function ordena(fundamental) {
+      var indice = this.diatonica.notas.findIndex(function (e) {
+        return e.cifra == fundamental;
+      });
+      return this.ordem.mudar(indice, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
+    } // Interpreta o modo (Maior ou Menor) de acordo com o tom
+
+  }, {
+    key: "modula",
+    value: function modula(tom) {
+      var escala = this.ordena(tom.cifra[0]);
+      this.aumentaUmaOitava(escala);
+
+      if (!tom.cifra.match(/m/)) {
+        return this.maior(tom, escala);
+      }
+    } // Escolhe uma ordem (bemol ou sustenido)
+    // Escolhe um modo (Maior ou menor)
+    // Escolhe um sistema (Tonal ou modal)
+
   }, {
     key: "geraEscalaAleatoria",
     value: function geraEscalaAleatoria() {
-      var ordem = this.ordemDosSustenitos(); // gera tonalidade
-
-      if (this.nivel >= 2) {
-        ordem.map(function (nota) {
-          ordem.push({
-            cifra: nota.cifra + '#',
-            nome: nota.nome + ' sustenido'
-          });
-        });
-      }
-
-      var nova_escala = this.modulaEscalaMaior(ordem[this.geraNumeroAleatorio(ordem)]);
-      var reordena = [];
+      var nova_escala = this.modula(this.ordem.sustenidos[this.geraNumeroAleatorio(this.ordem.sustenidos)]);
       var random = this.geraNumeroAleatorio(nova_escala);
-      nova_escala.map(function (nota, index) {
-        reordena.push(nova_escala[(index + random) % nova_escala.length]);
-      });
+      var reordena = this.ordem.mudar(random, nova_escala);
       return reordena;
     }
   }]);
@@ -66362,6 +66321,114 @@ var Notas = function Notas() {
     nome: "Sol"
   }];
 };
+
+
+
+/***/ }),
+
+/***/ "./resources/js/dados/Ordens.js":
+/*!**************************************!*\
+  !*** ./resources/js/dados/Ordens.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ordens; });
+/* harmony import */ var _Notas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Notas */ "./resources/js/dados/Notas.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var Ordens = /*#__PURE__*/function () {
+  function Ordens() {
+    _classCallCheck(this, Ordens);
+
+    this.sustenidos = this.sustenidos();
+  }
+
+  _createClass(Ordens, [{
+    key: "comparaNotas",
+    value: function comparaNotas(nota1, nota2, resultado) {
+      resultado = nota1.cifra == nota2.cifra ? true : resultado;
+      return resultado;
+    }
+  }, {
+    key: "adicionaSustenido",
+    value: function adicionaSustenido(nota) {
+      nota.cifra += "#";
+      nota.nome = !!nota.nome.match(/sustenido/) ? nota.nome.replace(" ", " dobrado ") : nota.nome + " sustenido";
+    }
+  }, {
+    key: "usarSustenidos",
+    value: function usarSustenidos(tom, escala) {
+      var _this = this;
+
+      var sensivel = false;
+      var fundamental = false;
+      this.sustenidos.every(function (nota) {
+        var index = escala.findIndex(function (n) {
+          return n.cifra[0] == nota.cifra[0];
+        });
+
+        if (!(fundamental && sensivel)) {
+          _this.adicionaSustenido(escala[index]);
+
+          _this.adicionaSustenido(nota);
+        }
+
+        sensivel = _this.comparaNotas(nota, escala[escala.length - 1], sensivel);
+        fundamental = _this.comparaNotas(escala[index + 1], tom, fundamental);
+        return nota;
+      });
+    }
+  }, {
+    key: "usariaSustenidos",
+    value: function usariaSustenidos(tom) {
+      return ![0, 1].includes(this.sustenidos.findIndex(function (o) {
+        return o.cifra == tom;
+      }));
+    }
+  }, {
+    key: "mudar",
+    value: function mudar(indiceFundamental, notas) {
+      var escalaNova = [];
+      notas.map(function (nota, index) {
+        escalaNova.push(notas[(index + indiceFundamental) % notas.length]);
+      });
+      return escalaNova;
+    }
+  }, {
+    key: "ordemDosSustenitos",
+    value: function ordemDosSustenitos() {
+      var ordem = [];
+      var escala = this.mudar(5, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
+      escala.forEach(function (nota, i) {
+        ordem.push(escala[4 * i % 7]);
+      });
+      return ordem;
+    }
+  }, {
+    key: "sustenidos",
+    value: function sustenidos() {
+      var tonalidades = this.ordemDosSustenitos();
+      tonalidades.map(function (nota) {
+        tonalidades.push({
+          cifra: nota.cifra + "#",
+          nome: nota.nome + " sustenido"
+        });
+      });
+      return tonalidades;
+    }
+  }]);
+
+  return Ordens;
+}();
 
 
 
