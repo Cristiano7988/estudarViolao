@@ -66223,7 +66223,7 @@ var Escalas = /*#__PURE__*/function () {
   _createClass(Escalas, [{
     key: "geraNumeroAleatorio",
     value: function geraNumeroAleatorio(escala) {
-      var random = parseInt(1 + Math.random() * (escala.length - 1));
+      var random = parseInt(0 + Math.random() * (escala.length - 0));
       return random;
     }
   }, {
@@ -66237,8 +66237,10 @@ var Escalas = /*#__PURE__*/function () {
   }, {
     key: "maior",
     value: function maior(tom, escala) {
-      if (this.ordem.usariaSustenidos(tom.cifra)) {
-        this.ordem.usarSustenidos(tom, escala);
+      if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
+        this.ordem.usar(tom, escala, this.ordem.sustenidos, "#", "sustenido", 0, 1);
+      } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
+        this.ordem.usar(tom, escala, this.ordem.bemois, "b", "bemol", 1, 4);
       }
 
       return escala;
@@ -66269,7 +66271,9 @@ var Escalas = /*#__PURE__*/function () {
   }, {
     key: "geraEscalaAleatoria",
     value: function geraEscalaAleatoria() {
-      var nova_escala = this.modula(this.ordem.sustenidos[this.geraNumeroAleatorio(this.ordem.sustenidos)]);
+      var escolhe = this.geraNumeroAleatorio(["#", "b"]);
+      var tonalidades = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
+      var nova_escala = this.modula(tonalidades[this.geraNumeroAleatorio(tonalidades)]);
       var random = this.geraNumeroAleatorio(nova_escala);
       var reordena = this.ordem.mudar(random, nova_escala);
       return reordena;
@@ -66349,7 +66353,8 @@ var Ordens = /*#__PURE__*/function () {
   function Ordens() {
     _classCallCheck(this, Ordens);
 
-    this.sustenidos = this.sustenidos();
+    this.sustenidos = this.acidente('#', 'sustenido', this.ordemDosSustenitos());
+    this.bemois = this.acidente('b', 'bemol', this.ordemDosBemois());
   }
 
   _createClass(Ordens, [{
@@ -66359,38 +66364,43 @@ var Ordens = /*#__PURE__*/function () {
       return resultado;
     }
   }, {
-    key: "adicionaSustenido",
-    value: function adicionaSustenido(nota) {
-      nota.cifra += "#";
-      nota.nome = !!nota.nome.match(/sustenido/) ? nota.nome.replace(" ", " dobrado ") : nota.nome + " sustenido";
+    key: "adicionaAcidente",
+    value: function adicionaAcidente(nota, simbolo, nome) {
+      nota.cifra += simbolo;
+      nota.nome = !!nota.nome.match(new RegExp(nome)) ? nota.nome.replace(" ", " dobrado ") : nota.nome + " " + nome;
     }
   }, {
-    key: "usarSustenidos",
-    value: function usarSustenidos(tom, escala) {
+    key: "usar",
+    value: function usar(tom, escala, notas, acidente, nome_acidente, posicao_sensivel, posicao_fundamental) {
       var _this = this;
 
       var sensivel = false;
       var fundamental = false;
-      this.sustenidos.every(function (nota) {
+      notas.map(function (nota, i) {
         var index = escala.findIndex(function (n) {
           return n.cifra[0] == nota.cifra[0];
         });
 
         if (!(fundamental && sensivel)) {
-          _this.adicionaSustenido(escala[index]);
+          _this.adicionaAcidente(escala[index], acidente, nome_acidente);
 
-          _this.adicionaSustenido(nota);
+          _this.adicionaAcidente(nota, acidente, nome_acidente);
         }
 
-        sensivel = _this.comparaNotas(nota, escala[escala.length - 1], sensivel);
-        fundamental = _this.comparaNotas(escala[index + 1], tom, fundamental);
+        sensivel = _this.comparaNotas(notas[(i + posicao_sensivel) % 7], escala[escala.length - 1], sensivel);
+        fundamental = _this.comparaNotas(escala[index + posicao_fundamental], tom, fundamental);
         return nota;
       });
     }
   }, {
-    key: "usariaSustenidos",
-    value: function usariaSustenidos(tom) {
-      return ![0, 1].includes(this.sustenidos.findIndex(function (o) {
+    key: "verificaOrdem",
+    value: function verificaOrdem(tom, tonalidades, i) {
+      var especifica = [];
+      tonalidades.map(function (nota) {
+        especifica.push(nota);
+      });
+      especifica.splice(0, i);
+      return especifica.includes(tonalidades.find(function (o) {
         return o.cifra == tom;
       }));
     }
@@ -66414,13 +66424,22 @@ var Ordens = /*#__PURE__*/function () {
       return ordem;
     }
   }, {
-    key: "sustenidos",
-    value: function sustenidos() {
+    key: "ordemDosBemois",
+    value: function ordemDosBemois() {
+      var ordem = [];
       var tonalidades = this.ordemDosSustenitos();
       tonalidades.map(function (nota) {
+        ordem.unshift(nota);
+      });
+      return ordem;
+    }
+  }, {
+    key: "acidente",
+    value: function acidente(simbolo, nome, tonalidades) {
+      tonalidades.map(function (nota) {
         tonalidades.push({
-          cifra: nota.cifra + "#",
-          nome: nota.nome + " sustenido"
+          cifra: nota.cifra + simbolo,
+          nome: nota.nome + " " + nome
         });
       });
       return tonalidades;

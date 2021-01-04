@@ -2,7 +2,8 @@ import Notas from "./Notas";
 
 export default class Ordens {
     constructor() {
-        this.sustenidos = this.sustenidos();
+        this.sustenidos = this.acidente('#', 'sustenido', this.ordemDosSustenitos());
+        this.bemois = this.acidente('b', 'bemol', this.ordemDosBemois());
     }
 
     comparaNotas(nota1, nota2, resultado) {
@@ -11,34 +12,34 @@ export default class Ordens {
         return resultado;
     }
 
-    adicionaSustenido(nota) {
-        nota.cifra += "#";
-        nota.nome = !!nota.nome.match(/sustenido/)
+    adicionaAcidente(nota, simbolo, nome) {
+        nota.cifra += simbolo;
+        nota.nome = !!nota.nome.match(new RegExp(nome))
             ? nota.nome.replace(" ", " dobrado ")
-            : nota.nome + " sustenido";
+            : nota.nome + " " + nome;
     }
 
-    usarSustenidos(tom, escala) {
+    usar(tom, escala, notas, acidente, nome_acidente, posicao_sensivel, posicao_fundamental) {
         let sensivel = false;
         let fundamental = false;
 
-        this.sustenidos.every(nota => {
+        notas.map( (nota, i) => {
             let index = escala.findIndex(n => {
                 return n.cifra[0] == nota.cifra[0];
             });
 
             if (!(fundamental && sensivel)) {
-                this.adicionaSustenido(escala[index]);
-                this.adicionaSustenido(nota);
+                this.adicionaAcidente(escala[index], acidente, nome_acidente);
+                this.adicionaAcidente(nota, acidente, nome_acidente);
             }
 
             sensivel = this.comparaNotas(
-                nota,
+                notas[(i + posicao_sensivel) % 7],
                 escala[escala.length - 1],
                 sensivel
             );
             fundamental = this.comparaNotas(
-                escala[index + 1],
+                escala[index + posicao_fundamental],
                 tom,
                 fundamental
             );
@@ -47,9 +48,16 @@ export default class Ordens {
         });
     }
 
-    usariaSustenidos(tom) {
-        return ![0, 1].includes(
-            this.sustenidos.findIndex(o => {
+    verificaOrdem(tom, tonalidades, i) {
+        let especifica = [];
+        tonalidades.map(nota=> {
+            especifica.push(nota);
+        })
+
+        especifica.splice(0, i);
+        
+        return especifica.includes(
+            tonalidades.find(o => {
                 return o.cifra == tom;
             })
         );
@@ -74,13 +82,21 @@ export default class Ordens {
         return ordem;
     }
 
-    sustenidos() {
+    ordemDosBemois() {
+        let ordem = [];
         let tonalidades = this.ordemDosSustenitos();
+        tonalidades.map(nota => {
+            ordem.unshift(nota);
+        });
 
+        return ordem;
+    }
+
+    acidente(simbolo, nome, tonalidades) {
         tonalidades.map(nota => {
             tonalidades.push({
-                cifra: nota.cifra + "#",
-                nome: nota.nome + " sustenido"
+                cifra: nota.cifra + simbolo,
+                nome: nota.nome + " " + nome
             });
         });
 
