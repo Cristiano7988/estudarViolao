@@ -10,7 +10,7 @@ export default class Escalas {
     }
 
     geraNumeroAleatorio(escala) {
-        const random = parseInt(1 + Math.random() * (escala.length - 1));
+        const random = parseInt(0 + Math.random() * (escala.length - 0));
         return random;
     }
 
@@ -22,8 +22,11 @@ export default class Escalas {
 
     // Verifica a ordem utilizada e adiciona os acidentes
     maior(tom, escala) {
-        if (this.ordem.usariaSustenidos(tom.cifra)) {
-            this.ordem.usarSustenidos(tom, escala);
+        if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
+            this.ordem.usar(tom, escala, this.ordem.sustenidos, "#", "sustenido", 0, 1);
+
+        } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
+            this.ordem.usar(tom, escala, this.ordem.bemois, "b", "bemol", 1, 4);
         }
 
         return escala;
@@ -53,10 +56,12 @@ export default class Escalas {
     // Escolhe um modo (Maior ou menor)
     // Escolhe um sistema (Tonal ou modal)
     geraEscalaAleatoria() {
+        let escolhe = this.geraNumeroAleatorio(["#", "b"]);
+
+        let tonalidades = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
+
         let nova_escala = this.modula(
-            this.ordem.sustenidos[
-                this.geraNumeroAleatorio(this.ordem.sustenidos)
-            ]
+            tonalidades[this.geraNumeroAleatorio(tonalidades)]
         );
 
         let random = this.geraNumeroAleatorio(nova_escala);
