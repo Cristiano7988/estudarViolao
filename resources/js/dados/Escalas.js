@@ -20,6 +20,14 @@ export default class Escalas {
         });
     }
 
+    reduzPraUmaOitava(escala) {
+        escala.forEach( (nota, index) => {
+            if(index <= 7) {
+                escala.splice(escala.length - 1);
+            }
+        });
+    }
+
     // Verifica a ordem utilizada e adiciona os acidentes
     maior(tom, escala) {
         if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
@@ -64,10 +72,8 @@ export default class Escalas {
             tonalidades[this.geraNumeroAleatorio(tonalidades)]
         );
 
-        let random = this.geraNumeroAleatorio(nova_escala);
+        this.reduzPraUmaOitava(nova_escala);
 
-        let reordena = this.ordem.mudar(random, nova_escala);
-
-        return reordena;
+        return nova_escala;
     }
 }
