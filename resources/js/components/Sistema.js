@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import Decifrar from "./Decifrar";
+import Ordenar from "./Ordenar";
 
 class Sistema extends Component {
     render() {
@@ -13,6 +14,7 @@ class Sistema extends Component {
                             <Decifrar
                                 usuario={JSON.parse(document.querySelector('[data-user]').dataset.user)}
                             />
+                            <Ordenar />
                         </div>
                     </div>
                 </div>
