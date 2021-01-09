@@ -67,7 +67,6 @@ class Ordenar extends Component {
             mensagemErro: null
         };
         this.onDragEnd = this.onDragEnd.bind(this);
-        this.escala = new Escalas();
     }
 
     onDragEnd(result) {
