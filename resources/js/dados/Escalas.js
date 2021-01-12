@@ -2,11 +2,9 @@ import Notas from "./Notas";
 import Ordens from "./Ordens";
 
 export default class Escalas {
-    constructor(nivel) {
-        this.nivel = nivel;
+    constructor() {
         this.diatonica = new Notas();
         this.ordem = new Ordens();
-        this.nova = this.geraEscalaAleatoria();
     }
 
     geraNumeroAleatorio(escala) {
@@ -31,10 +29,10 @@ export default class Escalas {
     // Verifica a ordem utilizada e adiciona os acidentes
     maior(tom, escala) {
         if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
-            this.ordem.usar(tom, escala, this.ordem.sustenidos, "#", "sustenido", 0, 1);
+            this.ordem.usar(tom, escala, this.ordem.geraOrdem("sustenidos"), "#", "sustenido", 0, 1);
 
         } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
-            this.ordem.usar(tom, escala, this.ordem.bemois, "b", "bemol", 1, 4);
+            this.ordem.usar(tom, escala, this.ordem.geraOrdem("bemois"), "b", "bemol", 1, 4);
         }
 
         return escala;
@@ -46,7 +44,11 @@ export default class Escalas {
             return e.cifra == fundamental;
         });
 
-        return this.ordem.mudar(indice, new Notas().notas);
+        let ordenado = this.ordem.mudar(indice, new Notas().notas);
+
+        ordenado.map( (nota, i) =>{nota.id = i.toString()})
+
+        return ordenado;
     }
 
     // Interpreta o modo (Maior ou Menor) de acordo com o tom
