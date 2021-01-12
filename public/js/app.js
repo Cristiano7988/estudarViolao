@@ -81355,10 +81355,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       respostaCerta: null,
       mensagemErro: null,
       nivel: getUser().nivel,
-      subNivel: getUser().sub_nivel,
-      avatar: {
-        nome: getUser().avatar_name
-      }
+      subNivel: getUser().sub_nivel
     };
     return _this;
   } // Tratamento de Nível
@@ -81366,14 +81363,13 @@ var Exercicios = /*#__PURE__*/function (_Component) {
 
   _createClass(Exercicios, [{
     key: "atualizaNivel",
-    value: function atualizaNivel(formData, nivel, novoSubNivel, acertos, erros, token) {
+    value: function atualizaNivel(formData, nivel, novoSubNivel, token) {
       var _this2 = this;
 
       formData.append("id", getUser().id);
       formData.append("nivel", nivel);
       formData.append("sub_nivel", novoSubNivel);
       formData.append("_token", token);
-      formData.append("nome_avatar", this.geraNomeAvatar(acertos, erros, nivel));
       fetch("/atualiza-nivel", {
         method: "post",
         body: formData
@@ -81384,41 +81380,9 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       }).then(function (r) {
         _this2.setState({
           subNivel: r.sub_nivel,
-          nivel: r.nivel,
-          avatar: {
-            nome: r.avatar_name
-          }
+          nivel: r.nivel
         });
       });
-    }
-  }, {
-    key: "geraNomeAvatar",
-    value: function geraNomeAvatar(acertos, erros, nivel) {
-      // cada item representa um nível
-      var substantivos = ["Iniciante ", "Estudante ", "Violonista ", "Musicista ", "Mestre ", "Bacharel "]; // cada item representa uma qualidade de acordo com a quantidade de acertos e erros
-
-      var adjetivosPositivos = ["adorável", "cordial", "decente", "doce", "eficiente", "eloquente", "entusiasta", "excelente", "exigente", "fiel", "forte", "gentil", "humilde", "independente", "inteligente", "leal", "legal", "livre", "otimista", "paciente", "perfeccionista", "perseverante", "persistente", "pontual", "prudente", "racional", "responsável", "sagaz", "sensível", "tolerante", "valente", "calculista"];
-      var adjetivosNegativos = ["desobediente", "impaciente", "imprudente", "inconstante", "inconveniente", "negligente", "pessimista", "pé-frio"]; // cada item representa uma atualização no avatar
-
-      var complementos = [// acessorios musical
-      "do violão de 6 cordas", "do vassourolão", "das cordas estouradas", "da viola de luthier", "na palhetada", "das unhas grandes", // acessório dia-a-dia
-      "da cabeleira marrenta", "do oclinho estiloso", "de roupinha nova", "do sapato velho", "da blusa emprestada", // lugar (plano de fundo pro avatar)
-      "da casa", "da rua do lado do sol fa mi", "do beco dos perdidos", // comportamento
-      "do cacuete engraçado", "da tremedeira na perninha", "das ideias boas"];
-      var nomeAvatar = substantivos[parseInt(nivel / 10)];
-      nomeAvatar += " ".concat(this.geraTextoAletorio(acertos > erros ? adjetivosPositivos : adjetivosNegativos));
-
-      if (nivel >= 10) {
-        nomeAvatar += " " + this.geraTextoAletorio(complementos);
-      }
-
-      return nomeAvatar;
-    }
-  }, {
-    key: "geraTextoAletorio",
-    value: function geraTextoAletorio(array) {
-      var num = parseInt(1 + Math.random() * (array.length - 1));
-      return array[num];
     }
   }, {
     key: "porcentagem",
@@ -81452,7 +81416,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
         var novoSubNivel = parseInt(r.exercicio.acertos / 3);
 
         if (novoSubNivel !== parseInt(r.sub_nivel)) {
-          _this3.atualizaNivel(new FormData(), parseInt(novoSubNivel / 10), novoSubNivel, r.exercicio.acertos, r.exercicio.erros, token);
+          _this3.atualizaNivel(new FormData(), parseInt(novoSubNivel / 10), novoSubNivel, token);
         }
       });
     }
@@ -81570,8 +81534,8 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta Errada")) : "", this.state.mensagemErro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "text-danger"
       }, this.state.mensagemErro) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "avatar-container alert"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.avatar.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "nivelamento-container alert"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
         className: "barra-sub-nivel m-0",
         title: "N\xEDvel: ".concat(this.state.nivel, " \n ").concat(this.porcentagem(this.state.subNivel)),
         style: {

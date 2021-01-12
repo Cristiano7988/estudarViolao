@@ -35,7 +35,6 @@ class ExerciciosController extends Controller
 
         $usuario->nivel = $request->nivel;
         $usuario->sub_nivel = $request->sub_nivel;
-        $usuario->avatar_name = $request->nome_avatar;
 
         $usuario->save();
 

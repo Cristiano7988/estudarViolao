@@ -70,7 +70,6 @@ class RegisterController extends Controller
             'erros' => 0
         ]);
         return User::create([
-            'avatar_name' => 'Iniciante ',
             'nivel' => 0,
             'sub_nivel' => 0,
             'name' => $data['name'],
