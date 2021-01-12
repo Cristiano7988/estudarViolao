@@ -81196,24 +81196,18 @@ var Decifrar = /*#__PURE__*/function (_Component) {
   var _super = _createSuper(Decifrar);
 
   function Decifrar(props) {
-    var _this;
-
     _classCallCheck(this, Decifrar);
 
-    _this = _super.call(this, props);
-    _this.subNivel = _this.props.sub_nivel;
-    return _this;
+    return _super.call(this, props); // this.subNivel = this.props.sub_nivel;
   }
 
   _createClass(Decifrar, [{
     key: "render",
     value: function render() {
-      var _this2 = this;
-
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
-        className: "list-group"
+        className: "list-group mb-2"
       }, this.props.escala.map(function (nota, index) {
-        var limite = getLimite(_this2.subNivel);
+        var limite = 2;
         return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: index,
           className: "list-group-item"
@@ -81353,12 +81347,9 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       escala_reordenada: mudarPosicao(_this.escala.geraEscalaAleatoria()),
       respondido: null,
       respostaCerta: null,
-      mensagemErro: null,
-      nivel: getUser().nivel,
-      subNivel: getUser().sub_nivel,
-      avatar: {
-        nome: getUser().avatar_name
-      }
+      mensagemErro: null // nivel: getUser().nivel,
+      // subNivel: getUser().sub_nivel,
+
     };
     return _this;
   } // Tratamento de Nível
@@ -81366,14 +81357,13 @@ var Exercicios = /*#__PURE__*/function (_Component) {
 
   _createClass(Exercicios, [{
     key: "atualizaNivel",
-    value: function atualizaNivel(formData, nivel, novoSubNivel, acertos, erros, token) {
+    value: function atualizaNivel(formData, nivel, novoSubNivel, token) {
       var _this2 = this;
 
-      formData.append("id", getUser().id);
-      formData.append("nivel", nivel);
-      formData.append("sub_nivel", novoSubNivel);
+      formData.append("id", getUser().id); // formData.append("nivel", nivel);
+      // formData.append("sub_nivel", novoSubNivel);
+
       formData.append("_token", token);
-      formData.append("nome_avatar", this.geraNomeAvatar(acertos, erros, nivel));
       fetch("/atualiza-nivel", {
         method: "post",
         body: formData
@@ -81382,43 +81372,10 @@ var Exercicios = /*#__PURE__*/function (_Component) {
           return r.json();
         }
       }).then(function (r) {
-        _this2.setState({
-          subNivel: r.sub_nivel,
-          nivel: r.nivel,
-          avatar: {
-            nome: r.avatar_name
-          }
+        _this2.setState({// subNivel: r.sub_nivel,
+          // nivel: r.nivel,
         });
       });
-    }
-  }, {
-    key: "geraNomeAvatar",
-    value: function geraNomeAvatar(acertos, erros, nivel) {
-      // cada item representa um nível
-      var substantivos = ["Iniciante ", "Estudante ", "Violonista ", "Musicista ", "Mestre ", "Bacharel "]; // cada item representa uma qualidade de acordo com a quantidade de acertos e erros
-
-      var adjetivosPositivos = ["adorável", "cordial", "decente", "doce", "eficiente", "eloquente", "entusiasta", "excelente", "exigente", "fiel", "forte", "gentil", "humilde", "independente", "inteligente", "leal", "legal", "livre", "otimista", "paciente", "perfeccionista", "perseverante", "persistente", "pontual", "prudente", "racional", "responsável", "sagaz", "sensível", "tolerante", "valente", "calculista"];
-      var adjetivosNegativos = ["desobediente", "impaciente", "imprudente", "inconstante", "inconveniente", "negligente", "pessimista", "pé-frio"]; // cada item representa uma atualização no avatar
-
-      var complementos = [// acessorios musical
-      "do violão de 6 cordas", "do vassourolão", "das cordas estouradas", "da viola de luthier", "na palhetada", "das unhas grandes", // acessório dia-a-dia
-      "da cabeleira marrenta", "do oclinho estiloso", "de roupinha nova", "do sapato velho", "da blusa emprestada", // lugar (plano de fundo pro avatar)
-      "da casa", "da rua do lado do sol fa mi", "do beco dos perdidos", // comportamento
-      "do cacuete engraçado", "da tremedeira na perninha", "das ideias boas"];
-      var nomeAvatar = substantivos[parseInt(nivel / 10)];
-      nomeAvatar += " ".concat(this.geraTextoAletorio(acertos > erros ? adjetivosPositivos : adjetivosNegativos));
-
-      if (nivel >= 10) {
-        nomeAvatar += " " + this.geraTextoAletorio(complementos);
-      }
-
-      return nomeAvatar;
-    }
-  }, {
-    key: "geraTextoAletorio",
-    value: function geraTextoAletorio(array) {
-      var num = parseInt(1 + Math.random() * (array.length - 1));
-      return array[num];
     }
   }, {
     key: "porcentagem",
@@ -81427,33 +81384,34 @@ var Exercicios = /*#__PURE__*/function (_Component) {
     } // Tratamento de resposta
 
   }, {
-    key: "verificarResposta",
-    value: function verificarResposta(gabarito, formData) {
-      var _this3 = this;
-
-      var resposta = document.querySelector(".input-group input").value;
-      var resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
+    key: "salvarResultado",
+    value: function salvarResultado(exercicio, resultado) {
       var token = document.querySelector("input[name=_token]").value;
+      var formData = new FormData();
       formData.append("id", getUser().id);
       formData.append("resultado", resultado);
       formData.append("_token", token);
+      formData.append("exercicio", exercicio);
       this.setState({
         respondido: true,
         respostaCerta: resultado
       });
-      fetch("/decifrar", {
+      fetch("/salvar-resultado", {
         method: "post",
         body: formData
       }).then(function (r) {
         if (r.ok) {
           return r.json();
         }
-      }).then(function (r) {
-        var novoSubNivel = parseInt(r.exercicio.acertos / 3);
-
-        if (novoSubNivel !== parseInt(r.sub_nivel)) {
-          _this3.atualizaNivel(new FormData(), parseInt(novoSubNivel / 10), novoSubNivel, r.exercicio.acertos, r.exercicio.erros, token);
-        }
+      }).then(function (r) {// let novoSubNivel = parseInt(r.exercicio.acertos / 3);
+        // if (novoSubNivel !== parseInt(r.sub_nivel)) {
+        // this.atualizaNivel(
+        //     new FormData(),
+        //     parseInt(novoSubNivel / 10),
+        //     novoSubNivel,
+        //     token
+        // );
+        // }
       });
     }
   }, {
@@ -81479,14 +81437,37 @@ var Exercicios = /*#__PURE__*/function (_Component) {
         mensagemErro: "Responda a Pergunta"
       });
       return this.state.respondido;
+    }
+  }, {
+    key: "verificaResposta",
+    value: function verificaResposta() {
+      var exercicio = this.props.match.params.exercicio;
+
+      if (this.state.respondido) {
+        return this.setState({
+          mensagemErro: "Pergunta já respondida"
+        });
+      }
+
+      switch (exercicio) {
+        case "decifrar":
+          this.verificarCifra(document.querySelector(".resposta").dataset.resposta, exercicio);
+          break;
+
+        case "ordenar":
+          this.verificaOrdem(document.querySelectorAll("[data-rbd-draggable-id]"), exercicio);
+          break;
+
+        default:
+          break;
+      }
     } // Funções de Decifrar
 
   }, {
-    key: "resposta",
-    value: function resposta() {
-      !this.state.respondido ? this.verificarResposta(document.querySelector(".resposta").dataset.resposta, new FormData()) : this.setState({
-        mensagemErro: "Pergunta já respondida"
-      });
+    key: "verificarCifra",
+    value: function verificarCifra(gabarito, exercicio) {
+      var resposta = document.querySelector(".input-group input").value;
+      this.salvarResultado(exercicio, resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0);
     } // Funções de Ordenar
 
   }, {
@@ -81504,30 +81485,15 @@ var Exercicios = /*#__PURE__*/function (_Component) {
     }
   }, {
     key: "verificaOrdem",
-    value: function verificaOrdem() {
-      if (!this.state.respondido) {
-        var ordem = [];
-        var resultado = true;
-        var id = "data-rbd-draggable-id";
-        document.querySelectorAll("[".concat(id, "]")).forEach(function (item) {
-          ordem.push(item.dataset.rbdDragHandleDraggableId);
-        });
-        ordem.forEach(function (posicao, i) {
-          if (posicao != i) {
-            document.querySelector("[".concat(id, "=\"").concat(posicao, "\"]")).classList.add("errado");
-            resultado = false;
-          }
-        });
-        this.setState({
-          respostaCerta: resultado,
-          respondido: true,
-          mensagemErro: null
-        });
-      } else {
-        this.setState({
-          mensagemErro: "Pergunta já respondida"
-        });
-      }
+    value: function verificaOrdem(escala, exercicio) {
+      var resultado = 1;
+      escala.forEach(function (posicao, i) {
+        if (posicao.dataset.rbdDraggableId != i) {
+          posicao.classList.add("errado");
+          resultado = 0;
+        }
+      });
+      this.salvarResultado(exercicio, resultado);
     }
   }, {
     key: "render",
@@ -81542,27 +81508,20 @@ var Exercicios = /*#__PURE__*/function (_Component) {
         className: "card"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
         className: "text-capitalize"
-      }, this.props.match.params.exercicio), this.props.match.params.exercicio == "decifrar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Decifrar__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        escala: this.state.escala,
-        sub_nivel: this.state.subNivel
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "mt-2"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "btn btn-primary",
-        onClick: this.resposta.bind(this)
-      }, "Verificar Resposta"))) : "", this.props.match.params.exercicio == "ordenar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Ordenar__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }, this.props.match.params.exercicio), this.props.match.params.exercicio == "decifrar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Decifrar__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        escala: this.state.escala // sub_nivel={this.state.subNivel}
+
+      }) : "", this.props.match.params.exercicio == "ordenar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Ordenar__WEBPACK_IMPORTED_MODULE_3__["default"], {
         escala: this.state.escala_reordenada,
         onDragEnd: this.onDragEnd
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "mt-2"
+      }) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex justify-content-around mb-2"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "btn btn-primary",
-        onClick: this.verificaOrdem.bind(this)
-      }, "Verificar Ordem"))) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "mt-2 mb-2"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.proximaQuestao.bind(this),
-        className: "btn btn-outline-primary"
+        onClick: this.verificaResposta.bind(this)
+      }, "Verificar Resposta"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-outline-primary",
+        onClick: this.proximaQuestao.bind(this)
       }, "Proxima Quest\xE3o")), this.state.respondido && this.state.respostaCerta ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "alert alert-success"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta certa")) : "", this.state.respondido && !this.state.respostaCerta ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81570,13 +81529,19 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta Errada")) : "", this.state.mensagemErro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "text-danger"
       }, this.state.mensagemErro) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "avatar-container alert"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.avatar.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
-        className: "barra-sub-nivel m-0",
-        title: "N\xEDvel: ".concat(this.state.nivel, " \n ").concat(this.porcentagem(this.state.subNivel)),
-        style: {
-          width: this.porcentagem(this.state.subNivel)
-        }
+        className: "nivelamento-container alert"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "barra-sub-nivel m-0" // title={`Nível: ${
+        //     this.state.nivel
+        // } \n ${this.porcentagem(
+        //     this.state.subNivel
+        // )}`}
+        // style={{
+        //     width: this.porcentagem(
+        //         this.state.subNivel
+        //     )
+        // }}
+
       }))))));
     }
   }]);

@@ -16,14 +16,15 @@ class CreateResultadosTable extends Migration
     {
         Schema::create('resultados', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('exercicio');
             $table->integer('acertos')->default(0);
             $table->integer('erros')->default(0);
-        });
+            $table->integer('user_id');
 
-        DB::table('resultados')->insert(array(
-            'acertos' => 0,
-            'erros' => 0
-        ));
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
+        });
     }
 
     /**

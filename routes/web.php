@@ -22,6 +22,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::post('/decifrar', [ExerciciosController::class, 'store']);
+Route::post('/salvar-resultado', [ExerciciosController::class, 'store']);
 
 Route::post('/atualiza-nivel', [ExerciciosController::class, 'storeNivel']);
