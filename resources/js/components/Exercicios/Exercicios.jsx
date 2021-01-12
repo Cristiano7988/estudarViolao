@@ -36,55 +36,33 @@ export default class Exercicios extends Component {
             respostaCerta: null,
             mensagemErro: null,
 
-            nivel: getUser().nivel,
-            subNivel: getUser().sub_nivel,
+            // nivel: getUser().nivel,
+            // subNivel: getUser().sub_nivel,
         };
     }
 
-    // Tratamento de Nível
-    atualizaNivel(formData, nivel, novoSubNivel, token) {
-        formData.append("id", getUser().id);
-        formData.append("nivel", nivel);
-        formData.append("sub_nivel", novoSubNivel);
-        formData.append("_token", token);
 
-        fetch("/atualiza-nivel", {
-            method: "post",
-            body: formData
-        })
-        .then(r => {
-            if (r.ok) {
-                return r.json();
-            }
-        })
-        .then(r => {
-            this.setState({
-                subNivel: r.sub_nivel,
-                nivel: r.nivel,
-            });
-        });
-    }
 
     porcentagem(string) {
         return parseInt(string[string.length - 1] * 10) + "%";
     }
 
     // Tratamento de resposta
-    verificarResposta(gabarito, formData) {
-        const resposta = document.querySelector(".input-group input").value;
-        const resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
-        const token = document.querySelector("input[name=_token]").value;
+    salvarResultado(exercicio, resultado) {
+        let token = document.querySelector("input[name=_token]").value;
+        let formData = new FormData();
 
         formData.append("id", getUser().id);
         formData.append("resultado", resultado);
         formData.append("_token", token);
+        formData.append("exercicio", exercicio);
 
         this.setState({
             respondido: true,
             respostaCerta: resultado
         });
 
-        fetch("/decifrar", {
+        fetch("/salvar-resultado", {
             method: "post",
             body: formData
         })
@@ -94,15 +72,6 @@ export default class Exercicios extends Component {
             }
         })
         .then(r => {
-            let novoSubNivel = parseInt(r.exercicio.acertos / 3);
-            if (novoSubNivel !== parseInt(r.sub_nivel)) {
-                this.atualizaNivel(
-                    new FormData(),
-                    parseInt(novoSubNivel / 10),
-                    novoSubNivel,
-                    token
-                );
-            }
         });
     }
 
@@ -129,14 +98,41 @@ export default class Exercicios extends Component {
         return this.state.respondido;
     }
 
+    verificaResposta() {
+        let exercicio = this.props.match.params.exercicio;
+        
+        if(this.state.respondido) {
+            return this.setState({ mensagemErro: "Pergunta já respondida" });
+        }
+
+        switch (exercicio) {
+            case "decifrar":
+                this.verificarCifra(
+                    document.querySelector(".resposta").dataset.resposta,
+                    exercicio
+                );       
+                break;
+
+            case "ordenar":
+                this.verificaOrdem(
+                    document.querySelectorAll("[data-rbd-draggable-id]"),
+                    exercicio
+                );
+                break;
+        
+            default:
+                break;
+        }
+    }
+
     // Funções de Decifrar
-    resposta() {
-        !this.state.respondido
-            ? this.verificarResposta(
-                  document.querySelector(".resposta").dataset.resposta,
-                  new FormData()
-              )
-            : this.setState({ mensagemErro: "Pergunta já respondida" });
+    verificarCifra(gabarito, exercicio) {
+        const resposta = document.querySelector(".input-group input").value;
+
+        this.salvarResultado(
+            exercicio,
+            resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0
+        )
     }
 
     // Funções de Ordenar
@@ -155,30 +151,20 @@ export default class Exercicios extends Component {
         this.setState({ escala_reordenada });
     }
 
-    verificaOrdem() {
-        if (!this.state.respondido) {
-            let ordem = [];
-            let resultado = true;
-            let id = "data-rbd-draggable-id";
+    verificaOrdem(escala, exercicio) {
+        let resultado = 1;
 
-            document.querySelectorAll(`[${id}]`).forEach(item => {
-                ordem.push(item.dataset.rbdDragHandleDraggableId);
-            });
+        escala.forEach((posicao, i) => {
+            if (posicao.dataset.rbdDraggableId != i) {
+                posicao.classList.add("errado");
+                resultado = 0;
+            }
+        });
 
-            ordem.forEach((posicao, i) => {
-                if (posicao != i) {
-                    document.querySelector(`[${id}="${posicao}"]`).classList.add("errado");
-                    resultado = false;
-                }
-            });
-            this.setState({
-                respostaCerta: resultado,
-                respondido: true,
-                mensagemErro: null
-            });
-        } else {
-            this.setState({ mensagemErro: "Pergunta já respondida" });
-        }
+        this.salvarResultado(
+            exercicio,
+            resultado
+        );
     }
 
     render() {
@@ -188,37 +174,27 @@ export default class Exercicios extends Component {
                     <div className="col-md-6">
                         <div className="card">
                             <h1 className="text-capitalize">{this.props.match.params.exercicio}</h1>
-                            {this.props.match.params.exercicio == "decifrar" ? (<>
+                            {this.props.match.params.exercicio == "decifrar" ? (
                                 <Decifrar
                                     escala={this.state.escala}
-                                    sub_nivel={this.state.subNivel}
+                                    // sub_nivel={this.state.subNivel}
                                 />
-                                <div className="mt-2">
-                                    <button className="btn btn-primary" onClick={this.resposta.bind(this)}>
-                                        Verificar Resposta
-                                    </button>
-                                </div>
-                            </>) : (
+                            ) : (
                                 ""
                             )}
-                            {this.props.match.params.exercicio == "ordenar" ? (<>
+                            {this.props.match.params.exercicio == "ordenar" ? (
                                 <Ordenar
                                     escala={this.state.escala_reordenada}
                                     onDragEnd={this.onDragEnd}
                                 />
-                                <div className="mt-2">
-                                    <button className="btn btn-primary" onClick={this.verificaOrdem.bind(this)}>
-                                        Verificar Ordem
-                                    </button>
-                                </div>
-                            </>) : (
+                            ) : (
                                 ""
                             )}
-                            <div className="mt-2 mb-2">
-                                <button
-                                    onClick={this.proximaQuestao.bind(this)}
-                                    className="btn btn-outline-primary"
-                                >
+                            <div className="d-flex justify-content-around mb-2">
+                                <button className="btn btn-primary" onClick={this.verificaResposta.bind(this)}>
+                                    Verificar Resposta
+                                </button>
+                                <button className="btn btn-outline-primary" onClick={this.proximaQuestao.bind(this)}>
                                     Proxima Questão
                                 </button>
                             </div>
@@ -248,16 +224,16 @@ export default class Exercicios extends Component {
                             <div className="nivelamento-container alert">
                                 <hr
                                     className="barra-sub-nivel m-0"
-                                    title={`Nível: ${
-                                        this.state.nivel
-                                    } \n ${this.porcentagem(
-                                        this.state.subNivel
-                                    )}`}
-                                    style={{
-                                        width: this.porcentagem(
-                                            this.state.subNivel
-                                        )
-                                    }}
+                                    // title={`Nível: ${
+                                    //     this.state.nivel
+                                    // } \n ${this.porcentagem(
+                                    //     this.state.subNivel
+                                    // )}`}
+                                    // style={{
+                                    //     width: this.porcentagem(
+                                    //         this.state.subNivel
+                                    //     )
+                                    // }}
                                 />
                             </div>
                         </div>

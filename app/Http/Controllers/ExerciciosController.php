@@ -12,8 +12,8 @@ class ExerciciosController extends Controller
     {
         $id = $request->id;
         $usuario = User::find($id);
-        $exercicio = Resultado::find($id);
-
+        $exercicio = $usuario->resultados->where('exercicio', $request->exercicio)->first();
+        
         if ($request->resultado) {
             $exercicio->acertos = ++$exercicio->acertos;
         } else {
@@ -23,21 +23,7 @@ class ExerciciosController extends Controller
         $exercicio->save();
 
         $dados['exercicio'] = $exercicio;
-        $dados['nivel'] = $usuario->nivel;
-        $dados['sub_nivel'] = $usuario->sub_nivel;
 
         return $dados;
-    }
-
-    public function storeNivel(Request $request)
-    {
-        $usuario = User::find($request->id);
-
-        $usuario->nivel = $request->nivel;
-        $usuario->sub_nivel = $request->sub_nivel;
-
-        $usuario->save();
-
-        return $usuario;
     }
 }

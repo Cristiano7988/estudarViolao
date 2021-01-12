@@ -10,4 +10,8 @@ class Resultado extends Model
     use HasFactory;
     protected $fillable = ['acertos','erros'];
     public $timestamps = false;
+
+    public function user() {
+        $this->belongsTo(User::class);
+    }
 }
