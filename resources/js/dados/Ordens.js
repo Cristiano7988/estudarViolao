@@ -2,8 +2,16 @@ import Notas from "./Notas";
 
 export default class Ordens {
     constructor() {
-        this.sustenidos = this.acidente('#', 'sustenido', this.ordemDosSustenitos());
-        this.bemois = this.acidente('b', 'bemol', this.ordemDosBemois());
+        // variavéis pra consulta apenas, para alterar use a função geraOrdem
+        this.sustenidos = this.geraOrdem("sustenidos");
+        this.bemois = this.geraOrdem("bemois");
+    }
+
+    geraOrdem(ordem) {
+        if(ordem =='sustenidos') {
+            return this.acidente('#', 'sustenido', this.ordemDosSustenitos())};
+        if(ordem =='bemois') {
+            return this.acidente('b', 'bemol', this.ordemDosBemois())};
     }
 
     comparaNotas(nota1, nota2, resultado) {
@@ -29,7 +37,9 @@ export default class Ordens {
             });
 
             if (!(fundamental && sensivel)) {
+                // Altera nota na escala
                 this.adicionaAcidente(escala[index], acidente, nome_acidente);
+                // Altera nota na ordem
                 this.adicionaAcidente(nota, acidente, nome_acidente);
             }
 

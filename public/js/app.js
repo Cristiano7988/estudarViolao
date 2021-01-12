@@ -81162,7 +81162,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -81187,6 +81186,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+var getLimite = function getLimite(subNivel) {
+  return subNivel == 0 ? 2 : subNivel == 1 ? 1 : 0;
+};
 
 var Decifrar = /*#__PURE__*/function (_Component) {
   _inherits(Decifrar, _Component);
@@ -81199,31 +81201,175 @@ var Decifrar = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, Decifrar);
 
     _this = _super.call(this, props);
-    _this.state = {
-      respondido: null,
-      respostaCerta: null,
-      mensagemErro: null,
-      nivel: _this.props.usuario.nivel,
-      subNivel: _this.props.usuario.sub_nivel,
-      avatar: {
-        nome: _this.props.usuario.avatar_name
-      }
-    };
-    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"](_this.state.nivel);
+    _this.subNivel = _this.props.sub_nivel;
     return _this;
   }
 
   _createClass(Decifrar, [{
-    key: "porcentagem",
-    value: function porcentagem(string) {
-      return parseInt(string[string.length - 1] * 10) + "%";
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "list-group"
+      }, this.props.escala.map(function (nota, index) {
+        var limite = getLimite(_this2.subNivel);
+        return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: index,
+          className: "list-group-item"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "row d-flex justify-content-center align-items-center"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "col-3"
+        }, nota.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "="), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "col-3"
+        }, index == limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "input-group"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          "data-resposta": nota.cifra,
+          type: "text",
+          className: "form-control text-center resposta text-capitalize",
+          placeholder: "?"
+        })) : nota.cifra))) : "";
+      }));
     }
-  }, {
+  }]);
+
+  return Decifrar;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (Decifrar);
+
+/***/ }),
+
+/***/ "./resources/js/components/Decifrar/index.js":
+/*!***************************************************!*\
+  !*** ./resources/js/components/Decifrar/index.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Decifrar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Decifrar */ "./resources/js/components/Decifrar/Decifrar.jsx");
+
+/* harmony default export */ __webpack_exports__["default"] = (_Decifrar__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
+/***/ "./resources/js/components/Exercicios/Exercicios.jsx":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/Exercicios/Exercicios.jsx ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Exercicios; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
+/* harmony import */ var _Decifrar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Decifrar */ "./resources/js/components/Decifrar/index.js");
+/* harmony import */ var _Ordenar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Ordenar */ "./resources/js/components/Ordenar/index.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+var getUser = function getUser() {
+  return JSON.parse(document.querySelector("[data-user]").dataset.user);
+};
+
+var mudarPosicao = function mudarPosicao(array) {
+  var de = parseInt(0 + Math.random() * (array.length - 0));
+  var para = parseInt(0 + Math.random() * (array.length - 0));
+  array.splice(para, 0, array.splice(de, 1)[0]);
+  return array;
+}; // a little function to help us with reordering the result
+
+
+var reorder = function reorder(list, startIndex, endIndex) {
+  var result = Array.from(list);
+
+  var _result$splice = result.splice(startIndex, 1),
+      _result$splice2 = _slicedToArray(_result$splice, 1),
+      removed = _result$splice2[0];
+
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+
+var Exercicios = /*#__PURE__*/function (_Component) {
+  _inherits(Exercicios, _Component);
+
+  var _super = _createSuper(Exercicios);
+
+  function Exercicios() {
+    var _this;
+
+    _classCallCheck(this, Exercicios);
+
+    _this = _super.call(this);
+    _this.usuario = getUser();
+    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this.onDragEnd = _this.onDragEnd.bind(_assertThisInitialized(_this));
+    _this.state = {
+      escala: _this.escala.geraEscalaAleatoria(),
+      escala_reordenada: mudarPosicao(_this.escala.geraEscalaAleatoria()),
+      respondido: null,
+      respostaCerta: null,
+      mensagemErro: null,
+      nivel: getUser().nivel,
+      subNivel: getUser().sub_nivel,
+      avatar: {
+        nome: getUser().avatar_name
+      }
+    };
+    return _this;
+  } // Tratamento de Nível
+
+
+  _createClass(Exercicios, [{
     key: "atualizaNivel",
     value: function atualizaNivel(formData, nivel, novoSubNivel, acertos, erros, token) {
       var _this2 = this;
 
-      formData.append("id", this.props.usuario.id);
+      formData.append("id", getUser().id);
       formData.append("nivel", nivel);
       formData.append("sub_nivel", novoSubNivel);
       formData.append("_token", token);
@@ -81260,10 +81406,10 @@ var Decifrar = /*#__PURE__*/function (_Component) {
       "da casa", "da rua do lado do sol fa mi", "do beco dos perdidos", // comportamento
       "do cacuete engraçado", "da tremedeira na perninha", "das ideias boas"];
       var nomeAvatar = substantivos[parseInt(nivel / 10)];
-      nomeAvatar += ' ' + this.geraTextoAletorio(acertos > erros ? adjetivosPositivos : adjetivosNegativos);
+      nomeAvatar += " ".concat(this.geraTextoAletorio(acertos > erros ? adjetivosPositivos : adjetivosNegativos));
 
       if (nivel >= 10) {
-        nomeAvatar += ' ' + this.geraTextoAletorio(complementos);
+        nomeAvatar += " " + this.geraTextoAletorio(complementos);
       }
 
       return nomeAvatar;
@@ -81275,28 +81421,11 @@ var Decifrar = /*#__PURE__*/function (_Component) {
       return array[num];
     }
   }, {
-    key: "proximaQuestao",
-    value: function proximaQuestao() {
-      this.state.respondido ? (this.resetarMensagens(), document.querySelector(".input-group input").value = "", this.escala.nova = this.escala.geraEscalaAleatoria()) : this.setState({
-        mensagemErro: "Responda a Pergunta"
-      });
-    }
-  }, {
-    key: "resposta",
-    value: function resposta(gabarito) {
-      !this.state.respondido ? (this.resetarMensagens(), this.verificarResposta(gabarito, new FormData())) : this.setState({
-        mensagemErro: "Pergunta já respondida"
-      });
-    }
-  }, {
-    key: "resetarMensagens",
-    value: function resetarMensagens() {
-      this.setState({
-        respondido: null,
-        respostaCerta: null,
-        mensagemErro: null
-      });
-    }
+    key: "porcentagem",
+    value: function porcentagem(string) {
+      return parseInt(string[string.length - 1] * 10) + "%";
+    } // Tratamento de resposta
+
   }, {
     key: "verificarResposta",
     value: function verificarResposta(gabarito, formData) {
@@ -81305,7 +81434,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
       var resposta = document.querySelector(".input-group input").value;
       var resultado = resposta.toUpperCase() == gabarito.toUpperCase() ? 1 : 0;
       var token = document.querySelector("input[name=_token]").value;
-      formData.append("id", this.props.usuario.id);
+      formData.append("id", getUser().id);
       formData.append("resultado", resultado);
       formData.append("_token", token);
       this.setState({
@@ -81328,142 +81457,79 @@ var Decifrar = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
-    key: "limite",
-    value: function limite(subNivel) {
-      return subNivel == 0 ? 2 : this.state.subNivel == 1 ? 1 : 0;
+    key: "resetarMensagens",
+    value: function resetarMensagens() {
+      this.setState({
+        respondido: null,
+        respostaCerta: null,
+        mensagemErro: null
+      });
+      document.querySelectorAll(".errado").forEach(function (div) {
+        return div.classList.remove("errado");
+      });
+      document.querySelector(".input-group input") ? document.querySelector(".input-group input").value = "" : "";
     }
   }, {
-    key: "render",
-    value: function render() {
-      var _this4 = this;
+    key: "proximaQuestao",
+    value: function proximaQuestao() {
+      this.state.respondido ? (this.setState({
+        escala: this.escala.geraEscalaAleatoria(),
+        escala_reordenada: mudarPosicao(this.escala.geraEscalaAleatoria())
+      }), this.resetarMensagens()) : this.setState({
+        mensagemErro: "Responda a Pergunta"
+      });
+      return this.state.respondido;
+    } // Funções de Decifrar
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "avatar-container alert"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.avatar.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
-        className: "barra-sub-nivel m-0",
-        title: "N\xEDvel: ".concat(this.state.nivel, " \n ").concat(this.porcentagem(this.state.subNivel)),
-        style: {
-          width: this.porcentagem(this.state.subNivel)
-        }
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Qual \xE9 a cifra desta nota?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
-        className: "list-group"
-      }, this.escala.nova.map(function (nota, index) {
-        var limite = _this4.limite(_this4.state.subNivel);
+  }, {
+    key: "resposta",
+    value: function resposta() {
+      !this.state.respondido ? this.verificarResposta(document.querySelector(".resposta").dataset.resposta, new FormData()) : this.setState({
+        mensagemErro: "Pergunta já respondida"
+      });
+    } // Funções de Ordenar
 
-        return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-          key: index,
-          className: "list-group-item"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "row d-flex justify-content-center align-items-center"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "col-3"
-        }, nota.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "="), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: "col-3"
-        }, index == limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "input-group"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-          type: "text",
-          className: "form-control text-center",
-          onChange: function onChange(e) {
-            return e.target.value = e.target.value.toUpperCase();
-          },
-          placeholder: "?"
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          onClick: function onClick() {
-            return _this4.resposta(nota.cifra);
-          },
-          className: "btn btn-outline-primary",
-          type: "button"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "fas fa-check"
-        }))) : nota.cifra))) : "";
-      })), this.state.respondido && this.state.respostaCerta ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "alert alert-success"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta certa")) : "", this.state.respondido && !this.state.respostaCerta ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "alert alert-danger"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta Errada")) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "btn btn-outline-primary mt-2",
-        onClick: this.proximaQuestao.bind(this)
-      }, "Pr\xF3ximo"), this.state.mensagemErro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-        className: "text-danger"
-      }, this.state.mensagemErro) : "");
+  }, {
+    key: "onDragEnd",
+    value: function onDragEnd(result) {
+      // dropped outside the list
+      if (!result.destination) {
+        return;
+      }
+
+      var escala_reordenada = reorder(this.state.escala_reordenada, result.source.index, result.destination.index);
+      this.setState({
+        escala_reordenada: escala_reordenada
+      });
     }
-  }]);
-
-  return Decifrar;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-/* harmony default export */ __webpack_exports__["default"] = (Decifrar);
-
-/***/ }),
-
-/***/ "./resources/js/components/Decifrar/index.js":
-/*!***************************************************!*\
-  !*** ./resources/js/components/Decifrar/index.js ***!
-  \***************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Decifrar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Decifrar */ "./resources/js/components/Decifrar/Decifrar.jsx");
-
-/* harmony default export */ __webpack_exports__["default"] = (_Decifrar__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-/***/ }),
-
-/***/ "./resources/js/components/Exercicios.js":
-/*!***********************************************!*\
-  !*** ./resources/js/components/Exercicios.js ***!
-  \***********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Exercicios; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Decifrar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Decifrar */ "./resources/js/components/Decifrar/index.js");
-/* harmony import */ var _Ordenar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ordenar */ "./resources/js/components/Ordenar/index.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-
-
-var Exercicios = /*#__PURE__*/function (_Component) {
-  _inherits(Exercicios, _Component);
-
-  var _super = _createSuper(Exercicios);
-
-  function Exercicios() {
-    _classCallCheck(this, Exercicios);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(Exercicios, [{
+  }, {
+    key: "verificaOrdem",
+    value: function verificaOrdem() {
+      if (!this.state.respondido) {
+        var ordem = [];
+        var resultado = true;
+        var id = "data-rbd-draggable-id";
+        document.querySelectorAll("[".concat(id, "]")).forEach(function (item) {
+          ordem.push(item.dataset.rbdDragHandleDraggableId);
+        });
+        ordem.forEach(function (posicao, i) {
+          if (posicao != i) {
+            document.querySelector("[".concat(id, "=\"").concat(posicao, "\"]")).classList.add("errado");
+            resultado = false;
+          }
+        });
+        this.setState({
+          respostaCerta: resultado,
+          respondido: true,
+          mensagemErro: null
+        });
+      } else {
+        this.setState({
+          mensagemErro: "Pergunta já respondida"
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81474,9 +81540,44 @@ var Exercicios = /*#__PURE__*/function (_Component) {
         className: "col-md-6"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Exercicios"), this.props.match.params.exercicio == "ordenar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Ordenar__WEBPACK_IMPORTED_MODULE_2__["default"], null) : "", this.props.match.params.exercicio == "decifrar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Decifrar__WEBPACK_IMPORTED_MODULE_1__["default"], {
-        usuario: JSON.parse(document.querySelector('[data-user]').dataset.user)
-      }) : ""))));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+        className: "text-capitalize"
+      }, this.props.match.params.exercicio), this.props.match.params.exercicio == "decifrar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Decifrar__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        escala: this.state.escala,
+        sub_nivel: this.state.subNivel
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "mt-2"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary",
+        onClick: this.resposta.bind(this)
+      }, "Verificar Resposta"))) : "", this.props.match.params.exercicio == "ordenar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Ordenar__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        escala: this.state.escala_reordenada,
+        onDragEnd: this.onDragEnd
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "mt-2"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary",
+        onClick: this.verificaOrdem.bind(this)
+      }, "Verificar Ordem"))) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "mt-2 mb-2"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.proximaQuestao.bind(this),
+        className: "btn btn-outline-primary"
+      }, "Proxima Quest\xE3o")), this.state.respondido && this.state.respostaCerta ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert alert-success"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta certa")) : "", this.state.respondido && !this.state.respostaCerta ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert alert-danger"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta Errada")) : "", this.state.mensagemErro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "text-danger"
+      }, this.state.mensagemErro) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "avatar-container alert"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.avatar.nome), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "barra-sub-nivel m-0",
+        title: "N\xEDvel: ".concat(this.state.nivel, " \n ").concat(this.porcentagem(this.state.subNivel)),
+        style: {
+          width: this.porcentagem(this.state.subNivel)
+        }
+      }))))));
     }
   }]);
 
@@ -81484,6 +81585,21 @@ var Exercicios = /*#__PURE__*/function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/Exercicios/index.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/Exercicios/index.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Exercicios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Exercicios */ "./resources/js/components/Exercicios/Exercicios.jsx");
+
+/* harmony default export */ __webpack_exports__["default"] = (_Exercicios__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 
@@ -81582,7 +81698,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
-/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -81613,50 +81728,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-
-
-function mudarPosicao(array) {
-  var de = parseInt(0 + Math.random() * (array.length - 0));
-  var para = parseInt(0 + Math.random() * (array.length - 0));
-  array.splice(para, 0, array.splice(de, 1)[0]);
-  return array;
-}
-
-var getItems = function getItems() {
-  var escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__["default"]().nova.map(function (nota, i) {
-    return {
-      id: "".concat(i),
-      content: "".concat(nota.cifra)
-    };
-  });
-  return mudarPosicao(escala);
-}; // a little function to help us with reordering the result
-
-
-var reorder = function reorder(list, startIndex, endIndex) {
-  var result = Array.from(list);
-
-  var _result$splice = result.splice(startIndex, 1),
-      _result$splice2 = _slicedToArray(_result$splice, 1),
-      removed = _result$splice2[0];
-
-  result.splice(endIndex, 0, removed);
-  return result;
-};
 
 var grid = 8;
 
@@ -81692,89 +81764,21 @@ var Ordenar = /*#__PURE__*/function (_Component) {
 
   var _super = _createSuper(Ordenar);
 
-  function Ordenar(props) {
-    var _this;
-
+  function Ordenar() {
     _classCallCheck(this, Ordenar);
 
-    _this = _super.call(this, props);
-    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__["default"]();
-    _this.state = {
-      items: getItems(),
-      respostaCerta: false,
-      respondido: false,
-      mensagemErro: null
-    };
-    _this.onDragEnd = _this.onDragEnd.bind(_assertThisInitialized(_this));
-    return _this;
+    return _super.apply(this, arguments);
   }
 
   _createClass(Ordenar, [{
-    key: "onDragEnd",
-    value: function onDragEnd(result) {
-      // dropped outside the list
-      if (!result.destination) {
-        return;
-      }
-
-      var items = reorder(this.state.items, result.source.index, result.destination.index);
-      document.querySelectorAll(".errado").forEach(function (div) {
-        return div.classList.remove("errado");
-      });
-      this.setState({
-        items: items
-      });
-    }
-  }, {
-    key: "verificaOrdem",
-    value: function verificaOrdem() {
-      if (!this.state.respondido) {
-        var ordem = [];
-        var resultado = true;
-        var id = "data-rbd-draggable-id";
-        document.querySelectorAll("[".concat(id, "]")).forEach(function (item) {
-          ordem.push(item.dataset.rbdDragHandleDraggableId);
-        });
-        ordem.forEach(function (posicao, i) {
-          if (posicao != i) {
-            document.querySelector("[".concat(id, "=\"").concat(posicao, "\"]")).classList.add("errado");
-            resultado = false;
-          }
-        });
-        this.setState({
-          respostaCerta: resultado,
-          respondido: true,
-          mensagemErro: null
-        });
-      } else {
-        this.setState({
-          mensagemErro: "Pergunta já respondida"
-        });
-      }
-    }
-  }, {
-    key: "proximaQuestao",
-    value: function proximaQuestao() {
-      this.state.respondido ? (this.setState({
-        items: getItems(),
-        mensagemErro: null,
-        respondido: null,
-        respostaCerta: null
-      }), document.querySelectorAll(".errado").forEach(function (div) {
-        return div.classList.remove("errado");
-      })) : this.setState({
-        mensagemErro: "Responda a Pergunta"
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Ordene as notas para formar uma escala maior"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Escala Maior"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-center mb-2"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
-        onDragEnd: this.onDragEnd
+        onDragEnd: this.props.onDragEnd
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
         droppableId: "droppable",
         direction: "horizontal"
@@ -81782,7 +81786,7 @@ var Ordenar = /*#__PURE__*/function (_Component) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
           ref: provided.innerRef,
           style: getListStyle(snapshot.isDraggingOver)
-        }, provided.droppableProps), _this2.state.items.map(function (item, index) {
+        }, provided.droppableProps), _this.props.escala.map(function (item, index) {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
             key: item.id,
             draggableId: item.id,
@@ -81792,24 +81796,10 @@ var Ordenar = /*#__PURE__*/function (_Component) {
               ref: provided.innerRef
             }, provided.draggableProps, provided.dragHandleProps, {
               style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
-            }), item.content);
+            }), item.cifra);
           });
         }), provided.placeholder);
-      }))), this.state.respostaCerta && this.state.respondido ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "alert alert-success"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta Certa")) : "", !this.state.respostaCerta && this.state.respondido ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "alert alert-danger"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta errada")) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "mb-2"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "btn btn-primary",
-        onClick: this.verificaOrdem.bind(this)
-      }, "Verificar"), this.state.mensagemErro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-        className: "text-danger"
-      }, this.state.mensagemErro) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "btn btn-outline-primary",
-        onClick: this.proximaQuestao.bind(this)
-      }, "Pr\xF3ximo")));
+      }))));
     }
   }]);
 
@@ -81849,10 +81839,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _Decifrar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Decifrar */ "./resources/js/components/Decifrar/index.js");
-/* harmony import */ var _Exercicios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Exercicios */ "./resources/js/components/Exercicios.js");
-/* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home/index.js");
-/* harmony import */ var _Ordenar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Ordenar */ "./resources/js/components/Ordenar/index.js");
+/* harmony import */ var _components_Exercicios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Exercicios */ "./resources/js/components/Exercicios/index.js");
+/* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -81881,8 +81869,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-
-
 var Sistema = /*#__PURE__*/function (_Component) {
   _inherits(Sistema, _Component);
 
@@ -81897,7 +81883,7 @@ var Sistema = /*#__PURE__*/function (_Component) {
   _createClass(Sistema, [{
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["BrowserRouter"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["BrowserRouter"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         style: {
           background: "currentColor"
         }
@@ -81937,11 +81923,11 @@ var Sistema = /*#__PURE__*/function (_Component) {
       }, "Decifrar"))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/home",
         exact: true,
-        component: _Home__WEBPACK_IMPORTED_MODULE_5__["default"]
+        component: _Home__WEBPACK_IMPORTED_MODULE_4__["default"]
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/exercicios/:exercicio",
-        component: _Exercicios__WEBPACK_IMPORTED_MODULE_4__["default"]
-      }))));
+        component: _components_Exercicios__WEBPACK_IMPORTED_MODULE_3__["default"]
+      })));
     }
   }]);
 
@@ -81978,13 +81964,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var Escalas = /*#__PURE__*/function () {
-  function Escalas(nivel) {
+  function Escalas() {
     _classCallCheck(this, Escalas);
 
-    this.nivel = nivel;
     this.diatonica = new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]();
     this.ordem = new _Ordens__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    this.nova = this.geraEscalaAleatoria();
   }
 
   _createClass(Escalas, [{
@@ -82014,9 +81998,9 @@ var Escalas = /*#__PURE__*/function () {
     key: "maior",
     value: function maior(tom, escala) {
       if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
-        this.ordem.usar(tom, escala, this.ordem.sustenidos, "#", "sustenido", 0, 1);
+        this.ordem.usar(tom, escala, this.ordem.geraOrdem("sustenidos"), "#", "sustenido", 0, 1);
       } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
-        this.ordem.usar(tom, escala, this.ordem.bemois, "b", "bemol", 1, 4);
+        this.ordem.usar(tom, escala, this.ordem.geraOrdem("bemois"), "b", "bemol", 1, 4);
       }
 
       return escala;
@@ -82028,7 +82012,11 @@ var Escalas = /*#__PURE__*/function () {
       var indice = this.diatonica.notas.findIndex(function (e) {
         return e.cifra == fundamental;
       });
-      return this.ordem.mudar(indice, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
+      var ordenado = this.ordem.mudar(indice, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
+      ordenado.map(function (nota, i) {
+        nota.id = i.toString();
+      });
+      return ordenado;
     } // Interpreta o modo (Maior ou Menor) de acordo com o tom
 
   }, {
@@ -82128,11 +82116,27 @@ var Ordens = /*#__PURE__*/function () {
   function Ordens() {
     _classCallCheck(this, Ordens);
 
-    this.sustenidos = this.acidente('#', 'sustenido', this.ordemDosSustenitos());
-    this.bemois = this.acidente('b', 'bemol', this.ordemDosBemois());
+    // variavéis pra consulta apenas, para alterar use a função geraOrdem
+    this.sustenidos = this.geraOrdem("sustenidos");
+    this.bemois = this.geraOrdem("bemois");
   }
 
   _createClass(Ordens, [{
+    key: "geraOrdem",
+    value: function geraOrdem(ordem) {
+      if (ordem == 'sustenidos') {
+        return this.acidente('#', 'sustenido', this.ordemDosSustenitos());
+      }
+
+      ;
+
+      if (ordem == 'bemois') {
+        return this.acidente('b', 'bemol', this.ordemDosBemois());
+      }
+
+      ;
+    }
+  }, {
     key: "comparaNotas",
     value: function comparaNotas(nota1, nota2, resultado) {
       resultado = nota1.cifra == nota2.cifra ? true : resultado;
@@ -82157,7 +82161,9 @@ var Ordens = /*#__PURE__*/function () {
         });
 
         if (!(fundamental && sensivel)) {
-          _this.adicionaAcidente(escala[index], acidente, nome_acidente);
+          // Altera nota na escala
+          _this.adicionaAcidente(escala[index], acidente, nome_acidente); // Altera nota na ordem
+
 
           _this.adicionaAcidente(nota, acidente, nome_acidente);
         }
