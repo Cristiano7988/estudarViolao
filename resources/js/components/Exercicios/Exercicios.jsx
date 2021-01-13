@@ -3,7 +3,12 @@ import Escalas from "../../dados/Escalas";
 import Decifrar from "../Decifrar";
 import Ordenar from "../Ordenar";
 
-const getUser = () => JSON.parse(document.querySelector("[data-user]").dataset.user);
+const getUser = (exercicio, item) => {
+    let resultados = JSON.parse(document.querySelector("[data-user]").dataset.user);
+
+    let resultados_exercicio = resultados.find(resultado=> {return resultado.exercicio === exercicio})
+    return resultados_exercicio[item];
+};
 
 const mudarPosicao = (array) => {
     let de = parseInt(0 + Math.random() * (array.length - 0));
@@ -22,9 +27,8 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 export default class Exercicios extends Component {
-    constructor() {
-        super();
-        this.usuario = getUser();
+    constructor(props) {
+        super(props);
         this.escala = new Escalas();
         this.onDragEnd = this.onDragEnd.bind(this);
 
@@ -36,15 +40,21 @@ export default class Exercicios extends Component {
             respostaCerta: null,
             mensagemErro: null,
 
-            // nivel: getUser().nivel,
-            // subNivel: getUser().sub_nivel,
+            acertos: getUser(this.props.match.params.exercicio, 'acertos'),
+            erros: getUser(this.props.match.params.exercicio, 'erros'),
+            concluido: parseInt(getUser(this.props.match.params.exercicio, 'concluido'))
         };
     }
 
 
 
-    porcentagem(string) {
-        return parseInt(string[string.length - 1] * 10) + "%";
+    porcentagem() {
+        let acertos = parseInt(this.state.acertos);
+        let erros = parseInt(this.state.erros);
+
+        let total = (acertos - erros) * 10 + "%";
+
+        return total
     }
 
     // Tratamento de resposta
@@ -52,7 +62,7 @@ export default class Exercicios extends Component {
         let token = document.querySelector("input[name=_token]").value;
         let formData = new FormData();
 
-        formData.append("id", getUser().id);
+        formData.append("id", getUser(this.props.match.params.exercicio, 'user_id'));
         formData.append("resultado", resultado);
         formData.append("_token", token);
         formData.append("exercicio", exercicio);
@@ -167,6 +177,34 @@ export default class Exercicios extends Component {
         );
     }
 
+    getResultados(id_exercicio) {
+
+        fetch(`/resultados/${id_exercicio}`, {
+            method: "get",
+        })
+        .then(r=>{
+            if(r.ok) {
+                return r.json();
+            }
+        }).then(r=>{
+            if(this.state.acertos != r.acertos || this.state.erros != r.erros) {
+                this.setState({
+                    acertos: r.acertos,
+                    erros: r.erros,
+                    concluido: parseInt(getUser(this.props.match.params.exercicio, "concluido"))
+                })
+                if(this.porcentagem() == "100%" && !this.state.concluido) {
+                    fetch(`/conclui/${getUser(this.props.match.params.exercicio, "id")}`)
+                    this.setState({concluido: true})
+                }   
+            }
+        })
+    }
+
+    componentDidUpdate() {
+        this.getResultados(getUser(this.props.match.params.exercicio, 'id'))
+    }
+
     render() {
         return (
             <div className="container py-4">
@@ -221,20 +259,14 @@ export default class Exercicios extends Component {
                             ) : (
                                 ""
                             )}
-                            <div className="nivelamento-container alert">
-                                <hr
-                                    className="barra-sub-nivel m-0"
-                                    // title={`Nível: ${
-                                    //     this.state.nivel
-                                    // } \n ${this.porcentagem(
-                                    //     this.state.subNivel
-                                    // )}`}
-                                    // style={{
-                                    //     width: this.porcentagem(
-                                    //         this.state.subNivel
-                                    //     )
-                                    // }}
-                                />
+                            <div className="nivelamento-container alert text-left">
+                                
+                                {this.state.concluido
+                                    ? getUser(this.props.match.params.exercicio, "insignia")
+                                    : <>
+                                        <span>Progresso: {this.porcentagem()}</span>
+                                        <hr className="barra-progresso m-0" style={{ width: this.porcentagem() }} />
+                                    </>}
                             </div>
                         </div>
                     </div>

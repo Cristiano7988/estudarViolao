@@ -24,4 +24,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::post('/salvar-resultado', [ExerciciosController::class, 'store']);
 
-Route::post('/atualiza-nivel', [ExerciciosController::class, 'storeNivel']);
+Route::get('/resultados/{resultado}', [ExerciciosController::class, 'getResultados']);
+
+Route::get('/conclui/{resultado}', [ExerciciosController::class, 'conclui']);

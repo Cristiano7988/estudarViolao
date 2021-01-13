@@ -1,10 +1,10 @@
 .nivelamento-container {
     background: lightsteelblue;
-}
-.barra-sub-nivel {
-    height: 2px;
-    background: deepskyblue;
-    transition: width 2s;
+    .barra-progresso {
+        height: 2px;
+        transition: width 2s;
+        background: deepskyblue;
+    }
 }
 
 .errado {

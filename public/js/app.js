@@ -81305,8 +81305,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var getUser = function getUser() {
-  return JSON.parse(document.querySelector("[data-user]").dataset.user);
+var getUser = function getUser(exercicio, item) {
+  var resultados = JSON.parse(document.querySelector("[data-user]").dataset.user);
+  var resultados_exercicio = resultados.find(function (resultado) {
+    return resultado.exercicio === exercicio;
+  });
+  return resultados_exercicio[item];
 };
 
 var mudarPosicao = function mudarPosicao(array) {
@@ -81333,13 +81337,12 @@ var Exercicios = /*#__PURE__*/function (_Component) {
 
   var _super = _createSuper(Exercicios);
 
-  function Exercicios() {
+  function Exercicios(props) {
     var _this;
 
     _classCallCheck(this, Exercicios);
 
-    _this = _super.call(this);
-    _this.usuario = getUser();
+    _this = _super.call(this, props);
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
     _this.onDragEnd = _this.onDragEnd.bind(_assertThisInitialized(_this));
     _this.state = {
@@ -81347,40 +81350,21 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       escala_reordenada: mudarPosicao(_this.escala.geraEscalaAleatoria()),
       respondido: null,
       respostaCerta: null,
-      mensagemErro: null // nivel: getUser().nivel,
-      // subNivel: getUser().sub_nivel,
-
+      mensagemErro: null,
+      acertos: getUser(_this.props.match.params.exercicio, 'acertos'),
+      erros: getUser(_this.props.match.params.exercicio, 'erros'),
+      concluido: parseInt(getUser(_this.props.match.params.exercicio, 'concluido'))
     };
     return _this;
-  } // Tratamento de Nível
-
+  }
 
   _createClass(Exercicios, [{
-    key: "atualizaNivel",
-    value: function atualizaNivel(formData, nivel, novoSubNivel, token) {
-      var _this2 = this;
-
-      formData.append("id", getUser().id); // formData.append("nivel", nivel);
-      // formData.append("sub_nivel", novoSubNivel);
-
-      formData.append("_token", token);
-      fetch("/atualiza-nivel", {
-        method: "post",
-        body: formData
-      }).then(function (r) {
-        if (r.ok) {
-          return r.json();
-        }
-      }).then(function (r) {
-        _this2.setState({// subNivel: r.sub_nivel,
-          // nivel: r.nivel,
-        });
-      });
-    }
-  }, {
     key: "porcentagem",
-    value: function porcentagem(string) {
-      return parseInt(string[string.length - 1] * 10) + "%";
+    value: function porcentagem() {
+      var acertos = parseInt(this.state.acertos);
+      var erros = parseInt(this.state.erros);
+      var total = (acertos - erros) * 10 + "%";
+      return total;
     } // Tratamento de resposta
 
   }, {
@@ -81388,7 +81372,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
     value: function salvarResultado(exercicio, resultado) {
       var token = document.querySelector("input[name=_token]").value;
       var formData = new FormData();
-      formData.append("id", getUser().id);
+      formData.append("id", getUser(this.props.match.params.exercicio, 'user_id'));
       formData.append("resultado", resultado);
       formData.append("_token", token);
       formData.append("exercicio", exercicio);
@@ -81403,16 +81387,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
         if (r.ok) {
           return r.json();
         }
-      }).then(function (r) {// let novoSubNivel = parseInt(r.exercicio.acertos / 3);
-        // if (novoSubNivel !== parseInt(r.sub_nivel)) {
-        // this.atualizaNivel(
-        //     new FormData(),
-        //     parseInt(novoSubNivel / 10),
-        //     novoSubNivel,
-        //     token
-        // );
-        // }
-      });
+      }).then(function (r) {});
     }
   }, {
     key: "resetarMensagens",
@@ -81496,6 +81471,40 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       this.salvarResultado(exercicio, resultado);
     }
   }, {
+    key: "getResultados",
+    value: function getResultados(id_exercicio) {
+      var _this2 = this;
+
+      fetch("/resultados/".concat(id_exercicio), {
+        method: "get"
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+      }).then(function (r) {
+        if (_this2.state.acertos != r.acertos || _this2.state.erros != r.erros) {
+          _this2.setState({
+            acertos: r.acertos,
+            erros: r.erros,
+            concluido: parseInt(getUser(_this2.props.match.params.exercicio, "concluido"))
+          });
+
+          if (_this2.porcentagem() == "100%" && !_this2.state.concluido) {
+            fetch("/conclui/".concat(getUser(_this2.props.match.params.exercicio, "id")));
+
+            _this2.setState({
+              concluido: true
+            });
+          }
+        }
+      });
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this.getResultados(getUser(this.props.match.params.exercicio, 'id'));
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81529,20 +81538,13 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta Errada")) : "", this.state.mensagemErro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "text-danger"
       }, this.state.mensagemErro) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "nivelamento-container alert"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
-        className: "barra-sub-nivel m-0" // title={`Nível: ${
-        //     this.state.nivel
-        // } \n ${this.porcentagem(
-        //     this.state.subNivel
-        // )}`}
-        // style={{
-        //     width: this.porcentagem(
-        //         this.state.subNivel
-        //     )
-        // }}
-
-      }))))));
+        className: "nivelamento-container alert text-left"
+      }, this.state.concluido ? getUser(this.props.match.params.exercicio, "insignia") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Progresso: ", this.porcentagem()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "barra-progresso m-0",
+        style: {
+          width: this.porcentagem()
+        }
+      })))))));
     }
   }]);
 
