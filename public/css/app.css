@@ -10938,10 +10938,10 @@ body main .container .col-md-6 .card h1 {
   background: lightsteelblue;
 }
 
-.barra-sub-nivel {
+.nivelamento-container .barra-progresso {
   height: 2px;
-  background: deepskyblue;
   transition: width 2s;
+  background: deepskyblue;
 }
 
 .errado {

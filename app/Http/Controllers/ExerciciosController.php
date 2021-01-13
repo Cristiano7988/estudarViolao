@@ -26,4 +26,13 @@ class ExerciciosController extends Controller
 
         return $dados;
     }
+
+    public function getResultados(Resultado $resultado) {
+        return $resultado;
+    }
+
+    public function conclui(Resultado $resultado) {
+        $resultado->concluido = true;
+        $resultado->save();
+    }
 }

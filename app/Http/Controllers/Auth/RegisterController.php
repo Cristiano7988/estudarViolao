@@ -75,10 +75,14 @@ class RegisterController extends Controller
             [
                 'user_id' => $usuario->id,
                 'exercicio'=>'decifrar',
+                'insignia'=>"Guido d'Arezzo",
+                'concluido'=>false
             ],
             [
                 'user_id' => $usuario->id,
                 'exercicio'=>'ordenar',
+                'insignia'=>'Pitágoras',
+                'concluido'=>false
             ],
         ]);
 

@@ -17,6 +17,8 @@ class CreateResultadosTable extends Migration
         Schema::create('resultados', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('exercicio');
+            $table->string('insignia');
+            $table->boolean('concluido');
             $table->integer('acertos')->default(0);
             $table->integer('erros')->default(0);
             $table->integer('user_id');
