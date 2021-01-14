@@ -205,6 +205,25 @@ export default class Exercicios extends Component {
         this.getResultados(getUser(this.props.match.params.exercicio, 'id'))
     }
 
+    classeInsignia() {
+        let nome = getUser(this.props.match.params.exercicio, "insignia");
+
+        return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
+    }
+
+    citacao(insignia) {
+        switch (insignia) {
+            case "guidodarezzo":
+                return `"Benedito Guido d'Arezzo foi (...) o inventor inconsciente dos nomes atuais dos sons,\npor ter se utilizado (...) das silabas Ut Re Mi Fa Sol La, tiradas da abertura de cada\nhemistíquio do Hino a São João Batista"\n\nANDRADE, Mário de. Pequena História da Música.`
+
+            case "pitagoras":
+                return `"O advento da escala (...) diatônica está historicamente associado ao\nfilósofo e matemático grego Pitágoras (...).\n\nA partir da experiência de subdivisão da corda de um monocórdio, (...)\nPitágoras chegou à conclusão de que as combinações tidas na época\ncomo "consonantes" e correspondente ao que hoje designamos por oitava,\nquinta, quarta e uníssono estão, respectivamente, nas proporções:\n\n2:1, 3:2, 4:3, 1:1"\n\nFILHO, Floriano Menezes. A acústica Musical em palavras e sons.`;
+        
+            default:
+                break;
+        }
+    }
+
     render() {
         return (
             <div className="container py-4">
@@ -259,14 +278,23 @@ export default class Exercicios extends Component {
                             ) : (
                                 ""
                             )}
-                            <div className="nivelamento-container alert text-left">
+                            <div className="nivelamento-container alert">
                                 
-                                {this.state.concluido
-                                    ? getUser(this.props.match.params.exercicio, "insignia")
-                                    : <>
+                                {this.state.concluido ?
+                                    <div className="container-insignia">
+                                        <i
+                                            className={`insignia ${this.classeInsignia()}`}
+                                            title={this.citacao(this.classeInsignia())}
+                                        ></i>
+                                        <span>
+                                            {getUser(this.props.match.params.exercicio, "insignia")}
+                                        </span>
+                                    </div>
+                                    : <div className="text-left">
                                         <span>Progresso: {this.porcentagem()}</span>
                                         <hr className="barra-progresso m-0" style={{ width: this.porcentagem() }} />
-                                    </>}
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
