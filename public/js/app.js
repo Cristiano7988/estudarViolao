@@ -81511,6 +81511,20 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
     }
   }, {
+    key: "citacao",
+    value: function citacao(insignia) {
+      switch (insignia) {
+        case "guidodarezzo":
+          return "\"Benedito Guido d'Arezzo foi (...) o inventor inconsciente dos nomes atuais dos sons,\npor ter se utilizado (...) das silabas Ut Re Mi Fa Sol La, tiradas da abertura de cada\nhemist\xEDquio do Hino a S\xE3o Jo\xE3o Batista\"\n\nANDRADE, M\xE1rio de. Pequena Hist\xF3ria da M\xFAsica.";
+
+        case "pitagoras":
+          return "\"O advento da escala (...) diat\xF4nica est\xE1 historicamente associado ao\nfil\xF3sofo e matem\xE1tico grego Pit\xE1goras (...).\n\nA partir da experi\xEAncia de subdivis\xE3o da corda de um monoc\xF3rdio, (...)\nPit\xE1goras chegou \xE0 conclus\xE3o de que as combina\xE7\xF5es tidas na \xE9poca\ncomo \"consonantes\" e correspondente ao que hoje designamos por oitava,\nquinta, quarta e un\xEDssono est\xE3o, respectivamente, nas propor\xE7\xF5es:\n\n2:1, 3:2, 4:3, 1:1\"\n\nFILHO, Floriano Menezes. A ac\xFAstica Musical em palavras e sons.";
+
+        default:
+          break;
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81548,7 +81562,8 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       }, this.state.concluido ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container-insignia"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "insignia ".concat(this.classeInsignia())
+        className: "insignia ".concat(this.classeInsignia()),
+        title: this.citacao(this.classeInsignia())
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, getUser(this.props.match.params.exercicio, "insignia"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "text-left"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Progresso: ", this.porcentagem()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
