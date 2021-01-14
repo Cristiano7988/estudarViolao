@@ -81505,6 +81505,12 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       this.getResultados(getUser(this.props.match.params.exercicio, 'id'));
     }
   }, {
+    key: "classeInsignia",
+    value: function classeInsignia() {
+      var nome = getUser(this.props.match.params.exercicio, "insignia");
+      return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81538,8 +81544,14 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Resposta Errada")) : "", this.state.mensagemErro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "text-danger"
       }, this.state.mensagemErro) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "nivelamento-container alert text-left"
-      }, this.state.concluido ? getUser(this.props.match.params.exercicio, "insignia") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Progresso: ", this.porcentagem()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "nivelamento-container alert"
+      }, this.state.concluido ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container-insignia"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "insignia ".concat(this.classeInsignia())
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, getUser(this.props.match.params.exercicio, "insignia"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "text-left"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Progresso: ", this.porcentagem()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
         className: "barra-progresso m-0",
         style: {
           width: this.porcentagem()

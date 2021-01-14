@@ -1,9 +1,44 @@
+@keyframes brilha {
+    from {
+        box-shadow: 0 0 0 white;
+    } to {
+        box-shadow: 0 0 20px white;
+    }
+}
+
 .nivelamento-container {
     background: lightsteelblue;
     .barra-progresso {
         height: 2px;
         transition: width 2s;
         background: deepskyblue;
+    }
+
+    .container-insignia {        
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        .insignia {
+            display: block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 4px double;
+            box-shadow: 0 0 10px white;
+            transition: box-shadow 2s;
+            animation: brilha 1s alternate infinite;
+            background-repeat: no-repeat;
+            &.pitagoras {
+                background-size: 70%;
+                background-position: 40% 35%;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 335.4 335.4'%3E%3Cpath d='M331 32c-2.4-.8-5.2-.4-6.8 1.2L39.4 318c-2 2-2.4 4.4-1.2 6.8.8 2.4 3.2 4 6 4H329c3.6 0 6.4-2.8 6.4-6.4V38c-.4-2.8-2-5.2-4.4-6zm-8.8 73.6h-28.4c-3.6 0-6.4 2.8-6.4 6.4s2.8 6.4 6.4 6.4h28.4V150h-18.8c-3.6 0-6.4 2.8-6.4 6.4 0 3.6 2.8 6.4 6.4 6.4h18.8v26.8h-28.4c-3.6 0-6.4 2.8-6.4 6.4 0 3.6 2.8 6.4 6.4 6.4h28.4V234h-18.8c-3.6 0-6.4 2.8-6.4 6.4 0 3.6 2.8 6.4 6.4 6.4h18.8v26.8h-28.4c-3.6 0-6.4 2.8-6.4 6.4 0 3.6 2.8 6.4 6.4 6.4h28.4V318H59v-1.6L322.2 53.2v52.4z'/%3E%3Cpath d='M272.2 167.2c-2.4-.8-5.2-.4-6.8 1.2L181.8 252c-2 2-2.4 4.4-1.2 6.8.8 2.4 3.2 4 6 4h83.2c3.6 0 6.4-2.8 6.4-6.4v-83.2c-.4-2.8-1.6-4.8-4-6zm-8.8 82.8h-62l62-61.6V250zM295.4 8.4C293 6 289 6 286.6 8.4L1.8 292.8c-2.4 2.4-2.4 6.4 0 8.8 1.2 1.2 2.8 2 4.4 2 1.6 0 3.2-.8 4.4-2L295.4 17.2c2.4-2.4 2.4-6.4 0-8.8z'/%3E%3C/svg%3E");
+            }
+            &.guidodarezzo {
+                background-size: 70%;
+                background-position: 50%;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='512' viewBox='0 0 24 24' width='512'%3E%3Cpath d='M11.894 24a.5.5 0 01-.491-.597l.707-3.535a.49.49 0 01.137-.256l7.778-7.778a1.503 1.503 0 012.121 0l1.414 1.414a1.501 1.501 0 010 2.121l-7.778 7.778a.497.497 0 01-.256.137l-3.535.707a.53.53 0 01-.097.009zm1.168-3.789l-.53 2.651 2.651-.53 7.671-7.671a.5.5 0 000-.707L21.44 12.54a.5.5 0 00-.707 0zm2.367 2.582h.01zM9.5 9h-2C6.673 9 6 8.327 6 7.5v-3C6 3.673 6.673 3 7.5 3h2a.5.5 0 010 1h-2c-.275 0-.5.225-.5.5v3c0 .275.225.5.5.5h2a.5.5 0 010 1zM14 9a.5.5 0 01-.5-.5v-5a.5.5 0 011 0v5a.5.5 0 01-.5.5zM16 9a.5.5 0 01-.5-.5v-5a.5.5 0 011 0v5a.5.5 0 01-.5.5z'/%3E%3Cpath d='M17.5 7.5h-5a.5.5 0 010-1h5a.5.5 0 010 1zM17.5 5.5h-5a.5.5 0 010-1h5a.5.5 0 010 1z'/%3E%3Cpath d='M8.89 24H4.5A2.502 2.502 0 012 21.5v-19C2 1.121 3.121 0 4.5 0h15C20.879 0 22 1.121 22 2.5v6.41a.5.5 0 01-1 0V2.5c0-.827-.673-1.5-1.5-1.5h-15C3.673 1 3 1.673 3 2.5v19c0 .827.673 1.5 1.5 1.5h4.39a.5.5 0 010 1z'/%3E%3C/svg%3E");
+            }
+        }
     }
 }
 

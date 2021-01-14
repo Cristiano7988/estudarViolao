@@ -205,6 +205,12 @@ export default class Exercicios extends Component {
         this.getResultados(getUser(this.props.match.params.exercicio, 'id'))
     }
 
+    classeInsignia() {
+        let nome = getUser(this.props.match.params.exercicio, "insignia");
+
+        return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
+    }
+
     render() {
         return (
             <div className="container py-4">
@@ -259,14 +265,20 @@ export default class Exercicios extends Component {
                             ) : (
                                 ""
                             )}
-                            <div className="nivelamento-container alert text-left">
+                            <div className="nivelamento-container alert">
                                 
-                                {this.state.concluido
-                                    ? getUser(this.props.match.params.exercicio, "insignia")
-                                    : <>
+                                {this.state.concluido ?
+                                    <div className="container-insignia">
+                                        <i className={`insignia ${this.classeInsignia()}`}></i>
+                                        <span>
+                                            {getUser(this.props.match.params.exercicio, "insignia")}
+                                        </span>
+                                    </div>
+                                    : <div className="text-left">
                                         <span>Progresso: {this.porcentagem()}</span>
                                         <hr className="barra-progresso m-0" style={{ width: this.porcentagem() }} />
-                                    </>}
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
