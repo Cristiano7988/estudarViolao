@@ -30,6 +30,7 @@ export default class Exercicios extends Component {
     constructor(props) {
         super(props);
         this.escala = new Escalas();
+        this.exercicio = this.props.match.params.exercicio
         this.onDragEnd = this.onDragEnd.bind(this);
 
         this.state = {
@@ -40,9 +41,9 @@ export default class Exercicios extends Component {
             respostaCerta: null,
             mensagemErro: null,
 
-            acertos: getUser(this.props.match.params.exercicio, 'acertos'),
-            erros: getUser(this.props.match.params.exercicio, 'erros'),
-            concluido: parseInt(getUser(this.props.match.params.exercicio, 'concluido'))
+            acertos: getUser(this.exercicio, 'acertos'),
+            erros: getUser(this.exercicio, 'erros'),
+            concluido: parseInt(getUser(this.exercicio, 'concluido'))
         };
     }
 
@@ -62,7 +63,7 @@ export default class Exercicios extends Component {
         let token = document.querySelector("input[name=_token]").value;
         let formData = new FormData();
 
-        formData.append("id", getUser(this.props.match.params.exercicio, 'user_id'));
+        formData.append("id", getUser(this.exercicio, 'user_id'));
         formData.append("resultado", resultado);
         formData.append("_token", token);
         formData.append("exercicio", exercicio);
@@ -109,24 +110,23 @@ export default class Exercicios extends Component {
     }
 
     verificaResposta() {
-        let exercicio = this.props.match.params.exercicio;
         
         if(this.state.respondido) {
             return this.setState({ mensagemErro: "Pergunta já respondida" });
         }
 
-        switch (exercicio) {
+        switch (this.exercicio) {
             case "decifrar":
                 this.verificarCifra(
                     document.querySelector(".resposta").dataset.resposta,
-                    exercicio
+                    this.exercicio
                 );       
                 break;
 
             case "ordenar":
                 this.verificaOrdem(
                     document.querySelectorAll("[data-rbd-draggable-id]"),
-                    exercicio
+                    this.exercicio
                 );
                 break;
         
@@ -191,22 +191,27 @@ export default class Exercicios extends Component {
                 this.setState({
                     acertos: r.acertos,
                     erros: r.erros,
-                    concluido: parseInt(getUser(this.props.match.params.exercicio, "concluido"))
+                    concluido: parseInt(getUser(this.exercicio, "concluido"))
                 })
-                if(this.porcentagem() == "100%" && !this.state.concluido) {
-                    fetch(`/conclui/${getUser(this.props.match.params.exercicio, "id")}`)
-                    this.setState({concluido: true})
-                }   
+            }
+            if(this.porcentagem() == "100%" && !this.state.concluido) {
+                fetch(`/conclui/${getUser(this.exercicio, "id")}`)
+                this.setState({concluido: true})
             }
         })
     }
 
     componentDidUpdate() {
-        this.getResultados(getUser(this.props.match.params.exercicio, 'id'))
+        if(this.exercicio != this.props.match.params.exercicio) {
+            this.exercicio = this.props.match.params.exercicio;
+            this.resetarMensagens();
+        } else {
+            this.getResultados(getUser(this.props.match.params.exercicio, 'id'))
+        }
     }
 
     classeInsignia() {
-        let nome = getUser(this.props.match.params.exercicio, "insignia");
+        let nome = getUser(this.exercicio, "insignia");
 
         return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
     }
@@ -230,8 +235,8 @@ export default class Exercicios extends Component {
                 <div className="row justify-content-center">
                     <div className="col-md-6">
                         <div className="card">
-                            <h1 className="text-capitalize">{this.props.match.params.exercicio}</h1>
-                            {this.props.match.params.exercicio == "decifrar" ? (
+                            <h1 className="text-capitalize">{this.exercicio}</h1>
+                            {this.exercicio == "decifrar" ? (
                                 <Decifrar
                                     escala={this.state.escala}
                                     // sub_nivel={this.state.subNivel}
@@ -239,7 +244,7 @@ export default class Exercicios extends Component {
                             ) : (
                                 ""
                             )}
-                            {this.props.match.params.exercicio == "ordenar" ? (
+                            {this.exercicio == "ordenar" ? (
                                 <Ordenar
                                     escala={this.state.escala_reordenada}
                                     onDragEnd={this.onDragEnd}
@@ -287,7 +292,7 @@ export default class Exercicios extends Component {
                                             title={this.citacao(this.classeInsignia())}
                                         ></i>
                                         <span>
-                                            {getUser(this.props.match.params.exercicio, "insignia")}
+                                            {getUser(this.exercicio, "insignia")}
                                         </span>
                                     </div>
                                     : <div className="text-left">

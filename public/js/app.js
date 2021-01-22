@@ -81344,6 +81344,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this.exercicio = _this.props.match.params.exercicio;
     _this.onDragEnd = _this.onDragEnd.bind(_assertThisInitialized(_this));
     _this.state = {
       escala: _this.escala.geraEscalaAleatoria(),
@@ -81351,9 +81352,9 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       respondido: null,
       respostaCerta: null,
       mensagemErro: null,
-      acertos: getUser(_this.props.match.params.exercicio, 'acertos'),
-      erros: getUser(_this.props.match.params.exercicio, 'erros'),
-      concluido: parseInt(getUser(_this.props.match.params.exercicio, 'concluido'))
+      acertos: getUser(_this.exercicio, 'acertos'),
+      erros: getUser(_this.exercicio, 'erros'),
+      concluido: parseInt(getUser(_this.exercicio, 'concluido'))
     };
     return _this;
   }
@@ -81372,7 +81373,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
     value: function salvarResultado(exercicio, resultado) {
       var token = document.querySelector("input[name=_token]").value;
       var formData = new FormData();
-      formData.append("id", getUser(this.props.match.params.exercicio, 'user_id'));
+      formData.append("id", getUser(this.exercicio, 'user_id'));
       formData.append("resultado", resultado);
       formData.append("_token", token);
       formData.append("exercicio", exercicio);
@@ -81416,21 +81417,19 @@ var Exercicios = /*#__PURE__*/function (_Component) {
   }, {
     key: "verificaResposta",
     value: function verificaResposta() {
-      var exercicio = this.props.match.params.exercicio;
-
       if (this.state.respondido) {
         return this.setState({
           mensagemErro: "Pergunta já respondida"
         });
       }
 
-      switch (exercicio) {
+      switch (this.exercicio) {
         case "decifrar":
-          this.verificarCifra(document.querySelector(".resposta").dataset.resposta, exercicio);
+          this.verificarCifra(document.querySelector(".resposta").dataset.resposta, this.exercicio);
           break;
 
         case "ordenar":
-          this.verificaOrdem(document.querySelectorAll("[data-rbd-draggable-id]"), exercicio);
+          this.verificaOrdem(document.querySelectorAll("[data-rbd-draggable-id]"), this.exercicio);
           break;
 
         default:
@@ -81486,28 +81485,33 @@ var Exercicios = /*#__PURE__*/function (_Component) {
           _this2.setState({
             acertos: r.acertos,
             erros: r.erros,
-            concluido: parseInt(getUser(_this2.props.match.params.exercicio, "concluido"))
+            concluido: parseInt(getUser(_this2.exercicio, "concluido"))
           });
+        }
 
-          if (_this2.porcentagem() == "100%" && !_this2.state.concluido) {
-            fetch("/conclui/".concat(getUser(_this2.props.match.params.exercicio, "id")));
+        if (_this2.porcentagem() == "100%" && !_this2.state.concluido) {
+          fetch("/conclui/".concat(getUser(_this2.exercicio, "id")));
 
-            _this2.setState({
-              concluido: true
-            });
-          }
+          _this2.setState({
+            concluido: true
+          });
         }
       });
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      this.getResultados(getUser(this.props.match.params.exercicio, 'id'));
+      if (this.exercicio != this.props.match.params.exercicio) {
+        this.exercicio = this.props.match.params.exercicio;
+        this.resetarMensagens();
+      } else {
+        this.getResultados(getUser(this.props.match.params.exercicio, 'id'));
+      }
     }
   }, {
     key: "classeInsignia",
     value: function classeInsignia() {
-      var nome = getUser(this.props.match.params.exercicio, "insignia");
+      var nome = getUser(this.exercicio, "insignia");
       return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
     }
   }, {
@@ -81537,10 +81541,10 @@ var Exercicios = /*#__PURE__*/function (_Component) {
         className: "card"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
         className: "text-capitalize"
-      }, this.props.match.params.exercicio), this.props.match.params.exercicio == "decifrar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Decifrar__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }, this.exercicio), this.exercicio == "decifrar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Decifrar__WEBPACK_IMPORTED_MODULE_2__["default"], {
         escala: this.state.escala // sub_nivel={this.state.subNivel}
 
-      }) : "", this.props.match.params.exercicio == "ordenar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Ordenar__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }) : "", this.exercicio == "ordenar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Ordenar__WEBPACK_IMPORTED_MODULE_3__["default"], {
         escala: this.state.escala_reordenada,
         onDragEnd: this.onDragEnd
       }) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81564,7 +81568,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "insignia ".concat(this.classeInsignia()),
         title: this.citacao(this.classeInsignia())
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, getUser(this.props.match.params.exercicio, "insignia"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, getUser(this.exercicio, "insignia"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "text-left"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Progresso: ", this.porcentagem()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
         className: "barra-progresso m-0",
