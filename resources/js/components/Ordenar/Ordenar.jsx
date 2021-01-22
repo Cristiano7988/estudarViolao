@@ -35,7 +35,7 @@ class Ordenar extends Component {
         return (
             <div>
                 <h2>Escala Maior</h2>
-                <div className="d-flex justify-content-center mb-2">
+                <div className="d-flex justify-content-center mt-5">
                     <DragDropContext onDragEnd={this.props.onDragEnd}>
                         <Droppable
                             droppableId="droppable"
@@ -76,6 +76,9 @@ class Ordenar extends Component {
                             )}
                         </Droppable>
                     </DragDropContext>
+                </div>
+                <div className="mb-5">
+                    <em>Arraste a nota para posição correta</em>
                 </div>
             </div>
         );

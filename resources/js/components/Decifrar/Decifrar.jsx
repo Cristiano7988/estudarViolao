@@ -11,7 +11,7 @@ class Decifrar extends Component {
 
     render() {
         return (
-            <ul className="list-group mb-2">
+            <ul className="list-group mb-5 mt-5">
                 {this.props.escala.map((nota, index) => {
                     let limite = 2;
 
