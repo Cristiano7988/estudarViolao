@@ -20,6 +20,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::fallback(function () {
+    return view("home");
+});
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::post('/salvar-resultado', [ExerciciosController::class, 'store']);
