@@ -8,6 +8,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>EstudarViolao</title>
+
+    <!-- protocolo HTTPS -->
+    <link rel="canonical" href="{{ url()->current() }}" />
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
