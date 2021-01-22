@@ -9,9 +9,6 @@
 
     <title>EstudarViolao</title>
 
-    <!-- protocolo HTTPS -->
-    <link rel="canonical" href="{{ url()->current() }}" />
-
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
