@@ -81151,6 +81151,149 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/components/Conteudo/Conteudo.jsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/Conteudo/Conteudo.jsx ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var Recursos = /*#__PURE__*/function (_Component) {
+  _inherits(Recursos, _Component);
+
+  var _super = _createSuper(Recursos);
+
+  function Recursos() {
+    var _this;
+
+    _classCallCheck(this, Recursos);
+
+    _this = _super.call(this);
+    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this.state = {
+      escala: null,
+      erro: false
+    };
+    return _this;
+  }
+
+  _createClass(Recursos, [{
+    key: "geraEscala",
+    value: function geraEscala(e) {
+      var escala;
+
+      switch (e.target.value) {
+        case '':
+          this.setState({
+            erro: false,
+            escala: null
+          });
+          break;
+
+        default:
+          escala = this.escala.maior(e.target.value), escala ? this.setState({
+            erro: false,
+            escala: escala
+          }) : this.setState({
+            erro: true,
+            escala: null
+          });
+          break;
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container py-4"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row justify-content-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-6"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Escala Maior"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "text-secondary mb-4"
+      }, "Insira um tom para visualizar sua escala"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "input-group input-group-sm w-25 m-auto"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "input-group-prepend"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "input-group-text",
+        id: "inputGroup-sizing-sm"
+      }, "Tom:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        "aria-label": "Small",
+        "aria-describedby": "inputGroup-sizing-sm",
+        className: "form-control",
+        type: "text",
+        onChange: function onChange(e) {
+          return _this2.geraEscala(e);
+        }
+      })), this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "text-danger font-italic"
+      }, "*Escala N\xE3o reconhecida") : '', this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.escala.map(function (nota, index) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "p-2",
+          key: index
+        }, nota.cifra);
+      })) : ''))));
+    }
+  }]);
+
+  return Recursos;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (Recursos);
+
+/***/ }),
+
+/***/ "./resources/js/components/Conteudo/index.js":
+/*!***************************************************!*\
+  !*** ./resources/js/components/Conteudo/index.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Conteudo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Conteudo */ "./resources/js/components/Conteudo/Conteudo.jsx");
+
+/* harmony default export */ __webpack_exports__["default"] = (_Conteudo__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
 /***/ "./resources/js/components/Decifrar/Decifrar.jsx":
 /*!*******************************************************!*\
   !*** ./resources/js/components/Decifrar/Decifrar.jsx ***!
@@ -81840,7 +81983,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _components_Exercicios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Exercicios */ "./resources/js/components/Exercicios/index.js");
-/* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home/index.js");
+/* harmony import */ var _components_Conteudo__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Conteudo */ "./resources/js/components/Conteudo/index.js");
+/* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -81862,6 +82006,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -81897,6 +82042,11 @@ var Sistema = /*#__PURE__*/function (_Component) {
         to: "/home",
         className: "nav-link"
       }, "Home")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: "nav-item"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+        to: "/conteudo",
+        className: "nav-link"
+      }, "Conteudo")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: "nav-item dropdown"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         id: "dLabel",
@@ -81923,7 +82073,10 @@ var Sistema = /*#__PURE__*/function (_Component) {
       }, "Decifrar"))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/home",
         exact: true,
-        component: _Home__WEBPACK_IMPORTED_MODULE_4__["default"]
+        component: _Home__WEBPACK_IMPORTED_MODULE_5__["default"]
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "/conteudo",
+        component: _components_Conteudo__WEBPACK_IMPORTED_MODULE_4__["default"]
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/exercicios/:exercicio",
         component: _components_Exercicios__WEBPACK_IMPORTED_MODULE_3__["default"]
@@ -81973,8 +82126,8 @@ var Escalas = /*#__PURE__*/function () {
 
   _createClass(Escalas, [{
     key: "geraNumeroAleatorio",
-    value: function geraNumeroAleatorio(escala) {
-      var random = parseInt(0 + Math.random() * (escala.length - 0));
+    value: function geraNumeroAleatorio(array) {
+      var random = parseInt(0 + Math.random() * (array.length - 0));
       return random;
     }
   }, {
@@ -81992,54 +82145,132 @@ var Escalas = /*#__PURE__*/function () {
           escala.splice(escala.length - 1);
         }
       });
-    } // Verifica a ordem utilizada e adiciona os acidentes
+    } // Verifica se a nota está na escala diatonica
 
   }, {
-    key: "maior",
-    value: function maior(tom, escala) {
-      if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
-        this.ordem.usar(tom, escala, this.ordem.geraOrdem("sustenidos"), "#", "sustenido", 0, 1);
-      } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
-        this.ordem.usar(tom, escala, this.ordem.geraOrdem("bemois"), "b", "bemol", 1, 4);
-      }
+    key: "verificaNota",
+    value: function verificaNota(input) {
+      var nota = this.diatonica.notas.filter(function (nota) {
+        if (nota.cifra == input[0]) {
+          return input;
+        }
+      });
 
+      if (nota.length) {
+        return input;
+      } else {
+        return false;
+      }
+    } // Escolhe uma ordem (bemol ou sustenido)
+
+  }, {
+    key: "geraEscalaAleatoria",
+    value: function geraEscalaAleatoria() {
+      var escolhe = this.geraNumeroAleatorio(["b", "#"]);
+      var tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
+      var escala = this.maior(tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra);
       return escala;
     } // Ordena a escala de acordo com sua fundamental
 
   }, {
     key: "ordena",
     value: function ordena(fundamental) {
-      var indice = this.diatonica.notas.findIndex(function (e) {
-        return e.cifra == fundamental;
-      });
-      var ordenado = this.ordem.mudar(indice, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
-      ordenado.map(function (nota, i) {
-        nota.id = i.toString();
-      });
-      return ordenado;
-    } // Interpreta o modo (Maior ou Menor) de acordo com o tom
-
-  }, {
-    key: "modula",
-    value: function modula(tom) {
-      var escala = this.ordena(tom.cifra[0]);
-      this.aumentaUmaOitava(escala);
-
-      if (!tom.cifra.match(/m/)) {
-        return this.maior(tom, escala);
+      try {
+        var indice = this.diatonica.notas.findIndex(function (e) {
+          return e.cifra == fundamental[0];
+        });
+        var ordenado = this.ordem.mudar(indice, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
+        ordenado.map(function (nota, i) {
+          nota.id = i.toString();
+        });
+        return ordenado;
+      } catch (error) {
+        return false;
       }
-    } // Escolhe uma ordem (bemol ou sustenido)
-    // Escolhe um modo (Maior ou menor)
-    // Escolhe um sistema (Tonal ou modal)
+    } // Adiciona sustenidos ou bemois para formar escalas maiores
 
   }, {
-    key: "geraEscalaAleatoria",
-    value: function geraEscalaAleatoria() {
-      var escolhe = this.geraNumeroAleatorio(["#", "b"]);
-      var tonalidades = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
-      var nova_escala = this.modula(tonalidades[this.geraNumeroAleatorio(tonalidades)]);
-      this.reduzPraUmaOitava(nova_escala);
-      return nova_escala;
+    key: "adicionarAcidentes",
+    value: function adicionarAcidentes(escala, input) {
+      var _this = this;
+
+      var tonalidades,
+          acidente = {
+        simbolo: '',
+        nome: ''
+      },
+          posicao = {
+        sensivel: 0,
+        fundamental: 0
+      };
+      var tom = {
+        cifra: input
+      };
+
+      try {
+        this.aumentaUmaOitava(escala);
+
+        if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
+          tonalidades = this.ordem.geraOrdem("sustenidos");
+          acidente = {
+            simbolo: "#",
+            nome: "sustenido"
+          };
+          posicao = {
+            sensivel: 0,
+            fundamental: 1
+          };
+        } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
+          tonalidades = this.ordem.geraOrdem("bemois");
+          acidente = {
+            simbolo: "b",
+            nome: "bemol"
+          };
+          posicao = {
+            sensivel: 1,
+            fundamental: 4
+          };
+        }
+
+        var sensivel = false;
+        var fundamental = false;
+        tonalidades.map(function (tonalidade, i) {
+          // Pega o indice dessa tonalidade na escala quando
+          // a cifra da escala for a mesma que a da tonalidade
+          var index = escala.findIndex(function (n) {
+            return n.cifra == tonalidade.cifra;
+          });
+
+          if (!(fundamental && sensivel)) {
+            // Na escala
+            _this.ordem.alteraNota(escala[index], acidente.simbolo, acidente.nome); // Na ordem
+
+
+            _this.ordem.alteraNota(tonalidade, acidente.simbolo, acidente.nome);
+          }
+
+          sensivel = _this.ordem.comparaNotas(tonalidades[(i + posicao.sensivel) % 7], escala[escala.length - 1], sensivel);
+          fundamental = _this.ordem.comparaNotas(escala[index + posicao.fundamental], tom, fundamental);
+          return tonalidade;
+        });
+        return escala;
+      } catch (error) {
+        // Se não está nas ordens, mas for a escala de C então retorna uma escala
+        if (escala && escala[0].cifra == "C") {
+          return escala;
+        } else {
+          return false;
+        }
+      }
+    }
+  }, {
+    key: "maior",
+    value: function maior(input) {
+      input = this.verificaNota(input);
+      var ordena = this.ordena(input);
+      var escala = this.adicionarAcidentes(ordena, input);
+      escala ? this.reduzPraUmaOitava(escala) : '';
+      return escala;
     }
   }]);
 
@@ -82143,35 +82374,10 @@ var Ordens = /*#__PURE__*/function () {
       return resultado;
     }
   }, {
-    key: "adicionaAcidente",
-    value: function adicionaAcidente(nota, simbolo, nome) {
+    key: "alteraNota",
+    value: function alteraNota(nota, simbolo, nome) {
       nota.cifra += simbolo;
       nota.nome = !!nota.nome.match(new RegExp(nome)) ? nota.nome.replace(" ", " dobrado ") : nota.nome + " " + nome;
-    }
-  }, {
-    key: "usar",
-    value: function usar(tom, escala, notas, acidente, nome_acidente, posicao_sensivel, posicao_fundamental) {
-      var _this = this;
-
-      var sensivel = false;
-      var fundamental = false;
-      notas.map(function (nota, i) {
-        var index = escala.findIndex(function (n) {
-          return n.cifra[0] == nota.cifra[0];
-        });
-
-        if (!(fundamental && sensivel)) {
-          // Altera nota na escala
-          _this.adicionaAcidente(escala[index], acidente, nome_acidente); // Altera nota na ordem
-
-
-          _this.adicionaAcidente(nota, acidente, nome_acidente);
-        }
-
-        sensivel = _this.comparaNotas(notas[(i + posicao_sensivel) % 7], escala[escala.length - 1], sensivel);
-        fundamental = _this.comparaNotas(escala[index + posicao_fundamental], tom, fundamental);
-        return nota;
-      });
     }
   }, {
     key: "verificaOrdem",
@@ -82181,9 +82387,10 @@ var Ordens = /*#__PURE__*/function () {
         especifica.push(nota);
       });
       especifica.splice(0, i);
-      return especifica.includes(tonalidades.find(function (o) {
+      var ordem = especifica.includes(especifica.find(function (o) {
         return o.cifra == tom;
       }));
+      return ordem;
     }
   }, {
     key: "mudar",

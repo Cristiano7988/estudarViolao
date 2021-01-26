@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Switch, Route, BrowserRouter, Link } from "react-router-dom";
 import Exercicios from "../components/Exercicios";
+import Conteudo from "../components/Conteudo";
 import Home from "./Home";
 
 class Sistema extends Component {
@@ -14,6 +15,11 @@ class Sistema extends Component {
                             <li className="nav-item">
                                 <Link to="/home" className="nav-link">
                                     Home
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link to="/conteudo" className="nav-link">
+                                    Conteudo
                                 </Link>
                             </li>
                             <li className="nav-item dropdown">
@@ -50,6 +56,7 @@ class Sistema extends Component {
                 </div>
                 <Switch>
                     <Route path="/home" exact={true} component={Home} />
+                    <Route path="/conteudo" component={Conteudo} />
                     <Route
                         path="/exercicios/:exercicio"
                         component={Exercicios}

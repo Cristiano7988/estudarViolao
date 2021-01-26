@@ -7,8 +7,8 @@ export default class Escalas {
         this.ordem = new Ordens();
     }
 
-    geraNumeroAleatorio(escala) {
-        const random = parseInt(0 + Math.random() * (escala.length - 0));
+    geraNumeroAleatorio(array) {
+        const random = parseInt(0 + Math.random() * (array.length - 0));
         return random;
     }
 
@@ -26,56 +26,127 @@ export default class Escalas {
         });
     }
 
-    // Verifica a ordem utilizada e adiciona os acidentes
-    maior(tom, escala) {
-        if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
-            this.ordem.usar(tom, escala, this.ordem.geraOrdem("sustenidos"), "#", "sustenido", 0, 1);
+    // Verifica se a nota está na escala diatonica
+    verificaNota(input) {
+        let nota = this.diatonica.notas.filter((nota)=>{
+            if(nota.cifra == input[0]) {
+                return input;
+            }
+        })
 
-        } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
-            this.ordem.usar(tom, escala, this.ordem.geraOrdem("bemois"), "b", "bemol", 1, 4);
+        if(nota.length) {
+            return input;
+        } else {
+            return false;
         }
+    }
+
+    // Escolhe uma ordem (bemol ou sustenido)
+    geraEscalaAleatoria() {
+        let escolhe = this.geraNumeroAleatorio(["b", "#"]);
+        let tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
+        let escala = this.maior( tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra );
 
         return escala;
     }
 
     // Ordena a escala de acordo com sua fundamental
     ordena(fundamental) {
-        let indice = this.diatonica.notas.findIndex(e => {
-            return e.cifra == fundamental;
-        });
-
-        let ordenado = this.ordem.mudar(indice, new Notas().notas);
-
-        ordenado.map( (nota, i) =>{nota.id = i.toString()})
-
-        return ordenado;
-    }
-
-    // Interpreta o modo (Maior ou Menor) de acordo com o tom
-    modula(tom) {
-        let escala = this.ordena(tom.cifra[0]);
-
-        this.aumentaUmaOitava(escala);
-
-        if (!tom.cifra.match(/m/)) {
-            return this.maior(tom, escala);
+        try {
+            let indice = this.diatonica.notas.findIndex(e => {
+                return e.cifra == fundamental[0];
+            });
+    
+            let ordenado = this.ordem.mudar(indice, new Notas().notas);
+    
+            ordenado.map( (nota, i) =>{nota.id = i.toString()})
+    
+            return ordenado;
+        } catch (error) {
+            return false;
         }
     }
 
-    // Escolhe uma ordem (bemol ou sustenido)
-    // Escolhe um modo (Maior ou menor)
-    // Escolhe um sistema (Tonal ou modal)
-    geraEscalaAleatoria() {
-        let escolhe = this.geraNumeroAleatorio(["#", "b"]);
+    // Adiciona sustenidos ou bemois para formar escalas maiores
+    adicionarAcidentes(escala, input) {
+        var
+        tonalidades,
+        acidente = { simbolo: '', nome: '' },
+        posicao = { sensivel: 0, fundamental: 0 };
+        let tom = { cifra: input }
+        try {
+            this.aumentaUmaOitava(escala)
 
-        let tonalidades = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
+            if(this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
+                tonalidades = this.ordem.geraOrdem("sustenidos");
+                acidente = {
+                    simbolo: "#",
+                    nome: "sustenido"
+                };
+                posicao = {
+                    sensivel: 0,
+                    fundamental: 1
+                };
+            } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
+                tonalidades = this.ordem.geraOrdem("bemois");
+                acidente = {
+                    simbolo: "b",
+                    nome: "bemol"
+                };
+                posicao = {
+                    sensivel: 1,
+                    fundamental: 4
+                };
+            }
 
-        let nova_escala = this.modula(
-            tonalidades[this.geraNumeroAleatorio(tonalidades)]
-        );
+            let sensivel = false;
+            let fundamental = false;
+    
+            tonalidades.map( (tonalidade, i) => {
+                // Pega o indice dessa tonalidade na escala quando
+                // a cifra da escala for a mesma que a da tonalidade
+                let index = escala.findIndex(n => {
+                    return n.cifra == tonalidade.cifra;
+                });
+    
+                if (!(fundamental && sensivel)) {
+                    // Na escala
+                    this.ordem.alteraNota(escala[index], acidente.simbolo, acidente.nome);
+                    // Na ordem
+                    this.ordem.alteraNota(tonalidade, acidente.simbolo, acidente.nome);
+                }
+    
+                sensivel = this.ordem.comparaNotas(
+                    tonalidades[(i + posicao.sensivel) % 7],
+                    escala[escala.length - 1],
+                    sensivel
+                );
+                fundamental = this.ordem.comparaNotas(
+                    escala[index + posicao.fundamental],
+                    tom,
+                    fundamental
+                );
+                return tonalidade;
+            });
+            
+            return escala;
+        } catch (error) {
+            // Se não está nas ordens, mas for a escala de C então retorna uma escala
+            if(escala && escala[0].cifra == "C") {
+                return escala;
+            } else {
+                return false;
+            }
+        }
+    }
 
-        this.reduzPraUmaOitava(nova_escala);
+    maior(input) {
+        input = this.verificaNota(input);
+        let ordena = this.ordena(input);
+        let escala = this.adicionarAcidentes(ordena, input);
 
-        return nova_escala;
+        escala ? this.reduzPraUmaOitava(escala) : ''
+
+        return escala;
     }
 }

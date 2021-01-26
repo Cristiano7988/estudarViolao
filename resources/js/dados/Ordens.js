@@ -20,42 +20,11 @@ export default class Ordens {
         return resultado;
     }
 
-    adicionaAcidente(nota, simbolo, nome) {
+    alteraNota(nota, simbolo, nome) {
         nota.cifra += simbolo;
         nota.nome = !!nota.nome.match(new RegExp(nome))
             ? nota.nome.replace(" ", " dobrado ")
             : nota.nome + " " + nome;
-    }
-
-    usar(tom, escala, notas, acidente, nome_acidente, posicao_sensivel, posicao_fundamental) {
-        let sensivel = false;
-        let fundamental = false;
-
-        notas.map( (nota, i) => {
-            let index = escala.findIndex(n => {
-                return n.cifra[0] == nota.cifra[0];
-            });
-
-            if (!(fundamental && sensivel)) {
-                // Altera nota na escala
-                this.adicionaAcidente(escala[index], acidente, nome_acidente);
-                // Altera nota na ordem
-                this.adicionaAcidente(nota, acidente, nome_acidente);
-            }
-
-            sensivel = this.comparaNotas(
-                notas[(i + posicao_sensivel) % 7],
-                escala[escala.length - 1],
-                sensivel
-            );
-            fundamental = this.comparaNotas(
-                escala[index + posicao_fundamental],
-                tom,
-                fundamental
-            );
-
-            return nota;
-        });
     }
 
     verificaOrdem(tom, tonalidades, i) {
@@ -65,12 +34,13 @@ export default class Ordens {
         })
 
         especifica.splice(0, i);
-        
-        return especifica.includes(
-            tonalidades.find(o => {
+
+        let ordem = especifica.includes(
+            especifica.find(o => {
                 return o.cifra == tom;
             })
         );
+        return ordem;
     }
 
     mudar(indiceFundamental, notas) {
