@@ -10926,7 +10926,7 @@ body main .container .col-md-6 .card {
 }
 
 body main .container .col-md-6 .card svg {
-  height: 240px;
+  max-height: 280px;
 }
 
 body main .container .col-md-6 .card p,
