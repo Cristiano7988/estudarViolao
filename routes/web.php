@@ -26,7 +26,8 @@ Route::fallback(function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::post('/admin', [App\Http\Controllers\HomeController::class, 'getEstudantes']);
+Route::post('/admin/estudantes', [App\Http\Controllers\HomeController::class, 'getEstudantes']);
+Route::post('/admin/exercicios', [App\Http\Controllers\HomeController::class, 'getExercicios']);
 
 Route::post('/salvar-resultado', [ExerciciosController::class, 'store']);
 

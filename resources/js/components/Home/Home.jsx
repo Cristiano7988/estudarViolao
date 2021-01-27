@@ -6,11 +6,12 @@ class Home extends Component {
         this.id = JSON.parse(document.querySelector("[data-user]").dataset.user)[0].user_id;
 
         this.state = {
-            estudantes: null
+            estudantes: null,
+            exercicios: null
         }
     }
 
-    consultarEstudantes(e) {
+    consultar(e, consulta) {
         e.preventDefault();
 
         let token = document.querySelector("input[name=_token]").value;
@@ -19,7 +20,7 @@ class Home extends Component {
         formData.append("id", this.id);
         formData.append("_token", token);
         
-        fetch(`/admin`,{
+        fetch(`/admin/${consulta}`,{
             method: "post",
             body: formData
         })
@@ -29,7 +30,15 @@ class Home extends Component {
             }
         })
         .then(r => {
-            this.setState({estudantes: r})
+            consulta == "estudantes" ?
+                this.setState({
+                    estudantes: r,
+                    exercicios: null
+                })
+            : this.setState({
+                exercicios: r,
+                estudantes: null
+            })
         })
     }
 
@@ -42,7 +51,10 @@ class Home extends Component {
                             <h1>Bem-Vindo!</h1>
                             {this.id == 1 ?
                                 <div>
-                                    <button onClick={(e)=>this.consultarEstudantes(e)} className="btn btn-primary">Estudantes</button>
+                                    <hr />
+                                    <h2>Admin</h2>
+                                    <button onClick={(e)=>this.consultar(e, "estudantes")} className="btn btn-primary m-2">Estudantes</button>
+                                    <button onClick={(e)=>this.consultar(e, "exercicios")} className="btn btn-primary m-2">Exercícios</button>
                                 </div>
                             : ''}
                             {this.id == 1 && this.state.estudantes ?
@@ -67,6 +79,17 @@ class Home extends Component {
                                     
                                 })
                             : ''}
+
+                            {this.id == 1 && this.state.exercicios ?
+                        
+                                this.state.exercicios.map( (exercicio, index) => {
+                                    return <ul key={index} className="list-group text-left text-capitalize m-2">
+                                        <li className="list-group-item list-group-item-primary">{exercicio.refere}</li>
+                                        <li className="list-group-item">Acertos: {exercicio.acertos}</li>
+                                        <li className="list-group-item">Erros: {exercicio.erros}</li>
+                                    </ul>
+                                })
+                            :''}
                         </div>
                     </div>
                 </div>

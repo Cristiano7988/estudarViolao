@@ -81794,14 +81794,15 @@ var Home = /*#__PURE__*/function (_Component) {
     _this = _super.call(this);
     _this.id = JSON.parse(document.querySelector("[data-user]").dataset.user)[0].user_id;
     _this.state = {
-      estudantes: null
+      estudantes: null,
+      exercicios: null
     };
     return _this;
   }
 
   _createClass(Home, [{
-    key: "consultarEstudantes",
-    value: function consultarEstudantes(e) {
+    key: "consultar",
+    value: function consultar(e, consulta) {
       var _this2 = this;
 
       e.preventDefault();
@@ -81809,7 +81810,7 @@ var Home = /*#__PURE__*/function (_Component) {
       var formData = new FormData();
       formData.append("id", this.id);
       formData.append("_token", token);
-      fetch("/admin", {
+      fetch("/admin/".concat(consulta), {
         method: "post",
         body: formData
       }).then(function (r) {
@@ -81817,8 +81818,12 @@ var Home = /*#__PURE__*/function (_Component) {
           return r.json();
         }
       }).then(function (r) {
-        _this2.setState({
-          estudantes: r
+        consulta == "estudantes" ? _this2.setState({
+          estudantes: r,
+          exercicios: null
+        }) : _this2.setState({
+          exercicios: r,
+          estudantes: null
         });
       });
     }
@@ -81835,12 +81840,17 @@ var Home = /*#__PURE__*/function (_Component) {
         className: "col-md-6"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Bem-Vindo!"), this.id == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Bem-Vindo!"), this.id == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Admin"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: function onClick(e) {
-          return _this3.consultarEstudantes(e);
+          return _this3.consultar(e, "estudantes");
         },
-        className: "btn btn-primary"
-      }, "Estudantes")) : '', this.id == 1 && this.state.estudantes ? this.state.estudantes.map(function (estudante, index) {
+        className: "btn btn-primary m-2"
+      }, "Estudantes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: function onClick(e) {
+          return _this3.consultar(e, "exercicios");
+        },
+        className: "btn btn-primary m-2"
+      }, "Exerc\xEDcios")) : '', this.id == 1 && this.state.estudantes ? this.state.estudantes.map(function (estudante, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
           key: index,
           className: "list-group text-left m-2"
@@ -81854,6 +81864,17 @@ var Home = /*#__PURE__*/function (_Component) {
             className: "list-group-item text-capitalize"
           }, resultado.exercicio, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Acertos: ", resultado.acertos), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Erros: ", resultado.erros), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "concluido: ", resultado.concluido)));
         }));
+      }) : '', this.id == 1 && this.state.exercicios ? this.state.exercicios.map(function (exercicio, index) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+          key: index,
+          className: "list-group text-left text-capitalize m-2"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          className: "list-group-item list-group-item-primary"
+        }, exercicio.refere), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          className: "list-group-item"
+        }, "Acertos: ", exercicio.acertos), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          className: "list-group-item"
+        }, "Erros: ", exercicio.erros));
       }) : ''))));
     }
   }]);
