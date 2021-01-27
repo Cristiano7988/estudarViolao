@@ -81874,7 +81874,9 @@ var Home = /*#__PURE__*/function (_Component) {
           className: "list-group-item"
         }, "Acertos: ", exercicio.acertos), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           className: "list-group-item"
-        }, "Erros: ", exercicio.erros));
+        }, "Erros: ", exercicio.erros), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          className: "list-group-item"
+        }, "Concluidos: ", exercicio.concluidos));
       }) : ''))));
     }
   }]);

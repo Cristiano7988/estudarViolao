@@ -87,6 +87,7 @@ class Home extends Component {
                                         <li className="list-group-item list-group-item-primary">{exercicio.refere}</li>
                                         <li className="list-group-item">Acertos: {exercicio.acertos}</li>
                                         <li className="list-group-item">Erros: {exercicio.erros}</li>
+                                        <li className="list-group-item">Concluidos: {exercicio.concluidos}</li>
                                     </ul>
                                 })
                             :''}

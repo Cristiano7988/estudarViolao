@@ -48,17 +48,20 @@ class HomeController extends Controller
             [
                 "refere" => "ordenar",
                 "acertos" => $ordenar->pluck("acertos")->sum(),
-                "erros" => $ordenar->pluck("erros")->sum()
+                "erros" => $ordenar->pluck("erros")->sum(),
+                "concluidos" => $ordenar->pluck("concluido")->sum()
             ],
             [
                 "refere" => "decifrar",
                 "acertos" => $decifrar->pluck("acertos")->sum(),
-                "erros" => $decifrar->pluck("erros")->sum()
+                "erros" => $decifrar->pluck("erros")->sum(),
+                "concluidos" => $decifrar->pluck("concluido")->sum()
             ],
             [
                 "refere" => "total",
                 "erros" => $resultados->pluck("erros")->sum(),
-                "acertos" => $resultados->pluck("acertos")->sum()
+                "acertos" => $resultados->pluck("acertos")->sum(),
+                "concluidos" => $resultados->pluck("concluido")->sum()
             ]
         ];
 
