@@ -81787,14 +81787,46 @@ var Home = /*#__PURE__*/function (_Component) {
   var _super = _createSuper(Home);
 
   function Home() {
+    var _this;
+
     _classCallCheck(this, Home);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this);
+    _this.id = JSON.parse(document.querySelector("[data-user]").dataset.user)[0].user_id;
+    _this.state = {
+      estudantes: null
+    };
+    return _this;
   }
 
   _createClass(Home, [{
+    key: "consultarEstudantes",
+    value: function consultarEstudantes(e) {
+      var _this2 = this;
+
+      e.preventDefault();
+      var token = document.querySelector("input[name=_token]").value;
+      var formData = new FormData();
+      formData.append("id", this.id);
+      formData.append("_token", token);
+      fetch("/admin", {
+        method: "post",
+        body: formData
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+      }).then(function (r) {
+        _this2.setState({
+          estudantes: r
+        });
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-4"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81803,7 +81835,26 @@ var Home = /*#__PURE__*/function (_Component) {
         className: "col-md-6"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Bem-Vindo!")))));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Bem-Vindo!"), this.id == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: function onClick(e) {
+          return _this3.consultarEstudantes(e);
+        },
+        className: "btn btn-primary"
+      }, "Estudantes")) : '', this.id == 1 && this.state.estudantes ? this.state.estudantes.map(function (estudante, index) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+          key: index,
+          className: "list-group text-left m-2"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          className: "list-group-item list-group-item-primary"
+        }, "Nome: ", estudante.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          className: "list-group-item"
+        }, "Email: ", estudante.email), estudante.resultados.map(function (resultado, i) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+            key: i,
+            className: "list-group-item text-capitalize"
+          }, resultado.exercicio, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Acertos: ", resultado.acertos), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Erros: ", resultado.erros), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "concluido: ", resultado.concluido)));
+        }));
+      }) : ''))));
     }
   }]);
 
