@@ -53,9 +53,11 @@ export default class Exercicios extends Component {
         let acertos = parseInt(this.state.acertos);
         let erros = parseInt(this.state.erros);
 
-        let total = (acertos - erros) * 10 + "%";
+        let total = (acertos - erros) * 10;
 
-        return total
+        total = total <= 0 ? "0%" : total + "%";
+
+        return total;
     }
 
     // Tratamento de resposta

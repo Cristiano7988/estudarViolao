@@ -81188,15 +81188,15 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var Recursos = /*#__PURE__*/function (_Component) {
-  _inherits(Recursos, _Component);
+var Conteudo = /*#__PURE__*/function (_Component) {
+  _inherits(Conteudo, _Component);
 
-  var _super = _createSuper(Recursos);
+  var _super = _createSuper(Conteudo);
 
-  function Recursos() {
+  function Conteudo() {
     var _this;
 
-    _classCallCheck(this, Recursos);
+    _classCallCheck(this, Conteudo);
 
     _this = _super.call(this);
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
@@ -81207,7 +81207,7 @@ var Recursos = /*#__PURE__*/function (_Component) {
     return _this;
   }
 
-  _createClass(Recursos, [{
+  _createClass(Conteudo, [{
     key: "geraEscala",
     value: function geraEscala(e) {
       var escala;
@@ -81254,6 +81254,7 @@ var Recursos = /*#__PURE__*/function (_Component) {
         className: "input-group-text",
         id: "inputGroup-sizing-sm"
       }, "Tom:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        placeholder: "Ex.: A",
         "aria-label": "Small",
         "aria-describedby": "inputGroup-sizing-sm",
         className: "form-control",
@@ -81272,10 +81273,10 @@ var Recursos = /*#__PURE__*/function (_Component) {
     }
   }]);
 
-  return Recursos;
+  return Conteudo;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
-/* harmony default export */ __webpack_exports__["default"] = (Recursos);
+/* harmony default export */ __webpack_exports__["default"] = (Conteudo);
 
 /***/ }),
 
@@ -81507,7 +81508,8 @@ var Exercicios = /*#__PURE__*/function (_Component) {
     value: function porcentagem() {
       var acertos = parseInt(this.state.acertos);
       var erros = parseInt(this.state.erros);
-      var total = (acertos - erros) * 10 + "%";
+      var total = (acertos - erros) * 10;
+      total = total <= 0 ? "0%" : total + "%";
       return total;
     } // Tratamento de resposta
 

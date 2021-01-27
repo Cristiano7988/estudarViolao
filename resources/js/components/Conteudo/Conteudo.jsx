@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Escalas from "../../dados/Escalas";
 
-class Recursos extends Component {
+class Conteudo extends Component {
     constructor() {
         super()
         this.escala = new Escalas();
@@ -42,6 +42,7 @@ class Recursos extends Component {
                                     <span className="input-group-text" id="inputGroup-sizing-sm">Tom:</span>
                                 </div>
                                 <input
+                                    placeholder="Ex.: A"
                                     aria-label="Small" aria-describedby="inputGroup-sizing-sm"
                                     className="form-control"
                                     type="text"
@@ -64,4 +65,4 @@ class Recursos extends Component {
     }
 }
  
-export default Recursos;
+export default Conteudo;
