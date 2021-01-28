@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Home extends Component {
     constructor() {
         super()
-        this.id = JSON.parse(document.querySelector("[data-user]").dataset.user)[0].user_id;
+        this.id = JSON.parse(document.querySelector("[data-usuario]").dataset.usuario)[0].user_id;
 
         this.state = {
             estudantes: null,

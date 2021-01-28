@@ -81202,6 +81202,7 @@ var Conteudo = /*#__PURE__*/function (_Component) {
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
     _this.state = {
       escala: null,
+      modo: null,
       erro: false
     };
     return _this;
@@ -81221,12 +81222,14 @@ var Conteudo = /*#__PURE__*/function (_Component) {
           break;
 
         default:
-          escala = this.escala.maior(e.target.value), escala ? this.setState({
+          escala = this.escala.formarEscala(e.target.value), escala ? this.setState({
             erro: false,
-            escala: escala
+            escala: escala.notas,
+            modo: escala.modo
           }) : this.setState({
             erro: true,
-            escala: null
+            escala: null,
+            modo: null
           });
           break;
       }
@@ -81244,7 +81247,7 @@ var Conteudo = /*#__PURE__*/function (_Component) {
         className: "col-md-6"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Escala Maior"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, this.state.modo ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Escala ", this.state.modo) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-secondary mb-4"
       }, "Insira um tom para visualizar sua escala"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "input-group input-group-sm w-25 m-auto"
@@ -81342,7 +81345,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
   function Decifrar(props) {
     _classCallCheck(this, Decifrar);
 
-    return _super.call(this, props); // this.subNivel = this.props.sub_nivel;
+    return _super.call(this, props);
   }
 
   _createClass(Decifrar, [{
@@ -81350,7 +81353,7 @@ var Decifrar = /*#__PURE__*/function (_Component) {
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "list-group mb-5 mt-5"
-      }, this.props.escala.map(function (nota, index) {
+      }, this.props.escala.notas.map(function (nota, index) {
         var limite = 2;
         return index <= limite ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: index,
@@ -81450,7 +81453,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var getUser = function getUser(exercicio, item) {
-  var resultados = JSON.parse(document.querySelector("[data-user]").dataset.user);
+  var resultados = JSON.parse(document.querySelector("[data-usuario]").dataset.usuario);
   var resultados_exercicio = resultados.find(function (resultado) {
     return resultado.exercicio === exercicio;
   });
@@ -81490,9 +81493,10 @@ var Exercicios = /*#__PURE__*/function (_Component) {
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
     _this.exercicio = _this.props.match.params.exercicio;
     _this.onDragEnd = _this.onDragEnd.bind(_assertThisInitialized(_this));
+    _this.escala_reordenada = _this.escala.geraEscalaAleatoria();
     _this.state = {
       escala: _this.escala.geraEscalaAleatoria(),
-      escala_reordenada: mudarPosicao(_this.escala.geraEscalaAleatoria()),
+      escala_reordenada: mudarPosicao(_this.escala_reordenada.notas),
       respondido: null,
       respostaCerta: null,
       mensagemErro: null,
@@ -81551,9 +81555,9 @@ var Exercicios = /*#__PURE__*/function (_Component) {
   }, {
     key: "proximaQuestao",
     value: function proximaQuestao() {
-      this.state.respondido ? (this.setState({
+      this.state.respondido ? (this.escala_reordenada = this.escala.geraEscalaAleatoria(), this.setState({
         escala: this.escala.geraEscalaAleatoria(),
-        escala_reordenada: mudarPosicao(this.escala.geraEscalaAleatoria())
+        escala_reordenada: mudarPosicao(this.escala_reordenada.notas)
       }), this.resetarMensagens()) : this.setState({
         mensagemErro: "Responda a Pergunta"
       });
@@ -81691,6 +81695,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
 
       }) : "", this.exercicio == "ordenar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Ordenar__WEBPACK_IMPORTED_MODULE_3__["default"], {
         escala: this.state.escala_reordenada,
+        modo: this.escala_reordenada.modo,
         onDragEnd: this.onDragEnd
       }) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-around mb-2"
@@ -81792,7 +81797,7 @@ var Home = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, Home);
 
     _this = _super.call(this);
-    _this.id = JSON.parse(document.querySelector("[data-user]").dataset.user)[0].user_id;
+    _this.id = JSON.parse(document.querySelector("[data-usuario]").dataset.usuario)[0].user_id;
     _this.state = {
       estudantes: null,
       exercicios: null
@@ -81992,7 +81997,7 @@ var Ordenar = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Escala Maior"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Escala ", this.props.modo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-center mt-5"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
         onDragEnd: this.props.onDragEnd
@@ -82242,9 +82247,12 @@ var Escalas = /*#__PURE__*/function () {
   }, {
     key: "geraEscalaAleatoria",
     value: function geraEscalaAleatoria() {
-      var escolhe = this.geraNumeroAleatorio(["b", "#"]);
-      var tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
-      var escala = this.maior(tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra);
+      var escolhe_ordem = this.geraNumeroAleatorio(["b", "#"]);
+      var tonalidade = escolhe_ordem ? this.ordem.bemois : this.ordem.sustenidos;
+      var tom = tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra;
+      var escolhe_modo = this.geraNumeroAleatorio(["M", "m"]);
+      escolhe_modo ? tom += "m" : '';
+      var escala = this.formarEscala(tom);
       return escala;
     } // Ordena a escala de acordo com sua fundamental
 
@@ -82270,23 +82278,36 @@ var Escalas = /*#__PURE__*/function () {
     value: function adicionarAcidentes(escala, input) {
       var _this = this;
 
-      var tonalidades,
-          acidente = {
-        simbolo: '',
-        nome: ''
-      },
-          posicao = {
-        sensivel: 0,
-        fundamental: 0
-      };
-      var tom = {
-        cifra: input
-      };
-
       try {
+        var tonalidades,
+            acidente = {
+          simbolo: '',
+          nome: ''
+        },
+            posicao = {
+          sensivel: 0,
+          fundamental: 0
+        };
+        var menor = input.match(/m/) ? 1 : 0;
+        var tom = {
+          cifra: input
+        };
+        var limite = {};
         this.aumentaUmaOitava(escala);
 
-        if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
+        if (menor) {
+          limite = {
+            sustenidos: 5,
+            bemois: 3
+          };
+        } else {
+          limite = {
+            sustenidos: 2,
+            bemois: 6
+          };
+        }
+
+        if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, limite.sustenidos)) {
           tonalidades = this.ordem.geraOrdem("sustenidos");
           acidente = {
             simbolo: "#",
@@ -82294,9 +82315,9 @@ var Escalas = /*#__PURE__*/function () {
           };
           posicao = {
             sensivel: 0,
-            fundamental: 1
+            fundamental: menor ? 6 : 1
           };
-        } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
+        } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, limite.bemois)) {
           tonalidades = this.ordem.geraOrdem("bemois");
           acidente = {
             simbolo: "b",
@@ -82304,12 +82325,22 @@ var Escalas = /*#__PURE__*/function () {
           };
           posicao = {
             sensivel: 1,
-            fundamental: 4
+            fundamental: menor ? 2 : 4
           };
         }
 
-        var sensivel = false;
+        var sensivel = menor ? true : false;
         var fundamental = false;
+        var dados = {
+          notas: escala,
+          tom: tom,
+          modo: menor ? "Menor Natural" : "Maior"
+        };
+
+        if (tom.cifra == "C" || tom.cifra == "Am") {
+          return dados;
+        }
+
         tonalidades.map(function (tonalidade, i) {
           // Pega o indice dessa tonalidade na escala quando
           // a cifra da escala for a mesma que a da tonalidade
@@ -82325,27 +82356,26 @@ var Escalas = /*#__PURE__*/function () {
             _this.ordem.alteraNota(tonalidade, acidente.simbolo, acidente.nome);
           }
 
-          sensivel = _this.ordem.comparaNotas(tonalidades[(i + posicao.sensivel) % 7], escala[escala.length - 1], sensivel);
+          if (!menor) {
+            sensivel = _this.ordem.comparaNotas(tonalidades[(i + posicao.sensivel) % 7], escala[escala.length - 1], sensivel);
+          }
+
           fundamental = _this.ordem.comparaNotas(escala[index + posicao.fundamental], tom, fundamental);
           return tonalidade;
         });
-        return escala;
+        dados.escala = escala;
+        return dados;
       } catch (error) {
-        // Se não está nas ordens, mas for a escala de C então retorna uma escala
-        if (escala && escala[0].cifra == "C") {
-          return escala;
-        } else {
-          return false;
-        }
+        return false;
       }
     }
   }, {
-    key: "maior",
-    value: function maior(input) {
+    key: "formarEscala",
+    value: function formarEscala(input) {
       input = this.verificaNota(input);
       var ordena = this.ordena(input);
       var escala = this.adicionarAcidentes(ordena, input);
-      escala ? this.reduzPraUmaOitava(escala) : '';
+      escala.notas ? this.reduzPraUmaOitava(escala.notas) : '';
       return escala;
     }
   }]);
@@ -82446,7 +82476,7 @@ var Ordens = /*#__PURE__*/function () {
   }, {
     key: "comparaNotas",
     value: function comparaNotas(nota1, nota2, resultado) {
-      resultado = nota1.cifra == nota2.cifra ? true : resultado;
+      resultado = nota1.cifra == nota2.cifra.replace("m", "") ? true : resultado;
       return resultado;
     }
   }, {
@@ -82464,7 +82494,7 @@ var Ordens = /*#__PURE__*/function () {
       });
       especifica.splice(0, i);
       var ordem = especifica.includes(especifica.find(function (o) {
-        return o.cifra == tom;
+        return o.cifra == tom.replace("m", '');
       }));
       return ordem;
     }

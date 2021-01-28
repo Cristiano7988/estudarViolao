@@ -43,9 +43,14 @@ export default class Escalas {
 
     // Escolhe uma ordem (bemol ou sustenido)
     geraEscalaAleatoria() {
-        let escolhe = this.geraNumeroAleatorio(["b", "#"]);
-        let tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
-        let escala = this.maior( tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra );
+        let escolhe_ordem = this.geraNumeroAleatorio(["b", "#"]);
+        let tonalidade = escolhe_ordem ? this.ordem.bemois : this.ordem.sustenidos;
+
+        let tom = tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra;
+        
+        let escolhe_modo = this.geraNumeroAleatorio(["M", "m"]);
+        escolhe_modo ? tom += "m" : ''
+        let escala = this.formarEscala( tom );
 
         return escala;
     }
@@ -69,15 +74,29 @@ export default class Escalas {
 
     // Adiciona sustenidos ou bemois para formar escalas maiores
     adicionarAcidentes(escala, input) {
-        var
-        tonalidades,
-        acidente = { simbolo: '', nome: '' },
-        posicao = { sensivel: 0, fundamental: 0 };
-        let tom = { cifra: input }
         try {
+            var
+            tonalidades,
+            acidente = { simbolo: '', nome: '' },
+            posicao = { sensivel: 0, fundamental: 0 };
+            var menor = input.match(/m/) ? 1 : 0;
+            var tom = { cifra: input }
+            let limite = {}
+    
             this.aumentaUmaOitava(escala)
-
-            if(this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, 2)) {
+            
+            if(menor) {
+                limite = {
+                    sustenidos: 5,
+                    bemois: 3
+                }
+            } else {
+                limite = {
+                    sustenidos: 2,
+                    bemois: 6
+                }
+            }
+            if(this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, limite.sustenidos)) {
                 tonalidades = this.ordem.geraOrdem("sustenidos");
                 acidente = {
                     simbolo: "#",
@@ -85,9 +104,9 @@ export default class Escalas {
                 };
                 posicao = {
                     sensivel: 0,
-                    fundamental: 1
+                    fundamental: menor ? 6 : 1
                 };
-            } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, 6)) {
+            } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, limite.bemois)) {
                 tonalidades = this.ordem.geraOrdem("bemois");
                 acidente = {
                     simbolo: "b",
@@ -95,13 +114,23 @@ export default class Escalas {
                 };
                 posicao = {
                     sensivel: 1,
-                    fundamental: 4
+                    fundamental: menor ? 2 : 4
                 };
             }
 
-            let sensivel = false;
+            let sensivel = menor ? true : false;
             let fundamental = false;
-    
+
+            var dados = {
+                notas: escala,
+                tom: tom,
+                modo: menor ? "Menor Natural" : "Maior"
+            }
+
+            if(tom.cifra == "C" || tom.cifra == "Am") {
+                return dados;
+            }
+
             tonalidades.map( (tonalidade, i) => {
                 // Pega o indice dessa tonalidade na escala quando
                 // a cifra da escala for a mesma que a da tonalidade
@@ -115,12 +144,14 @@ export default class Escalas {
                     // Na ordem
                     this.ordem.alteraNota(tonalidade, acidente.simbolo, acidente.nome);
                 }
-    
-                sensivel = this.ordem.comparaNotas(
-                    tonalidades[(i + posicao.sensivel) % 7],
-                    escala[escala.length - 1],
-                    sensivel
-                );
+
+                if(!menor) {
+                    sensivel = this.ordem.comparaNotas(
+                        tonalidades[(i + posicao.sensivel) % 7],
+                        escala[escala.length - 1],
+                        sensivel
+                    );
+                }
                 fundamental = this.ordem.comparaNotas(
                     escala[index + posicao.fundamental],
                     tom,
@@ -128,24 +159,21 @@ export default class Escalas {
                 );
                 return tonalidade;
             });
+
+            dados.escala = escala;
             
-            return escala;
+            return dados;
         } catch (error) {
-            // Se não está nas ordens, mas for a escala de C então retorna uma escala
-            if(escala && escala[0].cifra == "C") {
-                return escala;
-            } else {
-                return false;
-            }
+            return false;
         }
     }
 
-    maior(input) {
+    formarEscala(input) {
         input = this.verificaNota(input);
         let ordena = this.ordena(input);
         let escala = this.adicionarAcidentes(ordena, input);
 
-        escala ? this.reduzPraUmaOitava(escala) : ''
+        escala.notas ? this.reduzPraUmaOitava(escala.notas) : ''
 
         return escala;
     }

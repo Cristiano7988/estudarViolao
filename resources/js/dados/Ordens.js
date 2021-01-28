@@ -15,7 +15,7 @@ export default class Ordens {
     }
 
     comparaNotas(nota1, nota2, resultado) {
-        resultado = nota1.cifra == nota2.cifra ? true : resultado;
+        resultado = nota1.cifra == nota2.cifra.replace("m", "") ? true : resultado;
 
         return resultado;
     }
@@ -37,7 +37,7 @@ export default class Ordens {
 
         let ordem = especifica.includes(
             especifica.find(o => {
-                return o.cifra == tom;
+                return o.cifra == tom.replace("m", '');
             })
         );
         return ordem;

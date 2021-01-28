@@ -7,6 +7,7 @@ class Conteudo extends Component {
         this.escala = new Escalas();
         this.state = {
             escala: null,
+            modo: null,
             erro: false
         }
     }
@@ -19,10 +20,14 @@ class Conteudo extends Component {
                 break;
         
             default:
-                escala = this.escala.maior(e.target.value),
+                escala = this.escala.formarEscala(e.target.value),
                 escala
-                    ? this.setState({ erro: false, escala: escala })
-                    : this.setState({ erro: true, escala: null })
+                    ? this.setState({
+                        erro: false,
+                        escala: escala.notas,
+                        modo: escala.modo
+                    })
+                    : this.setState({ erro: true, escala: null, modo: null })
                 break;
         }
 
@@ -35,7 +40,9 @@ class Conteudo extends Component {
                <div className="row justify-content-center">
                     <div className="col-md-6">
                         <div className="card">
-                            <h1>Escala Maior</h1>
+                            {this.state.modo ?
+                            <h1>Escala {this.state.modo}</h1>
+                            : ""}
                             <span className="text-secondary mb-4">Insira um tom para visualizar sua escala</span>
                             <div className="input-group input-group-sm w-25 m-auto">
                                 <div className="input-group-prepend">

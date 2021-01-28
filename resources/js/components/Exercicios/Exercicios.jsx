@@ -4,8 +4,8 @@ import Decifrar from "../Decifrar";
 import Ordenar from "../Ordenar";
 
 const getUser = (exercicio, item) => {
-    let resultados = JSON.parse(document.querySelector("[data-user]").dataset.user);
-
+    let resultados = JSON.parse(document.querySelector("[data-usuario]").dataset.usuario);
+    
     let resultados_exercicio = resultados.find(resultado=> {return resultado.exercicio === exercicio})
     return resultados_exercicio[item];
 };
@@ -32,10 +32,11 @@ export default class Exercicios extends Component {
         this.escala = new Escalas();
         this.exercicio = this.props.match.params.exercicio
         this.onDragEnd = this.onDragEnd.bind(this);
+        this.escala_reordenada = this.escala.geraEscalaAleatoria();
 
         this.state = {
             escala: this.escala.geraEscalaAleatoria(),
-            escala_reordenada: mudarPosicao(this.escala.geraEscalaAleatoria()),
+            escala_reordenada: mudarPosicao( this.escala_reordenada.notas ),
 
             respondido: null,
             respostaCerta: null,
@@ -102,9 +103,10 @@ export default class Exercicios extends Component {
 
     proximaQuestao() {
         this.state.respondido
-            ? (this.setState({
+            ? (this.escala_reordenada = this.escala.geraEscalaAleatoria(),
+                this.setState({
                   escala: this.escala.geraEscalaAleatoria(),
-                  escala_reordenada: mudarPosicao( this.escala.geraEscalaAleatoria() )
+                  escala_reordenada: mudarPosicao( this.escala_reordenada.notas )
               }),
               this.resetarMensagens())
             : this.setState({ mensagemErro: "Responda a Pergunta" });
@@ -249,6 +251,7 @@ export default class Exercicios extends Component {
                             {this.exercicio == "ordenar" ? (
                                 <Ordenar
                                     escala={this.state.escala_reordenada}
+                                    modo={this.escala_reordenada.modo}
                                     onDragEnd={this.onDragEnd}
                                 />
                             ) : (

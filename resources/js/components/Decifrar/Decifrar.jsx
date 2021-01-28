@@ -6,13 +6,12 @@ const getLimite = subNivel => {
 class Decifrar extends Component {
     constructor(props) {
         super(props);
-        // this.subNivel = this.props.sub_nivel;
     }
 
     render() {
         return (
             <ul className="list-group mb-5 mt-5">
-                {this.props.escala.map((nota, index) => {
+                {this.props.escala.notas.map((nota, index) => {
                     let limite = 2;
 
                     return index <= limite ? (
