@@ -1,63 +1,67 @@
+import Acidentes from "./Acidentes";
 import Notas from "./Notas";
+
+const copiarObj = (obj) => JSON.parse(JSON.stringify(obj));
 
 export default class Ordens {
     constructor() {
-        // variavéis pra consulta apenas, para alterar use a função geraOrdem
-        this.sustenidos = this.geraOrdem("sustenidos");
-        this.bemois = this.geraOrdem("bemois");
+        this.diatonica = new Notas();
+        this.acidente = new Acidentes();
+        this.sustenidos =
+            this.completaOrdem(
+                this.acidente.sustenido,
+                this.ordemDosSustenitos()
+            );
+        this.bemois =
+            this.completaOrdem(
+                this.acidente.bemol,
+                this.ordemDosBemois()
+            );
     }
 
-    geraOrdem(ordem) {
-        if(ordem =='sustenidos') {
-            return this.acidente('#', 'sustenido', this.ordemDosSustenitos())};
-        if(ordem =='bemois') {
-            return this.acidente('b', 'bemol', this.ordemDosBemois())};
+    // Ordena a escala de acordo com sua fundamental
+    ordena(fundamental) {
+        try {
+            let indice = this.diatonica.notas.findIndex(e => {
+                return e.cifra == fundamental[0];
+            });
+            let expressao = `(index + ${indice}) % escala.length`
+    
+            let ordenado = this.alteraIndice(new Notas().notas, expressao);
+    
+            ordenado.map( (nota, i) =>{nota.id = i.toString()})
+    
+            return ordenado;
+        } catch (error) {
+            return false;
+        }
     }
 
-    comparaNotas(nota1, nota2, resultado) {
-        resultado = nota1.cifra == nota2.cifra.replace("m", "") ? true : resultado;
-
-        return resultado;
-    }
-
-    alteraNota(nota, simbolo, nome) {
-        nota.cifra += simbolo;
-        nota.nome = !!nota.nome.match(new RegExp(nome))
-            ? nota.nome.replace(" ", " dobrado ")
-            : nota.nome + " " + nome;
-    }
-
+    // Verifica qual ordem o tom deve utilizar
     verificaOrdem(tom, tonalidades, i) {
-        let especifica = [];
-        tonalidades.map(nota=> {
-            especifica.push(nota);
-        })
+        tonalidades = copiarObj(tonalidades);
+        tonalidades.splice(0, i);
 
-        especifica.splice(0, i);
-
-        let ordem = especifica.includes(
-            especifica.find(o => {
+        let ordem = tonalidades.includes(
+            tonalidades.find(o => {
                 return o.cifra == tom.replace("m", '');
             })
         );
         return ordem;
     }
 
-    mudar(indiceFundamental, notas) {
-        let escalaNova = [];
-        notas.map((nota, index) => {
-            escalaNova.push(notas[(index + indiceFundamental) % notas.length]);
+    alteraIndice(escala, expressao) {
+        let nova_escala = [];
+        escala.map((nota, index) => {
+            nova_escala.push(escala[eval(expressao)]);
         });
 
-        return escalaNova;
+        return nova_escala;
     }
 
     ordemDosSustenitos() {
-        let ordem = [];
-        let escala = this.mudar(5, new Notas().notas);
-        escala.forEach((nota, i) => {
-            ordem.push(escala[(4 * i) % 7]);
-        });
+        let escala = this.alteraIndice(this.diatonica.notas, `(index + 5) % escala.length`);
+        let ordem = this.alteraIndice(escala, `(4 * index) % escala.length`);
 
         return ordem;
     }
@@ -72,12 +76,11 @@ export default class Ordens {
         return ordem;
     }
 
-    acidente(simbolo, nome, tonalidades) {
+    completaOrdem(acidente, tonalidades) {
         tonalidades.map(nota => {
-            tonalidades.push({
-                cifra: nota.cifra + simbolo,
-                nome: nota.nome + " " + nome
-            });
+            tonalidades.push(
+                this.acidente.alteraNota(copiarObj(nota), acidente)
+            );
         });
 
         return tonalidades;
