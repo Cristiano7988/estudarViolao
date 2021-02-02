@@ -39,7 +39,7 @@ export default class Escalas {
         
         escolhe = this.geraNumeroAleatorio(["M", "m"]);
         escolhe ? tom += "m" : ''
-        let escala = this.formarEscala( tom );
+        let escala = this.formarEscala( tom, 1 );
 
         return escala;
     }
@@ -141,13 +141,52 @@ export default class Escalas {
         }
     }
 
-    formarEscala(input) {
+    cromatica(input, escala) {
+        try {
+            var
+            nova_escala = [],
+            filtra = input.replace(input[0],"").match(/[b,#]/),
+            acidente = this.acidente.escolhe(filtra ? filtra[0] : "#");
+
+            escala.map( (nota, i) => {
+                let nova = filtra
+                    ? this.acidente.alteraNota(copiarObj(nota), acidente)
+                    : nota
+
+                nova_escala.push(nova);
+
+                if(!nota.nome.match(/i/)) {
+                    nova = acidente == this.acidente.sustenido
+                        ? this.acidente.alteraNota(copiarObj(nova), acidente)
+                        : nota
+
+                    nova_escala.push(nova);
+                }
+            })
+
+            let cromatica = {
+                notas: nova_escala,
+                modo: "Cromática",
+                tom: nova_escala[0]
+            }
+            return cromatica;
+        } catch (error) {
+                
+        }
+    }
+
+    formarEscala(input, diatonica) {
         input = this.diatonica.verificaNota(input);
         let ordena = this.ordem.ordena(input);
-        let escala = this.adicionarAcidentes(ordena, input);
+        let escala;
 
-        escala.notas ? this.reduzPraUmaOitava(escala.notas) : ''
-
+        if(parseInt(diatonica)) {
+            escala = this.adicionarAcidentes(ordena, input);
+            escala.notas ? this.reduzPraUmaOitava(escala.notas) : ''
+        } else {
+            escala = this.cromatica(input, ordena)
+        }
+        
         return escala;
     }
 }

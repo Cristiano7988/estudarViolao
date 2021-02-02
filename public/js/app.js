@@ -81165,6 +81165,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+var _this = undefined;
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -81188,57 +81190,91 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+var geraEscala = function geraEscala() {
+  var escala = _this.escala.formarEscala(_this.state.tom, _this.state.tipo);
+
+  escala ? _this.setState({
+    erro: false,
+    escala: escala.notas,
+    modo: escala.modo
+  }) : _this.setState({
+    erro: true,
+    escala: null,
+    modo: null
+  });
+};
+
 var Conteudo = /*#__PURE__*/function (_Component) {
   _inherits(Conteudo, _Component);
 
   var _super = _createSuper(Conteudo);
 
   function Conteudo() {
-    var _this;
+    var _this2;
 
     _classCallCheck(this, Conteudo);
 
-    _this = _super.call(this);
-    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    _this.state = {
+    _this2 = _super.call(this);
+    _this2.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this2.nova_escala = null, _this2.escolherTipo = _this2.escolherTipo.bind(_assertThisInitialized(_this2));
+    _this2.defineTom = _this2.defineTom.bind(_assertThisInitialized(_this2));
+    _this2.geraEscala = _this2.geraEscala.bind(_assertThisInitialized(_this2));
+    _this2.state = {
       escala: null,
+      tom: null,
       modo: null,
+      tipo: "1",
       erro: false
     };
-    return _this;
+    return _this2;
   }
 
   _createClass(Conteudo, [{
+    key: "escolherTipo",
+    value: function escolherTipo(e) {
+      !this.state.tom ? this.setState({
+        tom: "A"
+      }) : '';
+      this.setState({
+        tipo: e.target.value
+      }, this.geraEscala);
+    }
+  }, {
     key: "geraEscala",
-    value: function geraEscala(e) {
-      var escala;
-
+    value: function geraEscala() {
+      var escala = this.escala.formarEscala(this.state.tom, this.state.tipo);
+      escala ? this.setState({
+        erro: false,
+        escala: escala.notas,
+        modo: escala.modo
+      }) : this.setState({
+        erro: true,
+        escala: null,
+        modo: null
+      });
+    }
+  }, {
+    key: "defineTom",
+    value: function defineTom(e) {
       switch (e.target.value) {
         case '':
           this.setState({
             erro: false,
-            escala: null
+            escala: null,
+            modo: null
           });
           break;
 
         default:
-          escala = this.escala.formarEscala(e.target.value), escala ? this.setState({
-            erro: false,
-            escala: escala.notas,
-            modo: escala.modo
-          }) : this.setState({
-            erro: true,
-            escala: null,
-            modo: null
-          });
+          this.setState({
+            tom: e.target.value
+          }, this.geraEscala);
           break;
       }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
-
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-4"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81262,10 +81298,32 @@ var Conteudo = /*#__PURE__*/function (_Component) {
         "aria-describedby": "inputGroup-sizing-sm",
         className: "form-control",
         type: "text",
-        onChange: function onChange(e) {
-          return _this2.geraEscala(e);
-        }
-      })), this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        onChange: this.defineTom
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-check form-check-inline m-2"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "form-check-input",
+        value: "1",
+        type: "radio",
+        name: "diatonica",
+        id: "flexRadioDefault1",
+        checked: this.state.tipo == "1",
+        onChange: this.escolherTipo
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-check-label mr-2",
+        htmlFor: "diatonica"
+      }, "Diat\xF4nica"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "form-check-input",
+        value: "0",
+        type: "radio",
+        name: "cromatica",
+        id: "flexRadioDefault2",
+        checked: this.state.tipo == "0",
+        onChange: this.escolherTipo
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-check-label",
+        htmlFor: "cromatica"
+      }, "Crom\xE1tica"))), this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-danger font-italic"
       }, "*Escala N\xE3o reconhecida") : '', this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.escala.map(function (nota, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
@@ -82176,6 +82234,63 @@ if (document.getElementById("Sistema")) {
 
 /***/ }),
 
+/***/ "./resources/js/dados/Acidentes.js":
+/*!*****************************************!*\
+  !*** ./resources/js/dados/Acidentes.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Acidentes; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Acidentes = /*#__PURE__*/function () {
+  function Acidentes() {
+    _classCallCheck(this, Acidentes);
+
+    this.sustenido = {
+      nome: "sustenido",
+      simbolo: "#"
+    };
+    this.bemol = {
+      nome: "bemol",
+      simbolo: "b"
+    };
+  }
+
+  _createClass(Acidentes, [{
+    key: "escolhe",
+    value: function escolhe(simbolo) {
+      if (simbolo == "#") {
+        return this.sustenido;
+      } else if (simbolo == "b") {
+        return this.bemol;
+      }
+
+      return false;
+    }
+  }, {
+    key: "alteraNota",
+    value: function alteraNota(nota, acidente) {
+      nota.cifra += acidente.simbolo;
+      nota.nome = !!nota.nome.match(new RegExp(acidente.nome)) ? nota.nome.replace(" ", " dobrado ") : nota.nome + " " + acidente.nome;
+      return nota;
+    }
+  }]);
+
+  return Acidentes;
+}();
+
+
+
+/***/ }),
+
 /***/ "./resources/js/dados/Escalas.js":
 /*!***************************************!*\
   !*** ./resources/js/dados/Escalas.js ***!
@@ -82186,8 +82301,9 @@ if (document.getElementById("Sistema")) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Escalas; });
-/* harmony import */ var _Notas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Notas */ "./resources/js/dados/Notas.js");
-/* harmony import */ var _Ordens__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Ordens */ "./resources/js/dados/Ordens.js");
+/* harmony import */ var _Acidentes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Acidentes */ "./resources/js/dados/Acidentes.js");
+/* harmony import */ var _Notas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Notas */ "./resources/js/dados/Notas.js");
+/* harmony import */ var _Ordens__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ordens */ "./resources/js/dados/Ordens.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -82197,12 +82313,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
+var copiarObj = function copiarObj(obj) {
+  return JSON.parse(JSON.stringify(obj));
+};
+
 var Escalas = /*#__PURE__*/function () {
   function Escalas() {
     _classCallCheck(this, Escalas);
 
-    this.diatonica = new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]();
-    this.ordem = new _Ordens__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.diatonica = new _Notas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.ordem = new _Ordens__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this.acidente = new _Acidentes__WEBPACK_IMPORTED_MODULE_0__["default"]();
   }
 
   _createClass(Escalas, [{
@@ -82226,51 +82348,43 @@ var Escalas = /*#__PURE__*/function () {
           escala.splice(escala.length - 1);
         }
       });
-    } // Verifica se a nota está na escala diatonica
-
-  }, {
-    key: "verificaNota",
-    value: function verificaNota(input) {
-      var nota = this.diatonica.notas.filter(function (nota) {
-        if (nota.cifra == input[0]) {
-          return input;
-        }
-      });
-
-      if (nota.length) {
-        return input;
-      } else {
-        return false;
-      }
     } // Escolhe uma ordem (bemol ou sustenido)
 
   }, {
     key: "geraEscalaAleatoria",
     value: function geraEscalaAleatoria() {
-      var escolhe_ordem = this.geraNumeroAleatorio(["b", "#"]);
-      var tonalidade = escolhe_ordem ? this.ordem.bemois : this.ordem.sustenidos;
+      var escolhe = this.geraNumeroAleatorio(["b", "#"]);
+      var tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
       var tom = tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra;
-      var escolhe_modo = this.geraNumeroAleatorio(["M", "m"]);
-      escolhe_modo ? tom += "m" : '';
-      var escala = this.formarEscala(tom);
+      escolhe = this.geraNumeroAleatorio(["M", "m"]);
+      escolhe ? tom += "m" : '';
+      var escala = this.formarEscala(tom, 1);
       return escala;
-    } // Ordena a escala de acordo com sua fundamental
+    } // Define o limite das tonalidades utilizadas no modo
 
   }, {
-    key: "ordena",
-    value: function ordena(fundamental) {
-      try {
-        var indice = this.diatonica.notas.findIndex(function (e) {
-          return e.cifra == fundamental[0];
-        });
-        var ordenado = this.ordem.mudar(indice, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
-        ordenado.map(function (nota, i) {
-          nota.id = i.toString();
-        });
-        return ordenado;
-      } catch (error) {
-        return false;
-      }
+    key: "limitarEscala",
+    value: function limitarEscala(s, b) {
+      var limite = {
+        sustenidos: s,
+        bemois: b
+      };
+      return limite;
+    }
+  }, {
+    key: "definePosicao",
+    value: function definePosicao(s, f) {
+      var posicao = {
+        sensivel: s,
+        fundamental: f
+      };
+      return posicao;
+    }
+  }, {
+    key: "comparaNotas",
+    value: function comparaNotas(nota1, nota2, resultado) {
+      resultado = nota1.cifra == nota2.cifra.replace("m", "") ? true : resultado;
+      return resultado;
     } // Adiciona sustenidos ou bemois para formar escalas maiores
 
   }, {
@@ -82279,54 +82393,21 @@ var Escalas = /*#__PURE__*/function () {
       var _this = this;
 
       try {
-        var tonalidades,
-            acidente = {
-          simbolo: '',
-          nome: ''
-        },
-            posicao = {
-          sensivel: 0,
-          fundamental: 0
-        };
         var menor = input.match(/m/) ? 1 : 0;
         var tom = {
           cifra: input
         };
-        var limite = {};
         this.aumentaUmaOitava(escala);
-
-        if (menor) {
-          limite = {
-            sustenidos: 5,
-            bemois: 3
-          };
-        } else {
-          limite = {
-            sustenidos: 2,
-            bemois: 6
-          };
-        }
+        var limite = menor ? this.limitarEscala(5, 3) : this.limitarEscala(2, 6);
 
         if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, limite.sustenidos)) {
-          tonalidades = this.ordem.geraOrdem("sustenidos");
-          acidente = {
-            simbolo: "#",
-            nome: "sustenido"
-          };
-          posicao = {
-            sensivel: 0,
-            fundamental: menor ? 6 : 1
-          };
+          var acidente = this.acidente.sustenido,
+              tonalidades = copiarObj(this.ordem.sustenidos),
+              posicao = this.definePosicao(0, menor ? 6 : 1);
         } else if (this.ordem.verificaOrdem(tom.cifra, this.ordem.bemois, limite.bemois)) {
-          tonalidades = this.ordem.geraOrdem("bemois");
-          acidente = {
-            simbolo: "b",
-            nome: "bemol"
-          };
-          posicao = {
-            sensivel: 1,
-            fundamental: menor ? 2 : 4
-          };
+          var acidente = this.acidente.bemol,
+              tonalidades = copiarObj(this.ordem.bemois),
+              posicao = this.definePosicao(1, menor ? 2 : 4);
         }
 
         var sensivel = menor ? true : false;
@@ -82350,17 +82431,17 @@ var Escalas = /*#__PURE__*/function () {
 
           if (!(fundamental && sensivel)) {
             // Na escala
-            _this.ordem.alteraNota(escala[index], acidente.simbolo, acidente.nome); // Na ordem
+            _this.acidente.alteraNota(escala[index], acidente); // Na ordem
 
 
-            _this.ordem.alteraNota(tonalidade, acidente.simbolo, acidente.nome);
+            _this.acidente.alteraNota(tonalidade, acidente);
           }
 
           if (!menor) {
-            sensivel = _this.ordem.comparaNotas(tonalidades[(i + posicao.sensivel) % 7], escala[escala.length - 1], sensivel);
+            sensivel = _this.comparaNotas(tonalidades[(i + posicao.sensivel) % 7], escala[escala.length - 1], sensivel);
           }
 
-          fundamental = _this.ordem.comparaNotas(escala[index + posicao.fundamental], tom, fundamental);
+          fundamental = _this.comparaNotas(escala[index + posicao.fundamental], tom, fundamental);
           return tonalidade;
         });
         dados.escala = escala;
@@ -82370,12 +82451,45 @@ var Escalas = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "cromatica",
+    value: function cromatica(input, escala) {
+      var _this2 = this;
+
+      try {
+        var nova_escala = [],
+            filtra = input.replace(input[0], "").match(/[b,#]/),
+            acidente = this.acidente.escolhe(filtra ? filtra[0] : "#");
+        escala.map(function (nota, i) {
+          var nova = filtra ? _this2.acidente.alteraNota(copiarObj(nota), acidente) : nota;
+          nova_escala.push(nova);
+
+          if (!nota.nome.match(/i/)) {
+            nova = acidente == _this2.acidente.sustenido ? _this2.acidente.alteraNota(copiarObj(nova), acidente) : nota;
+            nova_escala.push(nova);
+          }
+        });
+        var cromatica = {
+          notas: nova_escala,
+          modo: "Cromática",
+          tom: nova_escala[0]
+        };
+        return cromatica;
+      } catch (error) {}
+    }
+  }, {
     key: "formarEscala",
-    value: function formarEscala(input) {
-      input = this.verificaNota(input);
-      var ordena = this.ordena(input);
-      var escala = this.adicionarAcidentes(ordena, input);
-      escala.notas ? this.reduzPraUmaOitava(escala.notas) : '';
+    value: function formarEscala(input, diatonica) {
+      input = this.diatonica.verificaNota(input);
+      var ordena = this.ordem.ordena(input);
+      var escala;
+
+      if (parseInt(diatonica)) {
+        escala = this.adicionarAcidentes(ordena, input);
+        escala.notas ? this.reduzPraUmaOitava(escala.notas) : '';
+      } else {
+        escala = this.cromatica(input, ordena);
+      }
+
       return escala;
     }
   }]);
@@ -82399,32 +82513,58 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Notas; });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Notas = function Notas() {
-  _classCallCheck(this, Notas);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  this.notas = [{
-    cifra: "A",
-    nome: "Lá"
-  }, {
-    cifra: "B",
-    nome: "Si"
-  }, {
-    cifra: "C",
-    nome: "Dó"
-  }, {
-    cifra: "D",
-    nome: "Ré"
-  }, {
-    cifra: "E",
-    nome: "Mi"
-  }, {
-    cifra: "F",
-    nome: "Fá"
-  }, {
-    cifra: "G",
-    nome: "Sol"
-  }];
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Notas = /*#__PURE__*/function () {
+  function Notas() {
+    _classCallCheck(this, Notas);
+
+    this.notas = [{
+      cifra: "A",
+      nome: "Lá"
+    }, {
+      cifra: "B",
+      nome: "Si"
+    }, {
+      cifra: "C",
+      nome: "Dó"
+    }, {
+      cifra: "D",
+      nome: "Ré"
+    }, {
+      cifra: "E",
+      nome: "Mi"
+    }, {
+      cifra: "F",
+      nome: "Fá"
+    }, {
+      cifra: "G",
+      nome: "Sol"
+    }];
+  } // Verifica se a nota está na escala diatonica
+
+
+  _createClass(Notas, [{
+    key: "verificaNota",
+    value: function verificaNota(input) {
+      var nota = this.notas.filter(function (nota) {
+        if (nota.cifra == input[0]) {
+          return input;
+        }
+      });
+
+      if (nota.length) {
+        return input;
+      } else {
+        return false;
+      }
+    }
+  }]);
+
+  return Notas;
+}();
 
 
 
@@ -82440,7 +82580,8 @@ var Notas = function Notas() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ordens; });
-/* harmony import */ var _Notas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Notas */ "./resources/js/dados/Notas.js");
+/* harmony import */ var _Acidentes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Acidentes */ "./resources/js/dados/Acidentes.js");
+/* harmony import */ var _Notas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Notas */ "./resources/js/dados/Notas.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -82449,72 +82590,64 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
+var copiarObj = function copiarObj(obj) {
+  return JSON.parse(JSON.stringify(obj));
+};
+
 var Ordens = /*#__PURE__*/function () {
   function Ordens() {
     _classCallCheck(this, Ordens);
 
-    // variavéis pra consulta apenas, para alterar use a função geraOrdem
-    this.sustenidos = this.geraOrdem("sustenidos");
-    this.bemois = this.geraOrdem("bemois");
-  }
+    this.diatonica = new _Notas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.acidente = new _Acidentes__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.sustenidos = this.completaOrdem(this.acidente.sustenido, this.ordemDosSustenitos());
+    this.bemois = this.completaOrdem(this.acidente.bemol, this.ordemDosBemois());
+  } // Ordena a escala de acordo com sua fundamental
+
 
   _createClass(Ordens, [{
-    key: "geraOrdem",
-    value: function geraOrdem(ordem) {
-      if (ordem == 'sustenidos') {
-        return this.acidente('#', 'sustenido', this.ordemDosSustenitos());
+    key: "ordena",
+    value: function ordena(fundamental) {
+      try {
+        var indice = this.diatonica.notas.findIndex(function (e) {
+          return e.cifra == fundamental[0];
+        });
+        var expressao = "(index + ".concat(indice, ") % escala.length");
+        var ordenado = this.alteraIndice(new _Notas__WEBPACK_IMPORTED_MODULE_1__["default"]().notas, expressao);
+        ordenado.map(function (nota, i) {
+          nota.id = i.toString();
+        });
+        return ordenado;
+      } catch (error) {
+        return false;
       }
+    } // Verifica qual ordem o tom deve utilizar
 
-      ;
-
-      if (ordem == 'bemois') {
-        return this.acidente('b', 'bemol', this.ordemDosBemois());
-      }
-
-      ;
-    }
-  }, {
-    key: "comparaNotas",
-    value: function comparaNotas(nota1, nota2, resultado) {
-      resultado = nota1.cifra == nota2.cifra.replace("m", "") ? true : resultado;
-      return resultado;
-    }
-  }, {
-    key: "alteraNota",
-    value: function alteraNota(nota, simbolo, nome) {
-      nota.cifra += simbolo;
-      nota.nome = !!nota.nome.match(new RegExp(nome)) ? nota.nome.replace(" ", " dobrado ") : nota.nome + " " + nome;
-    }
   }, {
     key: "verificaOrdem",
     value: function verificaOrdem(tom, tonalidades, i) {
-      var especifica = [];
-      tonalidades.map(function (nota) {
-        especifica.push(nota);
-      });
-      especifica.splice(0, i);
-      var ordem = especifica.includes(especifica.find(function (o) {
+      tonalidades = copiarObj(tonalidades);
+      tonalidades.splice(0, i);
+      var ordem = tonalidades.includes(tonalidades.find(function (o) {
         return o.cifra == tom.replace("m", '');
       }));
       return ordem;
     }
   }, {
-    key: "mudar",
-    value: function mudar(indiceFundamental, notas) {
-      var escalaNova = [];
-      notas.map(function (nota, index) {
-        escalaNova.push(notas[(index + indiceFundamental) % notas.length]);
+    key: "alteraIndice",
+    value: function alteraIndice(escala, expressao) {
+      var nova_escala = [];
+      escala.map(function (nota, index) {
+        nova_escala.push(escala[eval(expressao)]);
       });
-      return escalaNova;
+      return nova_escala;
     }
   }, {
     key: "ordemDosSustenitos",
     value: function ordemDosSustenitos() {
-      var ordem = [];
-      var escala = this.mudar(5, new _Notas__WEBPACK_IMPORTED_MODULE_0__["default"]().notas);
-      escala.forEach(function (nota, i) {
-        ordem.push(escala[4 * i % 7]);
-      });
+      var escala = this.alteraIndice(this.diatonica.notas, "(index + 5) % escala.length");
+      var ordem = this.alteraIndice(escala, "(4 * index) % escala.length");
       return ordem;
     }
   }, {
@@ -82528,13 +82661,12 @@ var Ordens = /*#__PURE__*/function () {
       return ordem;
     }
   }, {
-    key: "acidente",
-    value: function acidente(simbolo, nome, tonalidades) {
+    key: "completaOrdem",
+    value: function completaOrdem(acidente, tonalidades) {
+      var _this = this;
+
       tonalidades.map(function (nota) {
-        tonalidades.push({
-          cifra: nota.cifra + simbolo,
-          nome: nota.nome + " " + nome
-        });
+        tonalidades.push(_this.acidente.alteraNota(copiarObj(nota), acidente));
       });
       return tonalidades;
     }

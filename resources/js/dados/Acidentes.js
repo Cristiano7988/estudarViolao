@@ -11,11 +11,13 @@ export default class Acidentes {
     }
 
     escolhe(simbolo) {
-        let acidente = simbolo == "#"
-            ? this.sustenido
-            : this.bemol;
-
-        return acidente;
+        if(simbolo == "#") {
+            return this.sustenido;
+        } else if (simbolo == "b") {
+            return this.bemol
+        }
+        
+        return false;
     }
 
     alteraNota(nota, acidente) {
