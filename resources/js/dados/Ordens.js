@@ -67,11 +67,8 @@ export default class Ordens {
     }
 
     ordemDosBemois() {
-        let ordem = [];
         let tonalidades = this.ordemDosSustenitos();
-        tonalidades.map(nota => {
-            ordem.unshift(nota);
-        });
+        let ordem = tonalidades.reverse();
 
         return ordem;
     }

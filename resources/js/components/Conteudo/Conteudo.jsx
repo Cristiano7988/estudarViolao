@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Escalas from "../../dados/Escalas";
+import Braco from '../Braco';
 
 const geraEscala = () => {
     let escala = this.escala.formarEscala(this.state.tom, this.state.tipo);
@@ -100,6 +101,11 @@ class Conteudo extends Component {
                             {this.state.erro ?
                             <span className="text-danger font-italic">*Escala Não reconhecida</span>
                             :''}
+                            {this.state.escala && parseInt(this.state.tipo) ?
+                                <div>
+                                    <Braco escala={this.state.escala} />
+                                </div>
+                            : ''}
                             {this.state.escala ?                            
                                 <p>{this.state.escala.map( (nota,index) => {
                                     return <span className="p-2" key={index}>{nota.cifra}</span>

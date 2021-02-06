@@ -189,4 +189,25 @@ export default class Escalas {
         
         return escala;
     }
+
+    pegaHomonimos(original) {
+        let escala = this.formarEscala(original, 0);
+        
+        let index =
+            escala.notas.findIndex( nota => {
+                if(nota.cifra == original){
+                    return nota
+                }
+            });
+
+        let bemol = original.match(/[EB]|#/)
+            ? escala.notas[index + 2].cifra.replace("#", "") + "b"
+            : escala.notas[index + 2].cifra.replace("#", "") + "bb"
+
+        let sustenido = escala.notas[(index + 10) % escala.notas.length].nome.match(/i/)
+            ? escala.notas[(index + 11) % escala.notas.length].cifra.replace("b", "") + "#"
+            : !escala.notas[(index + 10) % escala.notas.length].cifra.match(/#/) ? escala.notas[(index + 10) % escala.notas.length].cifra + "##" : ''
+            
+        return `[${original}] [${bemol}] [${sustenido}]`
+    }
 }
