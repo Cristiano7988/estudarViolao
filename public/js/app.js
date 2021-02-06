@@ -81205,8 +81205,12 @@ var Braco = /*#__PURE__*/function (_Component) {
       tessitura: {
         inicio: 0,
         fim: 5
+      },
+      erro: {
+        afinacao: false
       }
     };
+    _this.afina = _this.afina.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -81222,6 +81226,33 @@ var Braco = /*#__PURE__*/function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.digitaEscala();
+    }
+  }, {
+    key: "afina",
+    value: function afina(e) {
+      var valido = e.target.value.match(/^[A-G]|[b#]/);
+
+      if (!valido) {
+        this.setState({
+          erro: {
+            afinacao: true
+          }
+        });
+        return false;
+      }
+
+      try {
+        var casas = e.target.parentNode.parentNode.childNodes;
+        var cordas = this.state.cordas;
+        cordas[e.target.dataset.id] = this.escala.formarEscala(e.target.value, 0).notas;
+        casas[0].firstChild.placeholder = e.target.value;
+        this.setState({
+          cordas: cordas,
+          erro: {
+            afinacao: false
+          }
+        });
+      } catch (error) {}
     }
   }, {
     key: "mudaPosicao",
@@ -81264,7 +81295,9 @@ var Braco = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this3 = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.state.erro.afinacao ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "text-danger"
+      }, "Nota inv\xE1lida") : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-center"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex flex-column justify-content-center"
@@ -81289,23 +81322,30 @@ var Braco = /*#__PURE__*/function (_Component) {
         }, corda.map(function (nota, indice) {
           return indice == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: indice,
-            className: "afinacao",
-            title: nota.cifra
-          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, nota.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+            className: "afinacao"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+            type: "text",
+            onChange: _this3.afina,
+            "data-id": index,
+            placeholder: nota.cifra,
+            style: {
+              width: "15px",
+              border: "none"
+            }
+          }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
             "data-corda": (index - 6) * -1,
             "data-casa": indice + _this3.state.tessitura.inicio,
             "data-nota": _this3.escala.pegaHomonimos(nota.cifra)
           })) : indice + _this3.state.tessitura.inicio <= _this3.state.tessitura.fim ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: indice,
-            className: "casa",
-            title: corda[(indice + _this3.state.tessitura.inicio) % corda.length].cifra
+            className: "casa"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
             "data-corda": (index - 6) * -1,
             "data-casa": indice + _this3.state.tessitura.inicio,
             "data-nota": _this3.escala.pegaHomonimos(corda[(indice + _this3.state.tessitura.inicio) % corda.length].cifra)
           })) : "";
         }));
-      })));
+      }))));
     }
   }]);
 

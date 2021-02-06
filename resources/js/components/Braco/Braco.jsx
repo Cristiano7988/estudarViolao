@@ -17,8 +17,12 @@ class Braco extends Component {
             tessitura: {
                 inicio: 0,
                 fim: 5
+            },
+            erro: {
+                afinacao: false
             }
         }
+        this.afina = this.afina.bind(this)
     }
 
     componentDidUpdate() {
@@ -28,6 +32,35 @@ class Braco extends Component {
 
     componentDidMount() {
         this.digitaEscala()
+    }
+
+    afina(e) {
+        let valido = e.target.value.match(/^[A-G]|[b#]/)
+        if(!valido) {
+            this.setState({
+                erro: {
+                    afinacao: true
+                }
+            })
+            return false
+        }
+
+        try {
+            let casas = e.target.parentNode.parentNode.childNodes
+            let cordas = this.state.cordas
+    
+            cordas[e.target.dataset.id] = this.escala.formarEscala(e.target.value, 0).notas;
+            casas[0].firstChild.placeholder = e.target.value
+            
+            this.setState({
+                cordas: cordas,
+                erro: {
+                    afinacao: false
+                }
+            })
+        } catch(error) {
+
+        }
     }
 
     mudaPosicao(sobe) {
@@ -69,6 +102,10 @@ class Braco extends Component {
 
     render() {
         return (
+        <>
+        {this.state.erro.afinacao ?
+            <i className="text-danger">Nota inválida</i>
+        : ''}
         <div className="d-flex justify-content-center">
             <div className="d-flex flex-column justify-content-center">
                 <p>{this.state.tessitura.inicio + 1}ª</p>
@@ -81,8 +118,8 @@ class Braco extends Component {
                 {this.state.cordas.map( (corda,index) =>{
                     return <div key={index} className="corda">{corda.map( (nota, indice)=> {
                         return indice == 0 ? (
-                            <div key={indice} className="afinacao" title={nota.cifra}>
-                                <b>{nota.cifra}</b>
+                            <div key={indice} className="afinacao">
+                                <input type="text" onChange={this.afina} data-id={index} placeholder={nota.cifra} style={{width: "15px", border: "none"}}/>
                                 <span
                                     data-corda={ ((index - 6) * -1 )}
                                     data-casa={(indice + this.state.tessitura.inicio) }
@@ -91,7 +128,7 @@ class Braco extends Component {
                             </div>
                         ) : ( (indice + this.state.tessitura.inicio) <= this.state.tessitura.fim ?
      
-                            <div key={indice} className="casa" title={corda[ (indice + this.state.tessitura.inicio) % corda.length].cifra}>
+                            <div key={indice} className="casa">
                                 <hr />
                                 <span
                                     data-corda={ ((index - 6) * -1)}
@@ -109,6 +146,7 @@ class Braco extends Component {
                 })}
             </div>
         </div>
+        </>
          );
     }
 }
