@@ -75,6 +75,9 @@
                 border-radius: 50%;
                 &.active {
                     border: 1px solid;
+                    &.highlight {
+                        background: #3490dc;
+                    }
                 }
             }
         }
@@ -104,6 +107,9 @@
                 font-family: sans-serif;
                 &.active {
                     display: flex;
+                    &.highlight {
+                        background: #3490dc;
+                    }
                 }
             }
         }

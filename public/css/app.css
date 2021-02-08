@@ -11040,6 +11040,10 @@ body main .container .col-md-6 .card h1 {
   border: 1px solid;
 }
 
+.braco .corda .afinacao span.active.highlight {
+  background: #3490dc;
+}
+
 .braco .corda .casa {
   display: inline-flex;
   border-width: 1px 0px;
@@ -11071,6 +11075,10 @@ body main .container .col-md-6 .card h1 {
 
 .braco .corda .casa span.active {
   display: flex;
+}
+
+.braco .corda .casa span.active.highlight {
+  background: #3490dc;
 }
 
 .seta {

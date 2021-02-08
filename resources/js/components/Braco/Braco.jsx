@@ -119,7 +119,7 @@ class Braco extends Component {
                     return <div key={index} className="corda">{corda.map( (nota, indice)=> {
                         return indice == 0 ? (
                             <div key={indice} className="afinacao">
-                                <input type="text" onChange={this.afina} data-id={index} placeholder={nota.cifra} style={{width: "15px", border: "none"}}/>
+                                <input type="text" title="Clique para editar a afinação" onChange={this.afina} data-id={index} placeholder={nota.cifra} style={{width: "15px", border: "none"}}/>
                                 <span
                                     data-corda={ ((index - 6) * -1 )}
                                     data-casa={(indice + this.state.tessitura.inicio) }

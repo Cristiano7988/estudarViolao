@@ -29,6 +29,24 @@ class Conteudo extends Component {
         }
     }
 
+    limpaHighlight() {
+        let casas = Array.prototype.slice.call(document.querySelectorAll('[data-nota]'));
+        casas.map(casa=>casa.classList.remove('highlight'));
+    }
+
+    highlight(nota) {
+        this.limpaHighlight();
+        let casas = Array.prototype.slice.call(document.querySelectorAll('[data-nota]'));
+        
+        casas.find(casa=>{
+            let homonimos = new RegExp(`\\[${nota}\\]`)
+
+            if(casa.dataset.nota.match(homonimos)) {
+                casa.classList.add('highlight')
+            }
+        })
+    }
+
     escolherTipo(e) {
         !this.state.tom ? this.setState({tom: "A"}) : ''
         this.setState({
@@ -108,7 +126,7 @@ class Conteudo extends Component {
                             : ''}
                             {this.state.escala ?                            
                                 <p>{this.state.escala.map( (nota,index) => {
-                                    return <span className="p-2" key={index}>{nota.cifra}</span>
+                                    return <span className="p-2" key={index} style={{cursor: "pointer"}} onMouseOver={()=>this.highlight(nota.cifra)} onMouseLeave={()=>this.limpaHighlight()}> {nota.cifra}</span>
                                 })}</p>
                             : ''}
                         </div>

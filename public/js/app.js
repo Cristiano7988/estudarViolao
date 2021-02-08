@@ -81325,6 +81325,7 @@ var Braco = /*#__PURE__*/function (_Component) {
             className: "afinacao"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
             type: "text",
+            title: "Clique para editar a afina\xE7\xE3o",
             onChange: _this3.afina,
             "data-id": index,
             placeholder: nota.cifra,
@@ -81452,6 +81453,27 @@ var Conteudo = /*#__PURE__*/function (_Component) {
   }
 
   _createClass(Conteudo, [{
+    key: "limpaHighlight",
+    value: function limpaHighlight() {
+      var casas = Array.prototype.slice.call(document.querySelectorAll('[data-nota]'));
+      casas.map(function (casa) {
+        return casa.classList.remove('highlight');
+      });
+    }
+  }, {
+    key: "highlight",
+    value: function highlight(nota) {
+      this.limpaHighlight();
+      var casas = Array.prototype.slice.call(document.querySelectorAll('[data-nota]'));
+      casas.find(function (casa) {
+        var homonimos = new RegExp("\\[".concat(nota, "\\]"));
+
+        if (casa.dataset.nota.match(homonimos)) {
+          casa.classList.add('highlight');
+        }
+      });
+    }
+  }, {
     key: "escolherTipo",
     value: function escolherTipo(e) {
       !this.state.tom ? this.setState({
@@ -81497,6 +81519,8 @@ var Conteudo = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-4"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81552,8 +81576,17 @@ var Conteudo = /*#__PURE__*/function (_Component) {
       })) : '', this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.escala.map(function (nota, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "p-2",
-          key: index
-        }, nota.cifra);
+          key: index,
+          style: {
+            cursor: "pointer"
+          },
+          onMouseOver: function onMouseOver() {
+            return _this3.highlight(nota.cifra);
+          },
+          onMouseLeave: function onMouseLeave() {
+            return _this3.limpaHighlight();
+          }
+        }, " ", nota.cifra);
       })) : ''))));
     }
   }]);
