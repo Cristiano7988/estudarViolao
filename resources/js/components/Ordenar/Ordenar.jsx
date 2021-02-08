@@ -34,7 +34,7 @@ class Ordenar extends Component {
     render() {
         return (
             <div>
-                <h2>Escala {this.props.modo}</h2>
+                <h2 className="text-capitalize">Escala {this.props.modo} {this.props.complemento}</h2>
                 <div className="d-flex justify-content-center mt-5">
                     <DragDropContext onDragEnd={this.props.onDragEnd}>
                         <Droppable

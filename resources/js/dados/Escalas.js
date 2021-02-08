@@ -32,6 +32,8 @@ export default class Escalas {
 
     // Escolhe uma ordem (bemol ou sustenido)
     geraEscalaAleatoria() {
+        let complementos = ["natural", "harmonica", "melodica"];
+        let index;
         let escolhe = this.geraNumeroAleatorio(["b", "#"]);
         let tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
 
@@ -39,8 +41,11 @@ export default class Escalas {
         
         escolhe = this.geraNumeroAleatorio(["M", "m"]);
         escolhe ? tom += "m" : ''
-        let escala = this.formarEscala( tom, 1 );
 
+        if(tom.match(/m/)) {
+            index = this.geraNumeroAleatorio(complementos);
+        }
+        let escala = this.formarEscala( tom, 1, complementos[index]);
         return escala;
     }
 
@@ -68,7 +73,7 @@ export default class Escalas {
     }
 
     // Adiciona sustenidos ou bemois para formar escalas maiores
-    adicionarAcidentes(escala, input) {
+    adicionarAcidentes(escala, input, complemento) {
         try {
             var menor = input.match(/m/) ? 1 : 0;
             var tom = { cifra: input }
@@ -97,10 +102,24 @@ export default class Escalas {
             var dados = {
                 notas: escala,
                 tom: tom,
-                modo: menor ? "Menor Natural" : "Maior"
+                modo: menor ? "menor" : "maior",
+                complemento: menor ? complemento : ""
             }
 
             if(tom.cifra == "C" || tom.cifra == "Am") {
+                switch (complemento) {
+                    case "harmonica":
+                        this.acidente.alteraNota(escala[escala.length-1], this.acidente.sustenido)
+                        break;
+                    case "melodica":
+                        this.acidente.alteraNota(escala[escala.length-1], this.acidente.sustenido)
+                        this.acidente.alteraNota(escala[escala.length-2], this.acidente.sustenido)
+                        break;
+                
+                    default:
+                        break;
+                }
+
                 return dados;
             }
 
@@ -133,6 +152,25 @@ export default class Escalas {
                 return tonalidade;
             });
 
+            switch (complemento) {
+                case "harmonica":
+                    escala[escala.length-1].cifra.match(/[b]/g)
+                        ? this.acidente.bequadro(escala[escala.length-1], this.acidente.bemol) 
+                        : this.acidente.alteraNota(escala[escala.length-1], this.acidente.sustenido)
+                    break;
+                case "melodica":
+                    escala[escala.length-1].cifra.match(/[b]/g)
+                        ? this.acidente.bequadro(escala[escala.length-1], this.acidente.bemol) 
+                        : this.acidente.alteraNota(escala[escala.length-1], this.acidente.sustenido)
+                    escala[escala.length-2].cifra.match(/[b]/g)
+                        ? this.acidente.bequadro(escala[escala.length-2], this.acidente.bemol) 
+                        : this.acidente.alteraNota(escala[escala.length-2], this.acidente.sustenido)
+                    break;
+            
+                default:
+                    break;
+            }
+            
             dados.escala = escala;
             
             return dados;
@@ -175,13 +213,13 @@ export default class Escalas {
         }
     }
 
-    formarEscala(input, diatonica) {
+    formarEscala(input, diatonica, complemento) {
         input = this.diatonica.verificaNota(input);
         let ordena = this.ordem.ordena(input);
         let escala;
 
         if(parseInt(diatonica)) {
-            escala = this.adicionarAcidentes(ordena, input);
+            escala = this.adicionarAcidentes(ordena, input, complemento);
             escala.notas ? this.reduzPraUmaOitava(escala.notas) : ''
         } else {
             escala = this.cromatica(input, ordena)

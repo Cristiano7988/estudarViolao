@@ -252,6 +252,7 @@ export default class Exercicios extends Component {
                                 <Ordenar
                                     escala={this.state.escala_reordenada}
                                     modo={this.escala_reordenada.modo}
+                                    complemento={this.escala_reordenada.complemento ? this.escala_reordenada.complemento : ''}
                                     onDragEnd={this.onDragEnd}
                                 />
                             ) : (

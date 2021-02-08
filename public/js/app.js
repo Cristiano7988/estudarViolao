@@ -81387,8 +81387,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Braco__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Braco */ "./resources/js/components/Braco/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-var _this = undefined;
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -81413,43 +81411,31 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var geraEscala = function geraEscala() {
-  var escala = _this.escala.formarEscala(_this.state.tom, _this.state.tipo);
-
-  escala ? _this.setState({
-    erro: false,
-    escala: escala.notas,
-    modo: escala.modo
-  }) : _this.setState({
-    erro: true,
-    escala: null,
-    modo: null
-  });
-};
-
 var Conteudo = /*#__PURE__*/function (_Component) {
   _inherits(Conteudo, _Component);
 
   var _super = _createSuper(Conteudo);
 
   function Conteudo() {
-    var _this2;
+    var _this;
 
     _classCallCheck(this, Conteudo);
 
-    _this2 = _super.call(this);
-    _this2.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    _this2.nova_escala = null, _this2.escolherTipo = _this2.escolherTipo.bind(_assertThisInitialized(_this2));
-    _this2.defineTom = _this2.defineTom.bind(_assertThisInitialized(_this2));
-    _this2.geraEscala = _this2.geraEscala.bind(_assertThisInitialized(_this2));
-    _this2.state = {
+    _this = _super.call(this);
+    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this.nova_escala = null, _this.escolherTipo = _this.escolherTipo.bind(_assertThisInitialized(_this));
+    _this.escolherComplemento = _this.escolherComplemento.bind(_assertThisInitialized(_this));
+    _this.defineTom = _this.defineTom.bind(_assertThisInitialized(_this));
+    _this.geraEscala = _this.geraEscala.bind(_assertThisInitialized(_this));
+    _this.state = {
       escala: null,
       tom: null,
       modo: null,
+      complemento: null,
       tipo: "1",
       erro: false
     };
-    return _this2;
+    return _this;
   }
 
   _createClass(Conteudo, [{
@@ -81484,17 +81470,26 @@ var Conteudo = /*#__PURE__*/function (_Component) {
       }, this.geraEscala);
     }
   }, {
+    key: "escolherComplemento",
+    value: function escolherComplemento(e) {
+      this.setState({
+        complemento: e.target.value
+      }, this.geraEscala);
+    }
+  }, {
     key: "geraEscala",
     value: function geraEscala() {
-      var escala = this.escala.formarEscala(this.state.tom, this.state.tipo);
+      var escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
       escala ? this.setState({
         erro: false,
         escala: escala.notas,
-        modo: escala.modo
+        modo: escala.modo,
+        complemento: escala.complemento
       }) : this.setState({
         erro: true,
         escala: null,
-        modo: null
+        modo: null,
+        complemento: null
       });
     }
   }, {
@@ -81505,13 +81500,15 @@ var Conteudo = /*#__PURE__*/function (_Component) {
           this.setState({
             erro: false,
             escala: null,
-            modo: null
+            modo: null,
+            complemento: null
           });
           break;
 
         default:
           this.setState({
-            tom: e.target.value
+            tom: e.target.value,
+            complemento: e.target.value.match(/m/) ? "natural" : null
           }, this.geraEscala);
           break;
       }
@@ -81519,7 +81516,7 @@ var Conteudo = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-4"
@@ -81529,7 +81526,9 @@ var Conteudo = /*#__PURE__*/function (_Component) {
         className: "col-md-6"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
-      }, this.state.modo ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Escala ", this.state.modo) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, this.state.modo ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+        className: "text-capitalize"
+      }, "Escala ", this.state.modo, " ", this.state.complemento ? this.state.complemento : "") : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-secondary mb-4"
       }, "Insira um tom para visualizar sua escala"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "input-group input-group-sm w-25 m-auto"
@@ -81569,7 +81568,42 @@ var Conteudo = /*#__PURE__*/function (_Component) {
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "form-check-label",
         htmlFor: "cromatica"
-      }, "Crom\xE1tica"))), this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, "Crom\xE1tica"))), this.state.modo == "menor" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-check form-check-inline m-2"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "form-check-input",
+        value: "natural",
+        type: "radio",
+        name: "natural",
+        id: "flexRadioDefault1",
+        checked: this.state.complemento == "natural",
+        onChange: this.escolherComplemento
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-check-label mr-2",
+        htmlFor: "natural"
+      }, "Natural"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "form-check-input",
+        value: "harmonica",
+        type: "radio",
+        name: "harmonica",
+        id: "flexRadioDefault2",
+        checked: this.state.complemento == "harmonica",
+        onChange: this.escolherComplemento
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-check-label mr-2",
+        htmlFor: "harmonica"
+      }, "Harm\xF4nica"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "form-check-input",
+        value: "melodica",
+        type: "radio",
+        name: "melodica",
+        id: "flexRadioDefault2",
+        checked: this.state.complemento == "melodica",
+        onChange: this.escolherComplemento
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-check-label",
+        htmlFor: "melodica"
+      }, "Mel\xF3dica"))) : "", this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-danger font-italic"
       }, "*Escala N\xE3o reconhecida") : '', this.state.escala && parseInt(this.state.tipo) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_2__["default"], {
         escala: this.state.escala
@@ -81581,10 +81615,10 @@ var Conteudo = /*#__PURE__*/function (_Component) {
             cursor: "pointer"
           },
           onMouseOver: function onMouseOver() {
-            return _this3.highlight(nota.cifra);
+            return _this2.highlight(nota.cifra);
           },
           onMouseLeave: function onMouseLeave() {
-            return _this3.limpaHighlight();
+            return _this2.limpaHighlight();
           }
         }, " ", nota.cifra);
       })) : ''))));
@@ -82011,6 +82045,7 @@ var Exercicios = /*#__PURE__*/function (_Component) {
       }) : "", this.exercicio == "ordenar" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Ordenar__WEBPACK_IMPORTED_MODULE_3__["default"], {
         escala: this.state.escala_reordenada,
         modo: this.escala_reordenada.modo,
+        complemento: this.escala_reordenada.complemento ? this.escala_reordenada.complemento : '',
         onDragEnd: this.onDragEnd
       }) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-around mb-2"
@@ -82312,7 +82347,9 @@ var Ordenar = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Escala ", this.props.modo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "text-capitalize"
+      }, "Escala ", this.props.modo, " ", this.props.complemento), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-center mt-5"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
         onDragEnd: this.props.onDragEnd
@@ -82539,6 +82576,13 @@ var Acidentes = /*#__PURE__*/function () {
       nota.nome = !!nota.nome.match(new RegExp(acidente.nome)) ? nota.nome.replace(" ", " dobrado ") : nota.nome + " " + acidente.nome;
       return nota;
     }
+  }, {
+    key: "bequadro",
+    value: function bequadro(nota, acidente) {
+      nota.cifra = nota.cifra.replace(new RegExp(acidente.simbolo), "");
+      nota.nome = !!nota.nome.match(new RegExp(acidente.nome)) ? nota.nome.replace(new RegExp(acidente.nome), "") : nota.nome;
+      return nota;
+    }
   }]);
 
   return Acidentes;
@@ -82610,12 +82654,19 @@ var Escalas = /*#__PURE__*/function () {
   }, {
     key: "geraEscalaAleatoria",
     value: function geraEscalaAleatoria() {
+      var complementos = ["natural", "harmonica", "melodica"];
+      var index;
       var escolhe = this.geraNumeroAleatorio(["b", "#"]);
       var tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
       var tom = tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra;
       escolhe = this.geraNumeroAleatorio(["M", "m"]);
       escolhe ? tom += "m" : '';
-      var escala = this.formarEscala(tom, 1);
+
+      if (tom.match(/m/)) {
+        index = this.geraNumeroAleatorio(complementos);
+      }
+
+      var escala = this.formarEscala(tom, 1, complementos[index]);
       return escala;
     } // Define o limite das tonalidades utilizadas no modo
 
@@ -82646,7 +82697,7 @@ var Escalas = /*#__PURE__*/function () {
 
   }, {
     key: "adicionarAcidentes",
-    value: function adicionarAcidentes(escala, input) {
+    value: function adicionarAcidentes(escala, input, complemento) {
       var _this = this;
 
       try {
@@ -82672,10 +82723,25 @@ var Escalas = /*#__PURE__*/function () {
         var dados = {
           notas: escala,
           tom: tom,
-          modo: menor ? "Menor Natural" : "Maior"
+          modo: menor ? "menor" : "maior",
+          complemento: menor ? complemento : ""
         };
 
         if (tom.cifra == "C" || tom.cifra == "Am") {
+          switch (complemento) {
+            case "harmonica":
+              this.acidente.alteraNota(escala[escala.length - 1], this.acidente.sustenido);
+              break;
+
+            case "melodica":
+              this.acidente.alteraNota(escala[escala.length - 1], this.acidente.sustenido);
+              this.acidente.alteraNota(escala[escala.length - 2], this.acidente.sustenido);
+              break;
+
+            default:
+              break;
+          }
+
           return dados;
         }
 
@@ -82701,6 +82767,21 @@ var Escalas = /*#__PURE__*/function () {
           fundamental = _this.comparaNotas(escala[index + posicao.fundamental], tom, fundamental);
           return tonalidade;
         });
+
+        switch (complemento) {
+          case "harmonica":
+            escala[escala.length - 1].cifra.match(/[b]/g) ? this.acidente.bequadro(escala[escala.length - 1], this.acidente.bemol) : this.acidente.alteraNota(escala[escala.length - 1], this.acidente.sustenido);
+            break;
+
+          case "melodica":
+            escala[escala.length - 1].cifra.match(/[b]/g) ? this.acidente.bequadro(escala[escala.length - 1], this.acidente.bemol) : this.acidente.alteraNota(escala[escala.length - 1], this.acidente.sustenido);
+            escala[escala.length - 2].cifra.match(/[b]/g) ? this.acidente.bequadro(escala[escala.length - 2], this.acidente.bemol) : this.acidente.alteraNota(escala[escala.length - 2], this.acidente.sustenido);
+            break;
+
+          default:
+            break;
+        }
+
         dados.escala = escala;
         return dados;
       } catch (error) {
@@ -82735,13 +82816,13 @@ var Escalas = /*#__PURE__*/function () {
     }
   }, {
     key: "formarEscala",
-    value: function formarEscala(input, diatonica) {
+    value: function formarEscala(input, diatonica, complemento) {
       input = this.diatonica.verificaNota(input);
       var ordena = this.ordem.ordena(input);
       var escala;
 
       if (parseInt(diatonica)) {
-        escala = this.adicionarAcidentes(ordena, input);
+        escala = this.adicionarAcidentes(ordena, input, complemento);
         escala.notas ? this.reduzPraUmaOitava(escala.notas) : '';
       } else {
         escala = this.cromatica(input, ordena);

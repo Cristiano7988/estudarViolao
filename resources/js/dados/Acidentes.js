@@ -27,4 +27,12 @@ export default class Acidentes {
             : nota.nome + " " + acidente.nome;
         return nota;
     }
+
+    bequadro(nota, acidente) {
+        nota.cifra = nota.cifra.replace(new RegExp(acidente.simbolo), "");
+        nota.nome = !!nota.nome.match(new RegExp(acidente.nome))
+            ? nota.nome.replace(new RegExp(acidente.nome), "")
+            : nota.nome;
+        return nota;
+    }
 }
