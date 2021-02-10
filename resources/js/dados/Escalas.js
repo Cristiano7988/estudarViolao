@@ -230,22 +230,31 @@ export default class Escalas {
 
     pegaHomonimos(original) {
         let escala = this.formarEscala(original, 0);
+        let anterior, proxima;
+
+        let antecede = escala.notas[(/[FC]/.test(original) ? 11 : 10) % escala.notas.length].cifra.replace(/[b#]/, "");
+        let prescede = escala.notas[2 % escala.notas.length].cifra;
+        prescede = prescede.replace(/#|b/g, "")
         
-        let index =
-            escala.notas.findIndex( nota => {
-                if(nota.cifra == original){
-                    return nota
-                }
-            });
-
-        let bemol = original.match(/[EB]|#/)
-            ? escala.notas[index + 2].cifra.replace("#", "") + "b"
-            : escala.notas[index + 2].cifra.replace("#", "") + "bb"
-
-        let sustenido = escala.notas[(index + 10) % escala.notas.length].nome.match(/i/)
-            ? escala.notas[(index + 11) % escala.notas.length].cifra.replace("b", "") + "#"
-            : !escala.notas[(index + 10) % escala.notas.length].cifra.match(/#/) ? escala.notas[(index + 10) % escala.notas.length].cifra + "##" : ''
+        if(!/#/.test(original)) {
+        anterior = !/[FC]/.test(original) && !/b/.test(original)
+            ? antecede += "##"
+            : antecede += "#";
+        } else {
+            anterior = !/[FC]/.test(original)
+                ? /##/.test(original) ? antecede + "####" : antecede + "###"
+                : antecede + "##"
+        }
+        
+        if(!/##/.test(original)) {
+            proxima = /#/.test(original) || /[EB]/.test(original)
+                ? /b/.test(original) ? prescede += "bb" : prescede += "b"
+                : /b/.test(original) ? prescede += "bbb" : prescede += "bb";
+        } else {
+            proxima = prescede
+        }
+        
             
-        return `[${original}] [${bemol}] [${sustenido}]`
+        return `[${original}] [${anterior}] [${proxima}]`
     }
 }

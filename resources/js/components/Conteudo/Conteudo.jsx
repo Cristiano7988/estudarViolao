@@ -55,16 +55,79 @@ class Conteudo extends Component {
         )
     }
 
+    comparar(nota1, nota2, cromatica) {
+        // pega a posição dos homonimos da escala diatonica na escala cromatica
+        let index = cromatica.homonimos.findIndex( homonimo=> homonimo.match(`\\[${nota1}\\]`) )
+        let index2 = cromatica.homonimos.findIndex( homonimo=> homonimo.match(`\\[${nota2}\\]`) )
+        let soma = 0;
+        
+        index2= !index2 ? 12 : index2 
+        for( let i=index; i <= index2; i++) {
+            soma = parseFloat(soma) + 0.5
+        }
+
+        soma -= 0.5
+        let segunda = soma
+        let nome;
+        let valor;
+        switch (segunda) {
+            case 0:
+                nome = "diminuta"
+                valor = "unissono"
+                break;
+            
+            case 0.5:
+                nome = "menor"
+                valor = String.fromCharCode(189) +" tom"
+                break;
+            
+            case 1:
+                nome = "maior"
+                valor = "Tom"
+                break;
+
+            case 1.5:
+                nome = "aumentada"
+                valor = "Tom e " + String.fromCharCode(189)
+                break;
+
+            default:
+                break;
+        }
+
+        return {
+            valor: valor,
+            nome: "segunda " + nome
+        }
+    }
+
     geraEscala() {
-        let escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
-        escala
-            ? this.setState({
-                erro: false,
-                escala: escala.notas,
-                modo: escala.modo,
-                complemento: escala.complemento
+        try {
+            let escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
+            var cromatica = this.escala.formarEscala(this.state.tom, 0)
+    
+            cromatica.homonimos = []
+            cromatica.notas.map(nota => {
+                cromatica.homonimos.push(this.escala.pegaHomonimos(nota.cifra))
             })
-            : this.setState({ erro: true, escala: null, modo: null, complemento: null })
+
+            var intervalos = []
+            escala.notas.map( (nota, indice)=> {
+                intervalos.push(this.comparar(nota.cifra, escala.notas[(indice + 1) % escala.notas.length].cifra, cromatica))
+            });
+
+            escala
+                ? this.setState({
+                    erro: false,
+                    escala: escala.notas,
+                    modo: escala.modo,
+                    complemento: escala.complemento,
+                    intervalos: intervalos
+                })
+                : this.setState({ erro: true, escala: null, modo: null, complemento: null, intervalos: null })   
+        } catch (error) {
+            this.setState({ erro: true, escala: null, modo: null, complemento: null, intervalos: null })
+        }
     }
 
     defineTom(e) {
@@ -92,7 +155,9 @@ class Conteudo extends Component {
                             {this.state.modo ?
                             <h1 className="text-capitalize">Escala {this.state.modo} {this.state.complemento ? this.state.complemento : ""}</h1>
                             : ""}
-                            <span className="text-secondary mb-4">Insira um tom para visualizar sua escala</span>
+                            {!this.state.escala ?
+                                <span className="text-secondary mb-4">Insira um tom para visualizar sua escala</span>
+                            :''}
                             <div className="input-group input-group-sm w-25 m-auto">
                                 <div className="input-group-prepend">
                                     <span className="input-group-text" id="inputGroup-sizing-sm">Tom:</span>
@@ -144,9 +209,27 @@ class Conteudo extends Component {
                                 </div>
                             : ''}
                             {this.state.escala ?                            
-                                <p>{this.state.escala.map( (nota,index) => {
-                                    return <span className="p-2" key={index} style={{cursor: "pointer"}} onMouseOver={()=>this.highlight(nota.cifra)} onMouseLeave={()=>this.limpaHighlight()}> {nota.cifra}</span>
-                                })}</p>
+                                <div className="d-flex justify-content-between pr-5 mb-5 mt-5" style={{ background: '#a6540d', borderRadius: '5px'}}>{this.state.escala.map( (nota,index) => {
+                                    return (
+                                        <div
+                                            className="p-2"
+                                            key={index}
+                                            style={{position: 'relative'}}
+                                        >
+                                            <p
+                                                style={{color: 'white',cursor: "pointer"}}
+                                                onMouseOver={()=>this.highlight(nota.cifra)}
+                                                onMouseLeave={()=>this.limpaHighlight()}
+                                            >{nota.cifra}</p>
+                                            {this.state.tipo == "1" ?
+                                                <p
+                                                    title={this.state.intervalos[index].nome}
+                                                    style={{position: "absolute", top: '115%',left: "130%", minWidth: "33px"}}
+                                                >{this.state.intervalos[index].valor}</p>
+                                            : ''}  
+                                        </div>
+                                    )
+                                })}</div>
                             : ''}
                         </div>
                     </div>

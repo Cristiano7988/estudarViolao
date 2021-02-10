@@ -81477,20 +81477,95 @@ var Conteudo = /*#__PURE__*/function (_Component) {
       }, this.geraEscala);
     }
   }, {
+    key: "comparar",
+    value: function comparar(nota1, nota2, cromatica) {
+      // pega a posição dos homonimos da escala diatonica na escala cromatica
+      var index = cromatica.homonimos.findIndex(function (homonimo) {
+        return homonimo.match("\\[".concat(nota1, "\\]"));
+      });
+      var index2 = cromatica.homonimos.findIndex(function (homonimo) {
+        return homonimo.match("\\[".concat(nota2, "\\]"));
+      });
+      var soma = 0;
+      index2 = !index2 ? 12 : index2;
+
+      for (var i = index; i <= index2; i++) {
+        soma = parseFloat(soma) + 0.5;
+      }
+
+      soma -= 0.5;
+      var segunda = soma;
+      var nome;
+      var valor;
+
+      switch (segunda) {
+        case 0:
+          nome = "diminuta";
+          valor = "unissono";
+          break;
+
+        case 0.5:
+          nome = "menor";
+          valor = String.fromCharCode(189) + " tom";
+          break;
+
+        case 1:
+          nome = "maior";
+          valor = "Tom";
+          break;
+
+        case 1.5:
+          nome = "aumentada";
+          valor = "Tom e " + String.fromCharCode(189);
+          break;
+
+        default:
+          break;
+      }
+
+      return {
+        valor: valor,
+        nome: "segunda " + nome
+      };
+    }
+  }, {
     key: "geraEscala",
     value: function geraEscala() {
-      var escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
-      escala ? this.setState({
-        erro: false,
-        escala: escala.notas,
-        modo: escala.modo,
-        complemento: escala.complemento
-      }) : this.setState({
-        erro: true,
-        escala: null,
-        modo: null,
-        complemento: null
-      });
+      var _this2 = this;
+
+      try {
+        var escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
+        var cromatica = this.escala.formarEscala(this.state.tom, 0);
+        cromatica.homonimos = [];
+        cromatica.notas.map(function (nota) {
+          cromatica.homonimos.push(_this2.escala.pegaHomonimos(nota.cifra));
+        });
+        var intervalos = [];
+        escala.notas.map(function (nota, indice) {
+          intervalos.push(_this2.comparar(nota.cifra, escala.notas[(indice + 1) % escala.notas.length].cifra, cromatica));
+        });
+        escala ? this.setState({
+          erro: false,
+          escala: escala.notas,
+          modo: escala.modo,
+          complemento: escala.complemento,
+          intervalos: intervalos
+        }) : this.setState({
+          erro: true,
+          escala: null,
+          modo: null,
+          complemento: null,
+          intervalos: null
+        });
+      } catch (error) {
+        this.setState({
+          erro: true,
+          escala: null,
+          modo: null,
+          complemento: null,
+          intervalos: null
+        });
+      }
     }
   }, {
     key: "defineTom",
@@ -81516,7 +81591,7 @@ var Conteudo = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-4"
@@ -81528,9 +81603,9 @@ var Conteudo = /*#__PURE__*/function (_Component) {
         className: "card"
       }, this.state.modo ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
         className: "text-capitalize"
-      }, "Escala ", this.state.modo, " ", this.state.complemento ? this.state.complemento : "") : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, "Escala ", this.state.modo, " ", this.state.complemento ? this.state.complemento : "") : "", !this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-secondary mb-4"
-      }, "Insira um tom para visualizar sua escala"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Insira um tom para visualizar sua escala") : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "input-group input-group-sm w-25 m-auto"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "input-group-prepend"
@@ -81607,20 +81682,39 @@ var Conteudo = /*#__PURE__*/function (_Component) {
         className: "text-danger font-italic"
       }, "*Escala N\xE3o reconhecida") : '', this.state.escala && parseInt(this.state.tipo) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_2__["default"], {
         escala: this.state.escala
-      })) : '', this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.escala.map(function (nota, index) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      })) : '', this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex justify-content-between pr-5 mb-5 mt-5",
+        style: {
+          background: '#a6540d',
+          borderRadius: '5px'
+        }
+      }, this.state.escala.map(function (nota, index) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "p-2",
           key: index,
           style: {
+            position: 'relative'
+          }
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+          style: {
+            color: 'white',
             cursor: "pointer"
           },
           onMouseOver: function onMouseOver() {
-            return _this2.highlight(nota.cifra);
+            return _this3.highlight(nota.cifra);
           },
           onMouseLeave: function onMouseLeave() {
-            return _this2.limpaHighlight();
+            return _this3.limpaHighlight();
           }
-        }, " ", nota.cifra);
+        }, nota.cifra), _this3.state.tipo == "1" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+          title: _this3.state.intervalos[index].nome,
+          style: {
+            position: "absolute",
+            top: '115%',
+            left: "130%",
+            minWidth: "33px"
+          }
+        }, _this3.state.intervalos[index].valor) : '');
       })) : ''))));
     }
   }]);
@@ -82834,14 +82928,24 @@ var Escalas = /*#__PURE__*/function () {
     key: "pegaHomonimos",
     value: function pegaHomonimos(original) {
       var escala = this.formarEscala(original, 0);
-      var index = escala.notas.findIndex(function (nota) {
-        if (nota.cifra == original) {
-          return nota;
-        }
-      });
-      var bemol = original.match(/[EB]|#/) ? escala.notas[index + 2].cifra.replace("#", "") + "b" : escala.notas[index + 2].cifra.replace("#", "") + "bb";
-      var sustenido = escala.notas[(index + 10) % escala.notas.length].nome.match(/i/) ? escala.notas[(index + 11) % escala.notas.length].cifra.replace("b", "") + "#" : !escala.notas[(index + 10) % escala.notas.length].cifra.match(/#/) ? escala.notas[(index + 10) % escala.notas.length].cifra + "##" : '';
-      return "[".concat(original, "] [").concat(bemol, "] [").concat(sustenido, "]");
+      var anterior, proxima;
+      var antecede = escala.notas[(/[FC]/.test(original) ? 11 : 10) % escala.notas.length].cifra.replace(/[b#]/, "");
+      var prescede = escala.notas[2 % escala.notas.length].cifra;
+      prescede = prescede.replace(/#|b/g, "");
+
+      if (!/#/.test(original)) {
+        anterior = !/[FC]/.test(original) && !/b/.test(original) ? antecede += "##" : antecede += "#";
+      } else {
+        anterior = !/[FC]/.test(original) ? /##/.test(original) ? antecede + "####" : antecede + "###" : antecede + "##";
+      }
+
+      if (!/##/.test(original)) {
+        proxima = /#/.test(original) || /[EB]/.test(original) ? /b/.test(original) ? prescede += "bb" : prescede += "b" : /b/.test(original) ? prescede += "bbb" : prescede += "bb";
+      } else {
+        proxima = prescede;
+      }
+
+      return "[".concat(original, "] [").concat(anterior, "] [").concat(proxima, "]");
     }
   }]);
 
