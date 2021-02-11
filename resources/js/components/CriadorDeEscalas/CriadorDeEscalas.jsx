@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Escalas from "../../dados/Escalas";
 import Braco from '../Braco';
-class Conteudo extends Component {
+class CriadorDeEscalas extends Component {
     constructor() {
         super()
         this.escala = new Escalas();
@@ -239,4 +239,4 @@ class Conteudo extends Component {
     }
 }
  
-export default Conteudo;
+export default CriadorDeEscalas;

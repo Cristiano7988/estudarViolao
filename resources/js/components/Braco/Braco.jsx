@@ -23,6 +23,7 @@ class Braco extends Component {
             }
         }
         this.afina = this.afina.bind(this)
+        this.marcar = this.marcar.bind(this)
     }
 
     componentDidUpdate() {
@@ -32,6 +33,15 @@ class Braco extends Component {
 
     componentDidMount() {
         this.digitaEscala()
+    }
+
+    marcar(e) {
+        e.preventDefault();
+        if(this.props.digitar) {
+            let casa = e.target.closest('.casa, .afinacao');
+            casa.lastChild.classList.toggle('active')
+            casa.lastChild.setAttribute('title', casa.lastChild.dataset.nota.replace(/\[|\]/g, "").replace(/ /g, " ou "))
+        }
     }
 
     afina(e) {
@@ -82,22 +92,24 @@ class Braco extends Component {
     digitaEscala() {
         let casas = Array.prototype.slice.call(document.querySelectorAll("[data-nota]"));
 
-        casas.every( casa => {
+        if(this.props.escala) {
+            casas.every( casa => {
 
-            this.props.escala.every( nota => {
+                this.props.escala.every( nota => {
 
-                let homonimos = new RegExp(`\\[${ nota.cifra }\\]`)
+                    let homonimos = new RegExp(`\\[${ nota.cifra }\\]`)
 
-                if(casa.dataset.nota.match( homonimos )) {
-                    casa.classList.add('active')
-                    casa.parentNode.setAttribute('title', nota.cifra)
-                }
+                    if(casa.dataset.nota.match( homonimos )) {
+                        casa.classList.add('active')
+                        casa.parentNode.setAttribute('title', nota.cifra)
+                    }
+
+                    return true
+                })
 
                 return true
             })
-
-            return true
-        })
+        }
     }
 
     render() {
@@ -107,7 +119,7 @@ class Braco extends Component {
             <i className="text-danger">Nota inválida</i>
         : ''}
         <div className="d-flex justify-content-center">
-            <div className="d-flex flex-column justify-content-center">
+            <div className="d-flex flex-column pt-5">
                 <p>{this.state.tessitura.inicio + 1}ª</p>
                 <div className="d-flex flex-column align-items-center">
                     <i className="seta up" onClick={(e)=>this.mudaPosicao(0)}></i>
@@ -119,16 +131,21 @@ class Braco extends Component {
                     return <div key={index} className="corda">{corda.map( (nota, indice)=> {
                         return indice == 0 ? (
                             <div key={indice} className="afinacao">
-                                <input type="text" title="Clique para editar a afinação" onChange={this.afina} data-id={index} placeholder={nota.cifra} style={{width: "15px", border: "none"}}/>
+                                <input type="text"title="Clique para editar a afinação" onChange={this.afina} data-id={index} placeholder={nota.cifra} style={{width: "15px", border: "none"}}/>
                                 <span
                                     data-corda={ ((index - 6) * -1 )}
                                     data-casa={(indice + this.state.tessitura.inicio) }
                                     data-nota={this.escala.pegaHomonimos(nota.cifra)}
+                                    onClick={this.marcar}
                                 ></span>
                             </div>
                         ) : ( (indice + this.state.tessitura.inicio) <= this.state.tessitura.fim ?
      
-                            <div key={indice} className="casa">
+                            <div key={indice}
+                                className="casa"
+                                style={{cursor: this.props.digitar ? "pointer" : "unset"}}
+                                onClick={this.marcar}
+                            >
                                 <hr />
                                 <span
                                     data-corda={ ((index - 6) * -1)}

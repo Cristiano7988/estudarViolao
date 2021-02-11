@@ -81211,6 +81211,7 @@ var Braco = /*#__PURE__*/function (_Component) {
       }
     };
     _this.afina = _this.afina.bind(_assertThisInitialized(_this));
+    _this.marcar = _this.marcar.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -81226,6 +81227,17 @@ var Braco = /*#__PURE__*/function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.digitaEscala();
+    }
+  }, {
+    key: "marcar",
+    value: function marcar(e) {
+      e.preventDefault();
+
+      if (this.props.digitar) {
+        var casa = e.target.closest('.casa, .afinacao');
+        casa.lastChild.classList.toggle('active');
+        casa.lastChild.setAttribute('title', casa.lastChild.dataset.nota.replace(/\[|\]/g, "").replace(/ /g, " ou "));
+      }
     }
   }, {
     key: "afina",
@@ -81275,20 +81287,23 @@ var Braco = /*#__PURE__*/function (_Component) {
       var _this2 = this;
 
       var casas = Array.prototype.slice.call(document.querySelectorAll("[data-nota]"));
-      casas.every(function (casa) {
-        _this2.props.escala.every(function (nota) {
-          var homonimos = new RegExp("\\[".concat(nota.cifra, "\\]"));
 
-          if (casa.dataset.nota.match(homonimos)) {
-            casa.classList.add('active');
-            casa.parentNode.setAttribute('title', nota.cifra);
-          }
+      if (this.props.escala) {
+        casas.every(function (casa) {
+          _this2.props.escala.every(function (nota) {
+            var homonimos = new RegExp("\\[".concat(nota.cifra, "\\]"));
+
+            if (casa.dataset.nota.match(homonimos)) {
+              casa.classList.add('active');
+              casa.parentNode.setAttribute('title', nota.cifra);
+            }
+
+            return true;
+          });
 
           return true;
         });
-
-        return true;
-      });
+      }
     }
   }, {
     key: "render",
@@ -81300,7 +81315,7 @@ var Braco = /*#__PURE__*/function (_Component) {
       }, "Nota inv\xE1lida") : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-center"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "d-flex flex-column justify-content-center"
+        className: "d-flex flex-column pt-5"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.tessitura.inicio + 1, "\xAA"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex flex-column align-items-center"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -81336,10 +81351,15 @@ var Braco = /*#__PURE__*/function (_Component) {
           }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
             "data-corda": (index - 6) * -1,
             "data-casa": indice + _this3.state.tessitura.inicio,
-            "data-nota": _this3.escala.pegaHomonimos(nota.cifra)
+            "data-nota": _this3.escala.pegaHomonimos(nota.cifra),
+            onClick: _this3.marcar
           })) : indice + _this3.state.tessitura.inicio <= _this3.state.tessitura.fim ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: indice,
-            className: "casa"
+            className: "casa",
+            style: {
+              cursor: _this3.props.digitar ? "pointer" : "unset"
+            },
+            onClick: _this3.marcar
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
             "data-corda": (index - 6) * -1,
             "data-casa": indice + _this3.state.tessitura.inicio,
@@ -81372,10 +81392,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Conteudo/Conteudo.jsx":
-/*!*******************************************************!*\
-  !*** ./resources/js/components/Conteudo/Conteudo.jsx ***!
-  \*******************************************************/
+/***/ "./resources/js/components/CriadorDeEscalas/CriadorDeEscalas.jsx":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/CriadorDeEscalas/CriadorDeEscalas.jsx ***!
+  \***********************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -81411,15 +81431,15 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var Conteudo = /*#__PURE__*/function (_Component) {
-  _inherits(Conteudo, _Component);
+var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
+  _inherits(CriadorDeEscalas, _Component);
 
-  var _super = _createSuper(Conteudo);
+  var _super = _createSuper(CriadorDeEscalas);
 
-  function Conteudo() {
+  function CriadorDeEscalas() {
     var _this;
 
-    _classCallCheck(this, Conteudo);
+    _classCallCheck(this, CriadorDeEscalas);
 
     _this = _super.call(this);
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
@@ -81438,7 +81458,7 @@ var Conteudo = /*#__PURE__*/function (_Component) {
     return _this;
   }
 
-  _createClass(Conteudo, [{
+  _createClass(CriadorDeEscalas, [{
     key: "limpaHighlight",
     value: function limpaHighlight() {
       var casas = Array.prototype.slice.call(document.querySelectorAll('[data-nota]'));
@@ -81719,25 +81739,25 @@ var Conteudo = /*#__PURE__*/function (_Component) {
     }
   }]);
 
-  return Conteudo;
+  return CriadorDeEscalas;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
-/* harmony default export */ __webpack_exports__["default"] = (Conteudo);
+/* harmony default export */ __webpack_exports__["default"] = (CriadorDeEscalas);
 
 /***/ }),
 
-/***/ "./resources/js/components/Conteudo/index.js":
-/*!***************************************************!*\
-  !*** ./resources/js/components/Conteudo/index.js ***!
-  \***************************************************/
+/***/ "./resources/js/components/CriadorDeEscalas/index.js":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/CriadorDeEscalas/index.js ***!
+  \***********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Conteudo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Conteudo */ "./resources/js/components/Conteudo/Conteudo.jsx");
+/* harmony import */ var _CriadorDeEscalas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CriadorDeEscalas */ "./resources/js/components/CriadorDeEscalas/CriadorDeEscalas.jsx");
 
-/* harmony default export */ __webpack_exports__["default"] = (_Conteudo__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ __webpack_exports__["default"] = (_CriadorDeEscalas__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 
@@ -81838,6 +81858,101 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Decifrar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Decifrar */ "./resources/js/components/Decifrar/Decifrar.jsx");
 
 /* harmony default export */ __webpack_exports__["default"] = (_Decifrar__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
+/***/ "./resources/js/components/Editor/Editor.jsx":
+/*!***************************************************!*\
+  !*** ./resources/js/components/Editor/Editor.jsx ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Braco__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Braco */ "./resources/js/components/Braco/index.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var Editor = /*#__PURE__*/function (_Component) {
+  _inherits(Editor, _Component);
+
+  var _super = _createSuper(Editor);
+
+  function Editor() {
+    _classCallCheck(this, Editor);
+
+    return _super.call(this);
+  }
+
+  _createClass(Editor, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container py-4"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row justify-content-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-6"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Editor de Cifras"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        style: {
+          border: "none"
+        },
+        placeholder: "Nome",
+        className: "text-center"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        escala: false,
+        digitar: true
+      })))));
+    }
+  }]);
+
+  return Editor;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (Editor);
+
+/***/ }),
+
+/***/ "./resources/js/components/Editor/index.js":
+/*!*************************************************!*\
+  !*** ./resources/js/components/Editor/index.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Editor */ "./resources/js/components/Editor/Editor.jsx");
+
+/* harmony default export */ __webpack_exports__["default"] = (_Editor__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 
@@ -82510,8 +82625,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _components_Exercicios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Exercicios */ "./resources/js/components/Exercicios/index.js");
-/* harmony import */ var _components_Conteudo__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Conteudo */ "./resources/js/components/Conteudo/index.js");
-/* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home/index.js");
+/* harmony import */ var _components_CriadorDeEscalas__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/CriadorDeEscalas */ "./resources/js/components/CriadorDeEscalas/index.js");
+/* harmony import */ var _components_Editor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Editor */ "./resources/js/components/Editor/index.js");
+/* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -82533,6 +82649,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -82569,11 +82686,30 @@ var Sistema = /*#__PURE__*/function (_Component) {
         to: "/home",
         className: "nav-link"
       }, "Home")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-        className: "nav-item"
+        className: "nav-item dropdown"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        id: "dLabel",
+        className: "nav-link dropdown-toggle",
+        type: "button",
+        "data-toggle": "dropdown",
+        "aria-haspopup": "true",
+        "aria-expanded": "false"
+      }, "Recursos"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "dropdown-menu exerc\xEDcios",
+        style: {
+          background: "currentColor"
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: "nav-item dropdown-item"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
-        to: "/conteudo",
+        to: "/recursos/escalas",
         className: "nav-link"
-      }, "Conteudo")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      }, "Escalas")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: "nav-item dropdown-item"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+        to: "/recursos/editor",
+        className: "nav-link"
+      }, "Editor de Cifras")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: "nav-item dropdown"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         id: "dLabel",
@@ -82600,10 +82736,13 @@ var Sistema = /*#__PURE__*/function (_Component) {
       }, "Decifrar"))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/home",
         exact: true,
-        component: _Home__WEBPACK_IMPORTED_MODULE_5__["default"]
+        component: _Home__WEBPACK_IMPORTED_MODULE_6__["default"]
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
-        path: "/conteudo",
-        component: _components_Conteudo__WEBPACK_IMPORTED_MODULE_4__["default"]
+        path: "/recursos/escalas",
+        component: _components_CriadorDeEscalas__WEBPACK_IMPORTED_MODULE_4__["default"]
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "/recursos/editor",
+        component: _components_Editor__WEBPACK_IMPORTED_MODULE_5__["default"]
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/exercicios/:exercicio",
         component: _components_Exercicios__WEBPACK_IMPORTED_MODULE_3__["default"]
