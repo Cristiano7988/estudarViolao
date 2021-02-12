@@ -81239,18 +81239,26 @@ var Braco = /*#__PURE__*/function (_Component) {
       this.digitaEscala();
     }
   }, {
+    key: "nomear",
+    value: function nomear(e, index) {
+      e.preventDefault();
+      var braco = document.querySelector(".braco[data-id=\"".concat(index, "\"]"));
+      braco.dataset.cifra = e.target.value;
+    }
+  }, {
     key: "marcar",
     value: function marcar(e) {
       e.preventDefault();
 
       if (this.props.digitar) {
         var casa = e.target.closest('.casa, .afinacao');
-        var braco = e.target.closest('.braco').dataset.id; // Salva no componente pai
+        var braco = e.target.closest('.braco'); // Salva no componente pai
 
         this.props.salvar({
           corda: casa.lastChild.dataset.corda,
-          casa: casa.lastChild.dataset.casa,
-          braco: braco
+          nota: casa.lastChild.dataset.nota,
+          braco: braco.dataset.id,
+          cifra: braco.dataset.cifra ? braco.dataset.cifra : ""
         });
       }
     }
@@ -81329,6 +81337,10 @@ var Braco = /*#__PURE__*/function (_Component) {
         className: "cifra"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
         type: "text",
+        "data-input": this.props.id,
+        onChange: function onChange(e) {
+          return _this3.nomear(e, _this3.props.id);
+        },
         style: {
           border: "none"
         },
@@ -81967,7 +81979,7 @@ var Editor = /*#__PURE__*/function (_Component) {
     value: function verificaSaves(nota) {
       var marcadas = this.state.marcadas;
       var desmarcar = this.state.marcadas.findIndex(function (marcadas) {
-        return marcadas.corda == nota.corda && marcadas.casa == nota.casa && marcadas.braco == nota.braco;
+        return marcadas.corda == nota.corda && marcadas.nota == nota.nota && marcadas.braco == nota.braco;
       });
 
       if (desmarcar > -1) {
@@ -81995,8 +82007,10 @@ var Editor = /*#__PURE__*/function (_Component) {
     key: "retomar",
     value: function retomar() {
       this.state.marcadas.forEach(function (posicao) {
-        var elemento = document.querySelector("[data-id=\"".concat(posicao.braco, "\"] [data-corda=\"").concat(posicao.corda, "\"][data-casa=\"").concat(posicao.casa, "\"]"));
+        var elemento = document.querySelector("[data-id=\"".concat(posicao.braco, "\"] [data-corda=\"").concat(posicao.corda, "\"][data-nota=\"").concat(posicao.nota, "\"]"));
         elemento ? elemento.classList.add('active') : '';
+        var input = document.querySelector("[data-input=\"".concat(posicao.braco, "\"]"));
+        input ? input.value = posicao.cifra : '';
       });
       return this.state.marcadas;
     }

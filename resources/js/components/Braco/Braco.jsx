@@ -41,17 +41,23 @@ class Braco extends Component {
         this.digitaEscala()
     }
 
+    nomear(e, index) {
+        e.preventDefault();
+        let braco = document.querySelector(`.braco[data-id="${index}"]`)
+        braco.dataset.cifra = e.target.value
+    }
+
     marcar(e) {
         e.preventDefault();
         if(this.props.digitar) {
             let casa = e.target.closest('.casa, .afinacao');
-            let braco = e.target.closest('.braco').dataset.id;
-
+            let braco = e.target.closest('.braco');
             // Salva no componente pai
             this.props.salvar({
                 corda: casa.lastChild.dataset.corda,
-                casa: casa.lastChild.dataset.casa,
-                braco: braco
+                nota: casa.lastChild.dataset.nota,
+                braco: braco.dataset.id,
+                cifra: braco.dataset.cifra ? braco.dataset.cifra : ""
             })
         }
     }
@@ -71,9 +77,10 @@ class Braco extends Component {
             let casas = e.target.parentNode.parentNode.childNodes
             let cordas = this.state.cordas
     
-            cordas[e.target.dataset.id] = this.escala.aumentaUmaOitava(this.escala.formarEscala(e.target.value, 0).notas);
+            cordas[e.target.dataset.id] = this.escala.aumentaUmaOitava(this.escala.formarEscala(e.target.value, 0).notas)
+
             casas[0].firstChild.placeholder = e.target.value
-            
+
             this.setState({
                 cordas: cordas,
                 erro: {
@@ -129,7 +136,7 @@ class Braco extends Component {
         <>
         {this.props.digitar ?
             <div className="cifra">
-                <input type="text" style={{border: "none"}} placeholder="Nome" className="text-center cifra" />
+                <input type="text" data-input={this.props.id} onChange={(e)=>this.nomear(e,this.props.id)} style={{border: "none"}} placeholder="Nome" className="text-center cifra" />
             </div>
         :""}
         {this.state.erro.afinacao ?
@@ -170,7 +177,7 @@ class Braco extends Component {
                             <div key={indice}
                                 className="casa"
                                 style={{cursor: this.props.digitar ? "pointer" : "unset"}}
-                                onClick={this.marcar}
+                                onClick={this.marcar}                  
                             >
                                 <hr />
                                 <span

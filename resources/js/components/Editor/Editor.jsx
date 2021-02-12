@@ -28,7 +28,7 @@ class Editor extends Component {
         let desmarcar = this.state.marcadas.findIndex(marcadas=> {
             return (
                 marcadas.corda == nota.corda &&
-                marcadas.casa == nota.casa &&
+                marcadas.nota == nota.nota &&
                 marcadas.braco == nota.braco
             )
         })
@@ -53,8 +53,11 @@ class Editor extends Component {
 
     retomar() {
         this.state.marcadas.forEach(posicao=> {
-            let elemento = document.querySelector(`[data-id="${posicao.braco}"] [data-corda="${posicao.corda}"][data-casa="${posicao.casa}"]`)
+            let elemento = document.querySelector(`[data-id="${posicao.braco}"] [data-corda="${posicao.corda}"][data-nota="${posicao.nota}"]`)
             elemento ? elemento.classList.add('active') : ''
+
+            let input = document.querySelector(`[data-input="${posicao.braco}"]`)
+            input ? input.value = posicao.cifra: ''
         })
 
         return this.state.marcadas
