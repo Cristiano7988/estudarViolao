@@ -81226,7 +81226,11 @@ var Braco = /*#__PURE__*/function (_Component) {
       document.querySelectorAll(".active").forEach(function (el) {
         return el.classList.remove("active");
       });
-      this.props.retomar();
+
+      if (this.state.digitar) {
+        this.props.retomar();
+      }
+
       this.digitaEscala();
     }
   }, {

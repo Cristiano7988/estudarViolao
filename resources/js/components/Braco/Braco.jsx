@@ -31,7 +31,9 @@ class Braco extends Component {
     componentDidUpdate() {
         // Limpa o braço para poder atualizá-lo em seguida
         document.querySelectorAll(".active").forEach(el=>el.classList.remove("active"));
-        this.props.retomar()
+        if(this.state.digitar) {
+            this.props.retomar()
+        }
         this.digitaEscala();
     }
 
