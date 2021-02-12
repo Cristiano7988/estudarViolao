@@ -81542,6 +81542,70 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
       }, this.geraEscala);
     }
   }, {
+    key: "segunda",
+    value: function segunda(soma) {
+      var intervalo = {};
+
+      switch (soma) {
+        case 0:
+          intervalo.nome = "diminuta";
+          intervalo.valor = "unissono";
+          break;
+
+        case 0.5:
+          intervalo.nome = "menor";
+          intervalo.valor = String.fromCharCode(189) + " tom";
+          break;
+
+        case 1:
+          intervalo.nome = "maior";
+          intervalo.valor = "Tom";
+          break;
+
+        case 1.5:
+          intervalo.nome = "aumentada";
+          intervalo.valor = "Tom e " + String.fromCharCode(189);
+          break;
+
+        default:
+          break;
+      }
+
+      return intervalo;
+    }
+  }, {
+    key: "terca",
+    value: function terca(soma) {
+      var intervalo = {};
+
+      switch (soma) {
+        case 1:
+          intervalo.nome = "diminuta";
+          intervalo.valor = "Tom";
+          break;
+
+        case 1.5:
+          intervalo.nome = "menor";
+          intervalo.valor = "Tom e " + String.fromCharCode(189);
+          break;
+
+        case 2:
+          intervalo.nome = "maior";
+          intervalo.valor = "2 Tons";
+          break;
+
+        case 2.5:
+          intervalo.nome = "aumentada";
+          intervalo.valor = "2 Tons e " + String.fromCharCode(189);
+          break;
+
+        default:
+          break;
+      }
+
+      return intervalo;
+    }
+  }, {
     key: "comparar",
     value: function comparar(nota1, nota2, cromatica) {
       // pega a posição dos homonimos da escala diatonica na escala cromatica
@@ -81552,46 +81616,34 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
         return homonimo.match("\\[".concat(nota2, "\\]"));
       });
       var soma = 0;
-      index2 = !index2 ? 12 : index2;
+      var id2 = cromatica.notas[index2].id;
+      var id = cromatica.notas[index].id; // Calculo distancia entre as notas
 
-      for (var i = index; i <= index2; i++) {
-        soma = parseFloat(soma) + 0.5;
+      var distancia = {};
+      distancia.diatonica = id2 - id;
+      distancia.cromatica = index2 - index; // Calculo para 2 oitavas
+
+      if (distancia.cromatica < 0) {
+        distancia.cromatica = (index2 + 12 - index) % 13;
       }
 
-      soma -= 0.5;
-      var segunda = soma;
-      var nome;
-      var valor;
+      if (distancia.diatonica < 0) {
+        distancia.diatonica = (id2 + 7 - id) % 9;
+      }
 
-      switch (segunda) {
-        case 0:
-          nome = "diminuta";
-          valor = "unissono";
-          break;
+      soma = distancia.cromatica * 0.5;
 
-        case 0.5:
-          nome = "menor";
-          valor = String.fromCharCode(189) + " tom";
-          break;
-
+      switch (distancia.diatonica) {
         case 1:
-          nome = "maior";
-          valor = "Tom";
+          return this.segunda(soma, "segunda");
           break;
 
-        case 1.5:
-          nome = "aumentada";
-          valor = "Tom e " + String.fromCharCode(189);
-          break;
+        case 2:
+          return this.terca(soma, "terça");
 
         default:
           break;
       }
-
-      return {
-        valor: valor,
-        nome: "segunda " + nome
-      };
     }
   }, {
     key: "geraEscala",

@@ -55,49 +55,96 @@ class CriadorDeEscalas extends Component {
         )
     }
 
-    comparar(nota1, nota2, cromatica) {
-        // pega a posição dos homonimos da escala diatonica na escala cromatica
-        let index = cromatica.homonimos.findIndex( homonimo=> homonimo.match(`\\[${nota1}\\]`) )
-        let index2 = cromatica.homonimos.findIndex( homonimo=> homonimo.match(`\\[${nota2}\\]`) )
-        let soma = 0;
-        
-        index2= !index2 ? 12 : index2 
-        for( let i=index; i <= index2; i++) {
-            soma = parseFloat(soma) + 0.5
-        }
-
-        soma -= 0.5
-        let segunda = soma
-        let nome;
-        let valor;
-        switch (segunda) {
+    segunda(soma) {
+        let intervalo = {};
+        switch (soma) {
             case 0:
-                nome = "diminuta"
-                valor = "unissono"
+                intervalo.nome = "diminuta"
+                intervalo.valor = "unissono"
                 break;
             
             case 0.5:
-                nome = "menor"
-                valor = String.fromCharCode(189) +" tom"
+                intervalo.nome = "menor"
+                intervalo.valor = String.fromCharCode(189) +" tom"
                 break;
             
             case 1:
-                nome = "maior"
-                valor = "Tom"
+                intervalo.nome = "maior"
+                intervalo.valor = "Tom"
                 break;
 
             case 1.5:
-                nome = "aumentada"
-                valor = "Tom e " + String.fromCharCode(189)
+                intervalo.nome = "aumentada"
+                intervalo.valor = "Tom e " + String.fromCharCode(189)
                 break;
 
             default:
                 break;
         }
+        return intervalo;
+    }
 
-        return {
-            valor: valor,
-            nome: "segunda " + nome
+    terca(soma) {
+        let intervalo = {};
+        switch (soma) {
+            case 1:
+                intervalo.nome = "diminuta"
+                intervalo.valor = "Tom"
+                break;
+            
+            case 1.5:
+                intervalo.nome = "menor"
+                intervalo.valor = "Tom e " + String.fromCharCode(189)
+                break;
+            
+            case 2:
+                intervalo.nome = "maior"
+                intervalo.valor = "2 Tons"
+                break;
+
+            case 2.5:
+                intervalo.nome = "aumentada"
+                intervalo.valor = "2 Tons e " + String.fromCharCode(189)
+                break;
+
+            default:
+                break;
+        }
+        return intervalo;
+    }
+
+    comparar(nota1, nota2, cromatica) {
+        // pega a posição dos homonimos da escala diatonica na escala cromatica
+        let index = cromatica.homonimos.findIndex( homonimo=> homonimo.match(`\\[${nota1}\\]`) )
+        let index2 = cromatica.homonimos.findIndex( homonimo=> homonimo.match(`\\[${nota2}\\]`) )
+        let soma = 0;
+
+        let id2 = cromatica.notas[index2].id;
+        let id = cromatica.notas[index].id;
+        // Calculo distancia entre as notas
+        let distancia = {}
+
+        distancia.diatonica = id2 - id;
+        distancia.cromatica = index2 - index
+         
+        // Calculo para 2 oitavas
+        if(distancia.cromatica < 0) {
+            distancia.cromatica = ((index2 + 12) - index) % 13
+        }
+        if(distancia.diatonica < 0 ) {
+            distancia.diatonica = ( (id2 + 7) - id ) % 9
+        }
+
+        soma = distancia.cromatica * 0.5
+
+        switch (distancia.diatonica) {
+            case 1:
+                return this.segunda(soma, "segunda");
+                break;
+            case 2:
+                return this.terca(soma, "terça")
+            default:
+                break;
         }
     }
 
