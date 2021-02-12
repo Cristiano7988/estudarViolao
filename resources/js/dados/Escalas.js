@@ -20,6 +20,7 @@ export default class Escalas {
         escala.forEach(nota => {
             escala.push(nota);
         });
+        return escala
     }
 
     reduzPraUmaOitava(escala) {

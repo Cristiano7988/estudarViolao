@@ -1,3 +1,4 @@
+import { remove } from 'lodash';
 import React, { Component } from 'react';
 import Escalas from '../../dados/Escalas';
 
@@ -7,12 +8,12 @@ class Braco extends Component {
         this.escala = new Escalas()
         this.state = { 
             cordas: [
-                this.escala.formarEscala("E", 0).notas,
-                this.escala.formarEscala("A", 0).notas,
-                this.escala.formarEscala("D", 0).notas,
-                this.escala.formarEscala("G", 0).notas,
-                this.escala.formarEscala("B", 0).notas,
-                this.escala.formarEscala("E", 0).notas
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("E", 0).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("A", 0).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("D", 0).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("G", 0).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("B", 0).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("E", 0).notas)
             ],
             tessitura: {
                 inicio: 0,
@@ -20,14 +21,17 @@ class Braco extends Component {
             },
             erro: {
                 afinacao: false
-            }
+            },
+            notas: []
         }
         this.afina = this.afina.bind(this)
         this.marcar = this.marcar.bind(this)
     }
 
     componentDidUpdate() {
+        // Limpa o braço para poder atualizá-lo em seguida
         document.querySelectorAll(".active").forEach(el=>el.classList.remove("active"));
+        this.props.retomar()
         this.digitaEscala();
     }
 
@@ -39,8 +43,14 @@ class Braco extends Component {
         e.preventDefault();
         if(this.props.digitar) {
             let casa = e.target.closest('.casa, .afinacao');
-            casa.lastChild.classList.toggle('active')
-            casa.lastChild.setAttribute('title', casa.lastChild.dataset.nota.replace(/\[|\]/g, "").replace(/ /g, " ou "))
+            let braco = e.target.closest('.braco').dataset.id;
+
+            // Salva no componente pai
+            this.props.salvar({
+                corda: casa.lastChild.dataset.corda,
+                casa: casa.lastChild.dataset.casa,
+                braco: braco
+            })
         }
     }
 
@@ -59,7 +69,7 @@ class Braco extends Component {
             let casas = e.target.parentNode.parentNode.childNodes
             let cordas = this.state.cordas
     
-            cordas[e.target.dataset.id] = this.escala.formarEscala(e.target.value, 0).notas;
+            cordas[e.target.dataset.id] = this.escala.aumentaUmaOitava(this.escala.formarEscala(e.target.value, 0).notas);
             casas[0].firstChild.placeholder = e.target.value
             
             this.setState({
@@ -115,31 +125,45 @@ class Braco extends Component {
     render() {
         return (
         <>
+        {this.props.digitar ?
+            <div className="cifra">
+                <input type="text" style={{border: "none"}} placeholder="Nome" className="text-center cifra" />
+            </div>
+        :""}
         {this.state.erro.afinacao ?
             <i className="text-danger">Nota inválida</i>
         : ''}
         <div className="d-flex justify-content-center">
-            <div className="d-flex flex-column pt-5">
+        {!this.props.estender ?
+            <div className={`d-flex flex-column ${this.props.afinar ? "pt-5" : "pt-4"}`}>
                 <p>{this.state.tessitura.inicio + 1}ª</p>
                 <div className="d-flex flex-column align-items-center">
                     <i className="seta up" onClick={(e)=>this.mudaPosicao(0)}></i>
                     <i className="seta down" onClick={(e)=>this.mudaPosicao(1)}></i>
                 </div>
             </div>
-            <div className="braco">
+            : ""}
+            <div className="braco" data-id={this.props.id}>
                 {this.state.cordas.map( (corda,index) =>{
-                    return <div key={index} className="corda">{corda.map( (nota, indice)=> {
+                    let posicao = ((index - 6) * -1 );
+
+                    return <div key={index} className={`corda corda-${posicao}`}>{corda.map( (nota, indice)=> {
+                        let inicio = this.props.estender ? indice  : indice + this.state.tessitura.inicio;
+                        let final = this.props.estender ? 16 : this.state.tessitura.fim;
+
                         return indice == 0 ? (
-                            <div key={indice} className="afinacao">
-                                <input type="text"title="Clique para editar a afinação" onChange={this.afina} data-id={index} placeholder={nota.cifra} style={{width: "15px", border: "none"}}/>
+                            <div key={indice} className="afinacao" style={{cursor: this.props.digitar ? "pointer" : "unset"}}>
+                                {this.props.afinar ?
+                                    <input type="text" title="Clique para editar a afinação" onChange={this.afina} data-id={index} placeholder={nota.cifra} style={{width: "15px", border: "none"}}/>
+                                : ''}
                                 <span
-                                    data-corda={ ((index - 6) * -1 )}
-                                    data-casa={(indice + this.state.tessitura.inicio) }
+                                    data-corda={posicao}
+                                    data-casa={indice}
                                     data-nota={this.escala.pegaHomonimos(nota.cifra)}
                                     onClick={this.marcar}
                                 ></span>
                             </div>
-                        ) : ( (indice + this.state.tessitura.inicio) <= this.state.tessitura.fim ?
+                        ) : ( inicio <= final ?
      
                             <div key={indice}
                                 className="casa"
@@ -148,11 +172,11 @@ class Braco extends Component {
                             >
                                 <hr />
                                 <span
-                                    data-corda={ ((index - 6) * -1)}
-                                    data-casa={(indice + this.state.tessitura.inicio) }
+                                    data-corda={posicao}
+                                    data-casa={(inicio)}
                                     data-nota={
                                         this.escala.pegaHomonimos(
-                                            corda[ (indice + this.state.tessitura.inicio) % corda.length].cifra
+                                            corda[inicio % corda.length].cifra
                                         )
                                     }
                                 ></span>

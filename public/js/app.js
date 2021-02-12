@@ -81160,9 +81160,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -81188,6 +81190,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var Braco = /*#__PURE__*/function (_Component) {
   _inherits(Braco, _Component);
 
@@ -81199,16 +81202,17 @@ var Braco = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, Braco);
 
     _this = _super.call(this, props);
-    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__["default"]();
     _this.state = {
-      cordas: [_this.escala.formarEscala("E", 0).notas, _this.escala.formarEscala("A", 0).notas, _this.escala.formarEscala("D", 0).notas, _this.escala.formarEscala("G", 0).notas, _this.escala.formarEscala("B", 0).notas, _this.escala.formarEscala("E", 0).notas],
+      cordas: [_this.escala.aumentaUmaOitava(_this.escala.formarEscala("E", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("A", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("D", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("G", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("B", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("E", 0).notas)],
       tessitura: {
         inicio: 0,
         fim: 5
       },
       erro: {
         afinacao: false
-      }
+      },
+      notas: []
     };
     _this.afina = _this.afina.bind(_assertThisInitialized(_this));
     _this.marcar = _this.marcar.bind(_assertThisInitialized(_this));
@@ -81218,9 +81222,11 @@ var Braco = /*#__PURE__*/function (_Component) {
   _createClass(Braco, [{
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
+      // Limpa o braço para poder atualizá-lo em seguida
       document.querySelectorAll(".active").forEach(function (el) {
         return el.classList.remove("active");
       });
+      this.props.retomar();
       this.digitaEscala();
     }
   }, {
@@ -81235,8 +81241,13 @@ var Braco = /*#__PURE__*/function (_Component) {
 
       if (this.props.digitar) {
         var casa = e.target.closest('.casa, .afinacao');
-        casa.lastChild.classList.toggle('active');
-        casa.lastChild.setAttribute('title', casa.lastChild.dataset.nota.replace(/\[|\]/g, "").replace(/ /g, " ou "));
+        var braco = e.target.closest('.braco').dataset.id; // Salva no componente pai
+
+        this.props.salvar({
+          corda: casa.lastChild.dataset.corda,
+          casa: casa.lastChild.dataset.casa,
+          braco: braco
+        });
       }
     }
   }, {
@@ -81256,7 +81267,7 @@ var Braco = /*#__PURE__*/function (_Component) {
       try {
         var casas = e.target.parentNode.parentNode.childNodes;
         var cordas = this.state.cordas;
-        cordas[e.target.dataset.id] = this.escala.formarEscala(e.target.value, 0).notas;
+        cordas[e.target.dataset.id] = this.escala.aumentaUmaOitava(this.escala.formarEscala(e.target.value, 0).notas);
         casas[0].firstChild.placeholder = e.target.value;
         this.setState({
           cordas: cordas,
@@ -81310,35 +81321,53 @@ var Braco = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this3 = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.state.erro.afinacao ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, this.props.digitar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "cifra"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+        type: "text",
+        style: {
+          border: "none"
+        },
+        placeholder: "Nome",
+        className: "text-center cifra"
+      })) : "", this.state.erro.afinacao ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "text-danger"
-      }, "Nota inv\xE1lida") : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Nota inv\xE1lida") : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "d-flex justify-content-center"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "d-flex flex-column pt-5"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.tessitura.inicio + 1, "\xAA"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, !this.props.estender ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "d-flex flex-column ".concat(this.props.afinar ? "pt-5" : "pt-4")
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, this.state.tessitura.inicio + 1, "\xAA"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "d-flex flex-column align-items-center"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "seta up",
         onClick: function onClick(e) {
           return _this3.mudaPosicao(0);
         }
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "seta down",
         onClick: function onClick(e) {
           return _this3.mudaPosicao(1);
         }
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "braco"
+      }))) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "braco",
+        "data-id": this.props.id
       }, this.state.cordas.map(function (corda, index) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        var posicao = (index - 6) * -1;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
           key: index,
-          className: "corda"
+          className: "corda corda-".concat(posicao)
         }, corda.map(function (nota, indice) {
-          return indice == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          var inicio = _this3.props.estender ? indice : indice + _this3.state.tessitura.inicio;
+
+          var _final = _this3.props.estender ? 16 : _this3.state.tessitura.fim;
+
+          return indice == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
             key: indice,
-            className: "afinacao"
-          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+            className: "afinacao",
+            style: {
+              cursor: _this3.props.digitar ? "pointer" : "unset"
+            }
+          }, _this3.props.afinar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
             type: "text",
             title: "Clique para editar a afina\xE7\xE3o",
             onChange: _this3.afina,
@@ -81348,22 +81377,22 @@ var Braco = /*#__PURE__*/function (_Component) {
               width: "15px",
               border: "none"
             }
-          }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-            "data-corda": (index - 6) * -1,
-            "data-casa": indice + _this3.state.tessitura.inicio,
+          }) : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+            "data-corda": posicao,
+            "data-casa": indice,
             "data-nota": _this3.escala.pegaHomonimos(nota.cifra),
             onClick: _this3.marcar
-          })) : indice + _this3.state.tessitura.inicio <= _this3.state.tessitura.fim ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          })) : inicio <= _final ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
             key: indice,
             className: "casa",
             style: {
               cursor: _this3.props.digitar ? "pointer" : "unset"
             },
             onClick: _this3.marcar
-          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-            "data-corda": (index - 6) * -1,
-            "data-casa": indice + _this3.state.tessitura.inicio,
-            "data-nota": _this3.escala.pegaHomonimos(corda[(indice + _this3.state.tessitura.inicio) % corda.length].cifra)
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+            "data-corda": posicao,
+            "data-casa": inicio,
+            "data-nota": _this3.escala.pegaHomonimos(corda[inicio % corda.length].cifra)
           })) : "";
         }));
       }))));
@@ -81371,7 +81400,7 @@ var Braco = /*#__PURE__*/function (_Component) {
   }]);
 
   return Braco;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+}(react__WEBPACK_IMPORTED_MODULE_1__["Component"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (Braco);
 
@@ -81904,33 +81933,158 @@ var Editor = /*#__PURE__*/function (_Component) {
   var _super = _createSuper(Editor);
 
   function Editor() {
+    var _this;
+
     _classCallCheck(this, Editor);
 
-    return _super.call(this);
+    _this = _super.call(this);
+    _this.retomar = _this.retomar.bind(_assertThisInitialized(_this));
+    _this.salvar = _this.salvar.bind(_assertThisInitialized(_this));
+    _this.afinar = _this.afinar.bind(_assertThisInitialized(_this));
+    _this.remover = _this.remover.bind(_assertThisInitialized(_this));
+    _this.adicionar = _this.adicionar.bind(_assertThisInitialized(_this));
+    _this.estender = _this.estender.bind(_assertThisInitialized(_this));
+    _this.state = {
+      contador: [''],
+      afinar: false,
+      estender: false,
+      marcadas: []
+    };
+    return _this;
   }
 
   _createClass(Editor, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this.retomar();
+    }
+  }, {
+    key: "verificaSaves",
+    value: function verificaSaves(nota) {
+      var marcadas = this.state.marcadas;
+      var desmarcar = this.state.marcadas.findIndex(function (marcadas) {
+        return marcadas.corda == nota.corda && marcadas.casa == nota.casa && marcadas.braco == nota.braco;
+      });
+
+      if (desmarcar > -1) {
+        marcadas.splice(desmarcar, 1);
+        this.setState({
+          marcadas: marcadas
+        });
+        return true;
+      }
+    }
+  }, {
+    key: "salvar",
+    value: function salvar(notas) {
+      if (this.verificaSaves(notas)) {
+        return false;
+      }
+
+      var marcadas = this.state.marcadas;
+      marcadas.push(notas);
+      this.setState({
+        marcadas: marcadas
+      });
+    }
+  }, {
+    key: "retomar",
+    value: function retomar() {
+      this.state.marcadas.forEach(function (posicao) {
+        var elemento = document.querySelector("[data-id=\"".concat(posicao.braco, "\"] [data-corda=\"").concat(posicao.corda, "\"][data-casa=\"").concat(posicao.casa, "\"]"));
+        elemento ? elemento.classList.add('active') : '';
+      });
+      return this.state.marcadas;
+    }
+  }, {
+    key: "estender",
+    value: function estender(e) {
+      e.preventDefault();
+      e.target.classList.toggle('estender');
+      this.setState({
+        estender: e.target.classList.contains('estender')
+      });
+      this.retomar();
+    }
+  }, {
+    key: "afinar",
+    value: function afinar(e) {
+      e.preventDefault();
+      e.target.classList.toggle('afinar');
+      this.setState({
+        afinar: e.target.classList.contains('afinar')
+      });
+    }
+  }, {
+    key: "remover",
+    value: function remover(e) {
+      e.preventDefault();
+      var remove = this.state.contador;
+
+      if (remove.length > 1) {
+        remove.splice(remove.length - 1, 1);
+        this.setState({
+          contador: remove
+        });
+      }
+    }
+  }, {
+    key: "adicionar",
+    value: function adicionar(e) {
+      e.preventDefault();
+      var adiciona = this.state.contador;
+      adiciona.push('');
+      this.setState({
+        contador: adiciona
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-4"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row justify-content-center"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-md-6"
+        className: "col-md-12"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Editor de Cifras"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        style: {
-          border: "none"
-        },
-        placeholder: "Nome",
-        className: "text-center"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_1__["default"], {
-        escala: false,
-        digitar: true
-      })))));
+        className: "card text-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+        className: "m-5"
+      }, "Editor"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "mb-5"
+      }, "Cifras"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row m-auto pb-5"
+      }, this.state.contador.map(function (b, id) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: id
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          id: id,
+          notas: _this2.state.marcadas,
+          retomar: _this2.retomar,
+          salvar: _this2.salvar,
+          escala: false,
+          digitar: true,
+          afinar: _this2.state.afinar,
+          estender: _this2.state.estender
+        }));
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container-btn"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "btn-editor arm",
+        onClick: this.estender
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "btn-editor hand",
+        onClick: this.afinar
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "btn-editor",
+        onClick: this.remover
+      }, "-"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "btn-editor",
+        onClick: this.adicionar
+      }, "+"))))))));
     }
   }]);
 
@@ -82873,6 +83027,7 @@ var Escalas = /*#__PURE__*/function () {
       escala.forEach(function (nota) {
         escala.push(nota);
       });
+      return escala;
     }
   }, {
     key: "reduzPraUmaOitava",
