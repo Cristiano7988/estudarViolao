@@ -81227,7 +81227,7 @@ var Braco = /*#__PURE__*/function (_Component) {
         return el.classList.remove("active");
       });
 
-      if (this.state.digitar) {
+      if (this.props.digitar) {
         this.props.retomar();
       }
 
