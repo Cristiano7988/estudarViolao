@@ -81437,6 +81437,340 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/CriadorDeAcordes/CriadorDeAcordes.jsx":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/CriadorDeAcordes/CriadorDeAcordes.jsx ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var CriadorDeAcordes = /*#__PURE__*/function (_Component) {
+  _inherits(CriadorDeAcordes, _Component);
+
+  var _super = _createSuper(CriadorDeAcordes);
+
+  function CriadorDeAcordes() {
+    var _this;
+
+    _classCallCheck(this, CriadorDeAcordes);
+
+    _this = _super.call(this);
+    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this.criaAcorde = _this.criaAcorde.bind(_assertThisInitialized(_this));
+    _this.state = {
+      acorde: null,
+      erro: false
+    };
+    return _this;
+  }
+
+  _createClass(CriadorDeAcordes, [{
+    key: "exibeErro",
+    value: function exibeErro() {
+      this.setState({
+        erro: true
+      });
+    }
+  }, {
+    key: "limpaErro",
+    value: function limpaErro() {
+      this.setState({
+        erro: false
+      });
+    }
+  }, {
+    key: "exibeVerificacao",
+    value: function exibeVerificacao(valido) {
+      if (valido) {
+        this.limpaErro();
+        return true;
+      } else {
+        this.exibeErro();
+        return false;
+      }
+    }
+  }, {
+    key: "verificaAcorde",
+    value: function verificaAcorde(input) {
+      var nota = /^[A-G]/.test(input);
+      var acidente = input.replace(/^[A-G]|[m]/, "");
+      var simbolosErrados = /[ac-ln-zA-Z0-9]|[\!\@\$\%\¨\&\*\(\)\_\+\=\{\}\[\]\`\´\^\~\;\:\>\<\.\,\?\/]|[\/\\\]|[\-]/.test(acidente);
+      var combinacaoErrada = /#b|b#|m#|mb/.test(acidente);
+      return !(!nota || simbolosErrados || acidente.replace("m", "").length > 2 || combinacaoErrada);
+    }
+  }, {
+    key: "segunda",
+    value: function segunda(soma) {
+      var intervalo = {};
+
+      switch (soma) {
+        case 0:
+          intervalo.nome = "diminuta";
+          intervalo.valor = "unissono";
+          break;
+
+        case 0.5:
+          intervalo.nome = "menor";
+          intervalo.valor = String.fromCharCode(189) + " tom";
+          break;
+
+        case 1:
+          intervalo.nome = "maior";
+          intervalo.valor = "Tom";
+          break;
+
+        case 1.5:
+          intervalo.nome = "aumentada";
+          intervalo.valor = "Tom e " + String.fromCharCode(189);
+          break;
+
+        default:
+          break;
+      }
+
+      return intervalo;
+    }
+  }, {
+    key: "terca",
+    value: function terca(soma) {
+      var intervalo = {};
+
+      switch (soma) {
+        case 1:
+          intervalo.nome = "diminuta";
+          intervalo.valor = "Tom";
+          break;
+
+        case 1.5:
+          intervalo.nome = "menor";
+          intervalo.valor = "Tom e " + String.fromCharCode(189);
+          break;
+
+        case 2:
+          intervalo.nome = "maior";
+          intervalo.valor = "2 Tons";
+          break;
+
+        case 2.5:
+          intervalo.nome = "aumentada";
+          intervalo.valor = "2 Tons e " + String.fromCharCode(189);
+          break;
+
+        default:
+          break;
+      }
+
+      return intervalo;
+    }
+  }, {
+    key: "comparar",
+    value: function comparar(nota1, nota2) {
+      var cromatica = this.escala.formarEscala(nota1, 0);
+      var cromatica2 = this.escala.formarEscala(nota2, 0);
+      var homonimos1 = this.escala.pegaHomonimos(nota1);
+      var homonimos2 = this.escala.pegaHomonimos(nota2); // pega a posição dos homonimos da escala diatonica na escala cromatica
+
+      var index = cromatica.notas.findIndex(function (nota) {
+        return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos1);
+      });
+      var index2 = cromatica.notas.findIndex(function (nota) {
+        return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
+      });
+      var diatonica = this.escala.aumentaUmaOitava(this.escala.diatonica.notas);
+      var id = diatonica.findIndex(function (nota) {
+        return nota.cifra == nota1[0];
+      });
+      var id2 = diatonica.findIndex(function (nota) {
+        return nota.cifra == nota2[0];
+      }); // Calculo distancia entre as notas
+
+      var distancia = {};
+      distancia.diatonica = id2 - id;
+      distancia.cromatica = index2 - index;
+
+      if (index2 == -1) {
+        index = cromatica2.notas.findIndex(function (nota) {
+          return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos1);
+        });
+        index2 = cromatica2.notas.findIndex(function (nota) {
+          return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
+        });
+      } // Calculo para 2 oitavas
+
+
+      if (distancia.cromatica < 0) {
+        distancia.cromatica = (index2 + 12 - index) % 13;
+      }
+
+      if (distancia.diatonica < 0) {
+        distancia.diatonica = (id2 + 7 - id) % 9;
+      }
+
+      var soma = distancia.cromatica * 0.5;
+
+      switch (distancia.diatonica) {
+        case 1:
+          return this.segunda(soma, "segunda");
+
+        case 2:
+          return this.terca(soma, "terça");
+
+        default:
+          break;
+      }
+    }
+  }, {
+    key: "criaAcorde",
+    value: function criaAcorde(e) {
+      e.preventDefault();
+      var input = document.querySelector('.find-chord').value;
+      var valido = this.verificaAcorde(input);
+      valido = !input ? true : valido;
+      valido = this.exibeVerificacao(valido);
+
+      if (input == "" || !valido) {
+        this.setState({
+          acorde: null
+        });
+        return false;
+      }
+
+      var escala = this.escala.formarEscala(input, 1);
+      var fundamental = escala.notas[0];
+      var terca = escala.notas[2];
+      var quinta = escala.notas[4];
+      var modo = this.comparar(fundamental.cifra, terca.cifra);
+      var acorde = {
+        notas: [fundamental, terca, quinta],
+        modo: modo.nome,
+        cifra: fundamental.cifra,
+        intervalos: [modo, this.comparar(terca.cifra, quinta.cifra)]
+      };
+      this.setState({
+        acorde: acorde
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container py-4"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row justify-content-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-6"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card"
+      }, this.state.acorde ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+        className: "text-capitalize"
+      }, "Acorde ", this.state.acorde.modo) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "text-secondary mb-4"
+      }, "Insira uma Cifra"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "input-group input-group-sm w-25 m-auto"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "input-group-prepend"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "input-group-text",
+        id: "inputGroup-sizing-sm"
+      }, "Acorde:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        placeholder: "Ex.: A",
+        "aria-label": "Small",
+        "aria-describedby": "inputGroup-sizing-sm",
+        className: "form-control find-chord",
+        type: "text"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "text-center p-2"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        className: "btn btn-primary",
+        type: "button",
+        onClick: this.criaAcorde
+      }, "Verificar")), this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "text-danger font-italic"
+      }, "*Acorde n\xE3o reconhecido") : '', this.state.acorde ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex justify-content-around pr-5 pl-5 mb-5 mt-5",
+        style: {
+          background: '#a6540d',
+          borderRadius: '5px'
+        }
+      }, this.state.acorde.notas.map(function (nota, index) {
+        var intervalo = index >= 2 ? false : true;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "p-2",
+          key: index,
+          style: {
+            position: 'relative'
+          }
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+          style: {
+            color: 'white'
+          }
+        }, nota.cifra), intervalo ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+          title: _this2.state.acorde.intervalos[index].nome,
+          style: {
+            position: "absolute",
+            top: '115%',
+            left: "200%",
+            minWidth: "33px"
+          }
+        }, _this2.state.acorde.intervalos[index].valor) : "");
+      })) : ""))));
+    }
+  }]);
+
+  return CriadorDeAcordes;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (CriadorDeAcordes);
+
+/***/ }),
+
+/***/ "./resources/js/components/CriadorDeAcordes/index.js":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/CriadorDeAcordes/index.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CriadorDeAcordes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CriadorDeAcordes */ "./resources/js/components/CriadorDeAcordes/CriadorDeAcordes.jsx");
+
+/* harmony default export */ __webpack_exports__["default"] = (_CriadorDeAcordes__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
 /***/ "./resources/js/components/CriadorDeEscalas/CriadorDeEscalas.jsx":
 /*!***********************************************************************!*\
   !*** ./resources/js/components/CriadorDeEscalas/CriadorDeEscalas.jsx ***!
@@ -82852,6 +83186,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_CriadorDeEscalas__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/CriadorDeEscalas */ "./resources/js/components/CriadorDeEscalas/index.js");
 /* harmony import */ var _components_Editor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Editor */ "./resources/js/components/Editor/index.js");
 /* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home/index.js");
+/* harmony import */ var _CriadorDeAcordes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CriadorDeAcordes */ "./resources/js/components/CriadorDeAcordes/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -82873,6 +83208,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -82926,6 +83262,11 @@ var Sistema = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: "nav-item dropdown-item"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+        to: "/recursos/acordes",
+        className: "nav-link"
+      }, "Acordes")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: "nav-item dropdown-item"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
         to: "/recursos/escalas",
         className: "nav-link"
       }, "Escalas")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
@@ -82961,6 +83302,9 @@ var Sistema = /*#__PURE__*/function (_Component) {
         path: "/home",
         exact: true,
         component: _Home__WEBPACK_IMPORTED_MODULE_6__["default"]
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "/recursos/acordes",
+        component: _CriadorDeAcordes__WEBPACK_IMPORTED_MODULE_7__["default"]
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/recursos/escalas",
         component: _components_CriadorDeEscalas__WEBPACK_IMPORTED_MODULE_4__["default"]
@@ -83253,7 +83597,7 @@ var Escalas = /*#__PURE__*/function () {
 
       try {
         var nova_escala = [],
-            filtra = input.replace(input[0], "").match(/[b,#]/),
+            filtra = input.replace(/^[A-G]/, "").match(/[b#]/),
             acidente = this.acidente.escolhe(filtra ? filtra[0] : "#");
         escala.map(function (nota, i) {
           var nova = filtra ? _this2.acidente.alteraNota(copiarObj(nota), acidente) : nota;

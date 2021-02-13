@@ -184,7 +184,7 @@ export default class Escalas {
         try {
             var
             nova_escala = [],
-            filtra = input.replace(input[0],"").match(/[b,#]/),
+            filtra = input.replace(/^[A-G]/,"").match(/[b#]/),
             acidente = this.acidente.escolhe(filtra ? filtra[0] : "#");
 
             escala.map( (nota, i) => {

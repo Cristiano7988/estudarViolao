@@ -5,6 +5,7 @@ import Exercicios from "../components/Exercicios";
 import CriadorDeEscalas from "../components/CriadorDeEscalas";
 import Editor from "../components/Editor";
 import Home from "./Home";
+import CriadorDeAcordes from "./CriadorDeAcordes";
 
 class Sistema extends Component {
     render() {
@@ -30,6 +31,11 @@ class Sistema extends Component {
                                     Recursos
                                 </a>
                                 <ul className="dropdown-menu exercícios" style={{background: "currentColor"}}>
+                                    <li className="nav-item dropdown-item">
+                                        <Link to="/recursos/acordes" className="nav-link">
+                                            Acordes
+                                        </Link>
+                                    </li>
                                     <li className="nav-item dropdown-item">
                                         <Link to="/recursos/escalas" className="nav-link">
                                             Escalas
@@ -76,6 +82,7 @@ class Sistema extends Component {
                 </div>
                 <Switch>
                     <Route path="/home" exact={true} component={Home} />
+                    <Route path="/recursos/acordes" component={CriadorDeAcordes} />
                     <Route path="/recursos/escalas" component={CriadorDeEscalas} />
                     <Route path="/recursos/editor" component={Editor} />
                     <Route
