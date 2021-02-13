@@ -43,7 +43,7 @@ class CriadorDeAcordes extends Component {
 
     criaAcorde(e) {
         e.preventDefault();
-        let input = document.querySelector('.find-chord').value;
+        let input = e.target.value;
 
         let valido = this.verificaAcorde(input);
 
@@ -101,16 +101,8 @@ class CriadorDeAcordes extends Component {
                                     aria-label="Small" aria-describedby="inputGroup-sizing-sm"
                                     className="form-control find-chord"
                                     type="text"
+                                    onChange={ this.criaAcorde }
                                 />
-                            </div>
-                            <div className="text-center p-2">
-                                <a
-                                    className="btn btn-primary"
-                                    type="button"
-                                    onClick={ this.criaAcorde }
-                                >
-                                Verificar
-                                </a>
                             </div>
                             {this.state.erro ?
                                 <span className="text-danger font-italic">*Acorde não reconhecido</span>

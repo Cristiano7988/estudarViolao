@@ -81535,7 +81535,7 @@ var CriadorDeAcordes = /*#__PURE__*/function (_Component) {
     key: "criaAcorde",
     value: function criaAcorde(e) {
       e.preventDefault();
-      var input = document.querySelector('.find-chord').value;
+      var input = e.target.value;
       var valido = this.verificaAcorde(input);
       valido = !input ? true : valido;
       valido = this.exibeVerificacao(valido);
@@ -81591,14 +81591,9 @@ var CriadorDeAcordes = /*#__PURE__*/function (_Component) {
         "aria-label": "Small",
         "aria-describedby": "inputGroup-sizing-sm",
         className: "form-control find-chord",
-        type: "text"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "text-center p-2"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        className: "btn btn-primary",
-        type: "button",
-        onClick: this.criaAcorde
-      }, "Verificar")), this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        type: "text",
+        onChange: this.criaAcorde
+      })), this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-danger font-italic"
       }, "*Acorde n\xE3o reconhecido") : '', this.state.acorde ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-around pr-5 pl-5 mb-5 mt-5",
@@ -83529,7 +83524,7 @@ var Intervalos = /*#__PURE__*/function () {
       var index2 = cromatica.notas.findIndex(function (nota) {
         return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
       });
-      var diatonica = this.escala.aumentaUmaOitava(this.escala.diatonica.notas);
+      var diatonica = this.escala.diatonica.notas;
       var id = diatonica.findIndex(function (nota) {
         return nota.cifra == nota1[0];
       });
@@ -83537,9 +83532,10 @@ var Intervalos = /*#__PURE__*/function () {
         return nota.cifra == nota2[0];
       }); // Calculo distancia entre as notas
 
-      var distancia = {};
-      distancia.diatonica = id2 - id;
-      distancia.cromatica = index2 - index;
+      var distancia = {
+        diatonica: id2 - id,
+        cromatica: index2 - index
+      };
 
       if (index2 == -1) {
         index = cromatica2.notas.findIndex(function (nota) {
