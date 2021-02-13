@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Escalas from '../../dados/Escalas';
+import Intervalos from '../../dados/Intervalos';
 
 class CriadorDeAcordes extends Component {
     constructor() {
         super();
         this.escala = new Escalas();
+        this.intervalo = new Intervalos();
         this.criaAcorde = this.criaAcorde.bind(this)
         this.state = {
             acorde: null,
@@ -39,112 +41,6 @@ class CriadorDeAcordes extends Component {
         return !(!nota || simbolosErrados || acidente.replace("m", "").length > 2 || combinacaoErrada )
     }
 
-    segunda(soma) {
-        let intervalo = {};
-        switch (soma) {
-            case 0:
-                intervalo.nome = "diminuta"
-                intervalo.valor = "unissono"
-                break;
-            
-            case 0.5:
-                intervalo.nome = "menor"
-                intervalo.valor = String.fromCharCode(189) +" tom"
-                break;
-            
-            case 1:
-                intervalo.nome = "maior"
-                intervalo.valor = "Tom"
-                break;
-
-            case 1.5:
-                intervalo.nome = "aumentada"
-                intervalo.valor = "Tom e " + String.fromCharCode(189)
-                break;
-
-            default:
-                break;
-        }
-        return intervalo;
-    }
-
-    terca(soma) {
-        let intervalo = {};
-        switch (soma) {
-            case 1:
-                intervalo.nome = "diminuta"
-                intervalo.valor = "Tom"
-                break;
-            
-            case 1.5:
-                intervalo.nome = "menor"
-                intervalo.valor = "Tom e " + String.fromCharCode(189)
-                break;
-            
-            case 2:
-                intervalo.nome = "maior"
-                intervalo.valor = "2 Tons"
-                break;
-
-            case 2.5:
-                intervalo.nome = "aumentada"
-                intervalo.valor = "2 Tons e " + String.fromCharCode(189)
-                break;
-
-            default:
-                break;
-        }
-        return intervalo;
-    }
-
-    comparar(nota1, nota2) {
-        var cromatica = this.escala.formarEscala(nota1, 0)
-        
-        var cromatica2 = this.escala.formarEscala(nota2, 0)
-
-        let homonimos1 = this.escala.pegaHomonimos(nota1)
-        let homonimos2 = this.escala.pegaHomonimos(nota2)
-        
-        // pega a posição dos homonimos da escala diatonica na escala cromatica
-        let index = cromatica.notas.findIndex( nota=> new RegExp(`\\[${nota.cifra}\\]`).test(homonimos1) )
-        let index2 = cromatica.notas.findIndex( nota=> new RegExp(`\\[${nota.cifra}\\]`).test(homonimos2) )
-       
-        let diatonica = this.escala.aumentaUmaOitava(this.escala.diatonica.notas);
-
-        let id = diatonica.findIndex(nota=>nota.cifra==nota1[0]);
-        let id2 = diatonica.findIndex(nota=>nota.cifra == nota2[0]);
-
-        // Calculo distancia entre as notas
-        let distancia = {}
-
-        distancia.diatonica = id2 - id;
-        distancia.cromatica = index2 - index
-
-        if(index2 == -1) {
-            index = cromatica2.notas.findIndex( nota=> new RegExp(`\\[${nota.cifra}\\]`).test(homonimos1) )
-            index2 = cromatica2.notas.findIndex( nota=> new RegExp(`\\[${nota.cifra}\\]`).test(homonimos2) )
-        }
-         
-        // Calculo para 2 oitavas
-        if(distancia.cromatica < 0) {
-            distancia.cromatica = ((index2 + 12) - index) % 13
-        }
-        if(distancia.diatonica < 0 ) {
-            distancia.diatonica = ( (id2 + 7) - id ) % 9
-        }
-
-        let soma = distancia.cromatica * 0.5
-        
-        switch (distancia.diatonica) {
-            case 1:
-                return this.segunda(soma, "segunda");
-            case 2:
-                return this.terca(soma, "terça")
-            default:
-                break;
-        }
-    }
-
     criaAcorde(e) {
         e.preventDefault();
         let input = document.querySelector('.find-chord').value;
@@ -165,7 +61,7 @@ class CriadorDeAcordes extends Component {
         let terca = escala.notas[2];
         let quinta = escala.notas[4];
 
-        let modo = this.comparar(fundamental.cifra, terca.cifra);
+        let modo = this.intervalo.classificaIntervalo(fundamental.cifra, terca.cifra);
 
         let acorde = {
             notas: [fundamental, terca, quinta],
@@ -173,7 +69,7 @@ class CriadorDeAcordes extends Component {
             cifra: fundamental.cifra,
             intervalos: [
                 modo,
-                this.comparar(terca.cifra, quinta.cifra)
+                this.intervalo.classificaIntervalo(terca.cifra, quinta.cifra)
             ]
         }
 

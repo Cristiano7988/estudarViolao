@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import Escalas from "../../dados/Escalas";
+import Intervalos from '../../dados/Intervalos';
 import Braco from '../Braco';
+
 class CriadorDeEscalas extends Component {
     constructor() {
         super()
         this.escala = new Escalas();
-        this.nova_escala = null,
+        this.intervalos = new Intervalos();
+        this.nova_escala = null;
         this.escolherTipo = this.escolherTipo.bind(this);
         this.escolherComplemento = this.escolherComplemento.bind(this);
         this.defineTom = this.defineTom.bind(this);
@@ -55,112 +58,13 @@ class CriadorDeEscalas extends Component {
         )
     }
 
-    segunda(soma) {
-        let intervalo = {};
-        switch (soma) {
-            case 0:
-                intervalo.nome = "diminuta"
-                intervalo.valor = "unissono"
-                break;
-            
-            case 0.5:
-                intervalo.nome = "menor"
-                intervalo.valor = String.fromCharCode(189) +" tom"
-                break;
-            
-            case 1:
-                intervalo.nome = "maior"
-                intervalo.valor = "Tom"
-                break;
-
-            case 1.5:
-                intervalo.nome = "aumentada"
-                intervalo.valor = "Tom e " + String.fromCharCode(189)
-                break;
-
-            default:
-                break;
-        }
-        return intervalo;
-    }
-
-    terca(soma) {
-        let intervalo = {};
-        switch (soma) {
-            case 1:
-                intervalo.nome = "diminuta"
-                intervalo.valor = "Tom"
-                break;
-            
-            case 1.5:
-                intervalo.nome = "menor"
-                intervalo.valor = "Tom e " + String.fromCharCode(189)
-                break;
-            
-            case 2:
-                intervalo.nome = "maior"
-                intervalo.valor = "2 Tons"
-                break;
-
-            case 2.5:
-                intervalo.nome = "aumentada"
-                intervalo.valor = "2 Tons e " + String.fromCharCode(189)
-                break;
-
-            default:
-                break;
-        }
-        return intervalo;
-    }
-
-    comparar(nota1, nota2, cromatica) {
-        // pega a posição dos homonimos da escala diatonica na escala cromatica
-        let index = cromatica.homonimos.findIndex( homonimo=> homonimo.match(`\\[${nota1}\\]`) )
-        let index2 = cromatica.homonimos.findIndex( homonimo=> homonimo.match(`\\[${nota2}\\]`) )
-        let soma = 0;
-
-        let id2 = cromatica.notas[index2].id;
-        let id = cromatica.notas[index].id;
-        // Calculo distancia entre as notas
-        let distancia = {}
-
-        distancia.diatonica = id2 - id;
-        distancia.cromatica = index2 - index
-         
-        // Calculo para 2 oitavas
-        if(distancia.cromatica < 0) {
-            distancia.cromatica = ((index2 + 12) - index) % 13
-        }
-        if(distancia.diatonica < 0 ) {
-            distancia.diatonica = ( (id2 + 7) - id ) % 9
-        }
-
-        soma = distancia.cromatica * 0.5
-
-        switch (distancia.diatonica) {
-            case 1:
-                return this.segunda(soma, "segunda");
-                break;
-            case 2:
-                return this.terca(soma, "terça")
-            default:
-                break;
-        }
-    }
-
     geraEscala() {
         try {
             let escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
-            var cromatica = this.escala.formarEscala(this.state.tom, 0)
-    
-            cromatica.homonimos = []
-            cromatica.notas.map(nota => {
-                cromatica.homonimos.push(this.escala.pegaHomonimos(nota.cifra))
-            })
 
             var intervalos = []
             escala.notas.map( (nota, indice)=> {
-                intervalos.push(this.comparar(nota.cifra, escala.notas[(indice + 1) % escala.notas.length].cifra, cromatica))
+                intervalos.push(this.intervalos.classificaIntervalo(nota.cifra, escala.notas[(indice + 1) % escala.notas.length].cifra))
             });
 
             escala

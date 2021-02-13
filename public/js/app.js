@@ -81449,6 +81449,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
+/* harmony import */ var _dados_Intervalos__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../dados/Intervalos */ "./resources/js/dados/Intervalos.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -81474,6 +81475,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var CriadorDeAcordes = /*#__PURE__*/function (_Component) {
   _inherits(CriadorDeAcordes, _Component);
 
@@ -81486,6 +81488,7 @@ var CriadorDeAcordes = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this);
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _this.intervalo = new _dados_Intervalos__WEBPACK_IMPORTED_MODULE_2__["default"]();
     _this.criaAcorde = _this.criaAcorde.bind(_assertThisInitialized(_this));
     _this.state = {
       acorde: null,
@@ -81529,127 +81532,6 @@ var CriadorDeAcordes = /*#__PURE__*/function (_Component) {
       return !(!nota || simbolosErrados || acidente.replace("m", "").length > 2 || combinacaoErrada);
     }
   }, {
-    key: "segunda",
-    value: function segunda(soma) {
-      var intervalo = {};
-
-      switch (soma) {
-        case 0:
-          intervalo.nome = "diminuta";
-          intervalo.valor = "unissono";
-          break;
-
-        case 0.5:
-          intervalo.nome = "menor";
-          intervalo.valor = String.fromCharCode(189) + " tom";
-          break;
-
-        case 1:
-          intervalo.nome = "maior";
-          intervalo.valor = "Tom";
-          break;
-
-        case 1.5:
-          intervalo.nome = "aumentada";
-          intervalo.valor = "Tom e " + String.fromCharCode(189);
-          break;
-
-        default:
-          break;
-      }
-
-      return intervalo;
-    }
-  }, {
-    key: "terca",
-    value: function terca(soma) {
-      var intervalo = {};
-
-      switch (soma) {
-        case 1:
-          intervalo.nome = "diminuta";
-          intervalo.valor = "Tom";
-          break;
-
-        case 1.5:
-          intervalo.nome = "menor";
-          intervalo.valor = "Tom e " + String.fromCharCode(189);
-          break;
-
-        case 2:
-          intervalo.nome = "maior";
-          intervalo.valor = "2 Tons";
-          break;
-
-        case 2.5:
-          intervalo.nome = "aumentada";
-          intervalo.valor = "2 Tons e " + String.fromCharCode(189);
-          break;
-
-        default:
-          break;
-      }
-
-      return intervalo;
-    }
-  }, {
-    key: "comparar",
-    value: function comparar(nota1, nota2) {
-      var cromatica = this.escala.formarEscala(nota1, 0);
-      var cromatica2 = this.escala.formarEscala(nota2, 0);
-      var homonimos1 = this.escala.pegaHomonimos(nota1);
-      var homonimos2 = this.escala.pegaHomonimos(nota2); // pega a posição dos homonimos da escala diatonica na escala cromatica
-
-      var index = cromatica.notas.findIndex(function (nota) {
-        return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos1);
-      });
-      var index2 = cromatica.notas.findIndex(function (nota) {
-        return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
-      });
-      var diatonica = this.escala.aumentaUmaOitava(this.escala.diatonica.notas);
-      var id = diatonica.findIndex(function (nota) {
-        return nota.cifra == nota1[0];
-      });
-      var id2 = diatonica.findIndex(function (nota) {
-        return nota.cifra == nota2[0];
-      }); // Calculo distancia entre as notas
-
-      var distancia = {};
-      distancia.diatonica = id2 - id;
-      distancia.cromatica = index2 - index;
-
-      if (index2 == -1) {
-        index = cromatica2.notas.findIndex(function (nota) {
-          return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos1);
-        });
-        index2 = cromatica2.notas.findIndex(function (nota) {
-          return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
-        });
-      } // Calculo para 2 oitavas
-
-
-      if (distancia.cromatica < 0) {
-        distancia.cromatica = (index2 + 12 - index) % 13;
-      }
-
-      if (distancia.diatonica < 0) {
-        distancia.diatonica = (id2 + 7 - id) % 9;
-      }
-
-      var soma = distancia.cromatica * 0.5;
-
-      switch (distancia.diatonica) {
-        case 1:
-          return this.segunda(soma, "segunda");
-
-        case 2:
-          return this.terca(soma, "terça");
-
-        default:
-          break;
-      }
-    }
-  }, {
     key: "criaAcorde",
     value: function criaAcorde(e) {
       e.preventDefault();
@@ -81669,12 +81551,12 @@ var CriadorDeAcordes = /*#__PURE__*/function (_Component) {
       var fundamental = escala.notas[0];
       var terca = escala.notas[2];
       var quinta = escala.notas[4];
-      var modo = this.comparar(fundamental.cifra, terca.cifra);
+      var modo = this.intervalo.classificaIntervalo(fundamental.cifra, terca.cifra);
       var acorde = {
         notas: [fundamental, terca, quinta],
         modo: modo.nome,
         cifra: fundamental.cifra,
-        intervalos: [modo, this.comparar(terca.cifra, quinta.cifra)]
+        intervalos: [modo, this.intervalo.classificaIntervalo(terca.cifra, quinta.cifra)]
       };
       this.setState({
         acorde: acorde
@@ -81783,7 +81665,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
-/* harmony import */ var _Braco__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Braco */ "./resources/js/components/Braco/index.js");
+/* harmony import */ var _dados_Intervalos__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../dados/Intervalos */ "./resources/js/dados/Intervalos.js");
+/* harmony import */ var _Braco__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Braco */ "./resources/js/components/Braco/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -81810,6 +81693,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
   _inherits(CriadorDeEscalas, _Component);
 
@@ -81822,7 +81706,9 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this);
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    _this.nova_escala = null, _this.escolherTipo = _this.escolherTipo.bind(_assertThisInitialized(_this));
+    _this.intervalos = new _dados_Intervalos__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    _this.nova_escala = null;
+    _this.escolherTipo = _this.escolherTipo.bind(_assertThisInitialized(_this));
     _this.escolherComplemento = _this.escolherComplemento.bind(_assertThisInitialized(_this));
     _this.defineTom = _this.defineTom.bind(_assertThisInitialized(_this));
     _this.geraEscala = _this.geraEscala.bind(_assertThisInitialized(_this));
@@ -81876,124 +81762,15 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
       }, this.geraEscala);
     }
   }, {
-    key: "segunda",
-    value: function segunda(soma) {
-      var intervalo = {};
-
-      switch (soma) {
-        case 0:
-          intervalo.nome = "diminuta";
-          intervalo.valor = "unissono";
-          break;
-
-        case 0.5:
-          intervalo.nome = "menor";
-          intervalo.valor = String.fromCharCode(189) + " tom";
-          break;
-
-        case 1:
-          intervalo.nome = "maior";
-          intervalo.valor = "Tom";
-          break;
-
-        case 1.5:
-          intervalo.nome = "aumentada";
-          intervalo.valor = "Tom e " + String.fromCharCode(189);
-          break;
-
-        default:
-          break;
-      }
-
-      return intervalo;
-    }
-  }, {
-    key: "terca",
-    value: function terca(soma) {
-      var intervalo = {};
-
-      switch (soma) {
-        case 1:
-          intervalo.nome = "diminuta";
-          intervalo.valor = "Tom";
-          break;
-
-        case 1.5:
-          intervalo.nome = "menor";
-          intervalo.valor = "Tom e " + String.fromCharCode(189);
-          break;
-
-        case 2:
-          intervalo.nome = "maior";
-          intervalo.valor = "2 Tons";
-          break;
-
-        case 2.5:
-          intervalo.nome = "aumentada";
-          intervalo.valor = "2 Tons e " + String.fromCharCode(189);
-          break;
-
-        default:
-          break;
-      }
-
-      return intervalo;
-    }
-  }, {
-    key: "comparar",
-    value: function comparar(nota1, nota2, cromatica) {
-      // pega a posição dos homonimos da escala diatonica na escala cromatica
-      var index = cromatica.homonimos.findIndex(function (homonimo) {
-        return homonimo.match("\\[".concat(nota1, "\\]"));
-      });
-      var index2 = cromatica.homonimos.findIndex(function (homonimo) {
-        return homonimo.match("\\[".concat(nota2, "\\]"));
-      });
-      var soma = 0;
-      var id2 = cromatica.notas[index2].id;
-      var id = cromatica.notas[index].id; // Calculo distancia entre as notas
-
-      var distancia = {};
-      distancia.diatonica = id2 - id;
-      distancia.cromatica = index2 - index; // Calculo para 2 oitavas
-
-      if (distancia.cromatica < 0) {
-        distancia.cromatica = (index2 + 12 - index) % 13;
-      }
-
-      if (distancia.diatonica < 0) {
-        distancia.diatonica = (id2 + 7 - id) % 9;
-      }
-
-      soma = distancia.cromatica * 0.5;
-
-      switch (distancia.diatonica) {
-        case 1:
-          return this.segunda(soma, "segunda");
-          break;
-
-        case 2:
-          return this.terca(soma, "terça");
-
-        default:
-          break;
-      }
-    }
-  }, {
     key: "geraEscala",
     value: function geraEscala() {
       var _this2 = this;
 
       try {
         var escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
-        var cromatica = this.escala.formarEscala(this.state.tom, 0);
-        cromatica.homonimos = [];
-        cromatica.notas.map(function (nota) {
-          cromatica.homonimos.push(_this2.escala.pegaHomonimos(nota.cifra));
-        });
         var intervalos = [];
         escala.notas.map(function (nota, indice) {
-          intervalos.push(_this2.comparar(nota.cifra, escala.notas[(indice + 1) % escala.notas.length].cifra, cromatica));
+          intervalos.push(_this2.intervalos.classificaIntervalo(nota.cifra, escala.notas[(indice + 1) % escala.notas.length].cifra));
         });
         escala ? this.setState({
           erro: false,
@@ -82131,7 +81908,7 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
         htmlFor: "melodica"
       }, "Mel\xF3dica"))) : "", this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-danger font-italic"
-      }, "*Escala N\xE3o reconhecida") : '', this.state.escala && parseInt(this.state.tipo) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }, "*Escala N\xE3o reconhecida") : '', this.state.escala && parseInt(this.state.tipo) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_3__["default"], {
         escala: this.state.escala
       })) : '', this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-between pr-5 mb-5 mt-5",
@@ -83658,6 +83435,146 @@ var Escalas = /*#__PURE__*/function () {
   }]);
 
   return Escalas;
+}();
+
+
+
+/***/ }),
+
+/***/ "./resources/js/dados/Intervalos.js":
+/*!******************************************!*\
+  !*** ./resources/js/dados/Intervalos.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Intervalos; });
+/* harmony import */ var _Escalas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Escalas */ "./resources/js/dados/Escalas.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var Intervalos = /*#__PURE__*/function () {
+  function Intervalos() {
+    _classCallCheck(this, Intervalos);
+
+    this.escala = new _Escalas__WEBPACK_IMPORTED_MODULE_0__["default"]();
+  }
+
+  _createClass(Intervalos, [{
+    key: "atribuiValores",
+    value: function atribuiValores(distancia, nome) {
+      var casos = [];
+      var indices = [];
+
+      switch (nome) {
+        case "segunda":
+          casos = [0, 0.5, 1, 1.5];
+          indices = [0, 1, 2, 3];
+          break;
+
+        case "terça":
+          casos = [1, 1.5, 2, 2.5];
+          indices = [2, 3, 4, 5];
+          break;
+      }
+
+      var tom = "Tom";
+      var tons = "Tons";
+      var semitom = String.fromCharCode(189);
+      var valores = ["unissono", "".concat(semitom, "  ").concat(tom), tom, "".concat(tom, " e ").concat(semitom), "".concat(distancia.diatonica, " ").concat(tons), "".concat(distancia.diatonica, " ").concat(tons, "  e ").concat(semitom)];
+      var intervalo = {};
+
+      switch (distancia.semitons) {
+        case casos[0]:
+          intervalo.nome = "diminuta";
+          intervalo.valor = valores[indices[0]];
+          break;
+
+        case casos[1]:
+          intervalo.nome = "menor";
+          intervalo.valor = valores[indices[1]];
+          break;
+
+        case casos[2]:
+          intervalo.nome = "maior";
+          intervalo.valor = valores[indices[2]];
+          break;
+
+        case casos[3]:
+          intervalo.nome = "aumentada";
+          intervalo.valor = valores[indices[3]];
+          break;
+      }
+
+      return intervalo;
+    }
+  }, {
+    key: "classificaIntervalo",
+    value: function classificaIntervalo(nota1, nota2) {
+      var cromatica = this.escala.formarEscala(nota1, 0);
+      var cromatica2 = this.escala.formarEscala(nota2, 0);
+      var homonimos1 = this.escala.pegaHomonimos(nota1);
+      var homonimos2 = this.escala.pegaHomonimos(nota2); // pega a posição dos homonimos da escala diatonica na escala cromatica
+
+      var index = cromatica.notas.findIndex(function (nota) {
+        return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos1);
+      });
+      var index2 = cromatica.notas.findIndex(function (nota) {
+        return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
+      });
+      var diatonica = this.escala.aumentaUmaOitava(this.escala.diatonica.notas);
+      var id = diatonica.findIndex(function (nota) {
+        return nota.cifra == nota1[0];
+      });
+      var id2 = diatonica.findIndex(function (nota) {
+        return nota.cifra == nota2[0];
+      }); // Calculo distancia entre as notas
+
+      var distancia = {};
+      distancia.diatonica = id2 - id;
+      distancia.cromatica = index2 - index;
+
+      if (index2 == -1) {
+        index = cromatica2.notas.findIndex(function (nota) {
+          return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos1);
+        });
+        index2 = cromatica2.notas.findIndex(function (nota) {
+          return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
+        });
+      } // Calculo para 2 oitavas
+
+
+      if (distancia.cromatica < 0) {
+        distancia.cromatica = (index2 + 12 - index) % 13;
+      }
+
+      if (distancia.diatonica < 0) {
+        distancia.diatonica = (id2 + 7 - id) % 9;
+      }
+
+      distancia.semitons = distancia.cromatica * 0.5;
+
+      switch (distancia.diatonica) {
+        case 1:
+          return this.atribuiValores(distancia, "segunda");
+
+        case 2:
+          return this.atribuiValores(distancia, "terça");
+
+        default:
+          break;
+      }
+    }
+  }]);
+
+  return Intervalos;
 }();
 
 
