@@ -687,13 +687,18 @@ class Cartas extends Component {
     render() {
         return (
             <div className="container py-4">
+                <div className="modal-espera">
+                    <div className="card d-flex p-4 mt-4 text-center">
+                        <p>Use este recurso em uma tela maior</p>
+                    </div>
+                </div>
                 <div className="row justify-content-center">
                     <div className="card d-flex p-4">
 
                     {this.state.maquina ?
     <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable
-            droppableId="usuario"
+            droppableId="maquina"
             direction="horizontal"
         >
             {(provided, snapshot) => (<>
