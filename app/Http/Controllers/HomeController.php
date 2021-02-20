@@ -25,6 +25,22 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $id = auth()->user()->id;
+
+        $verifica = Resultado::where("exercicio", "cartas")
+            ->where("user_id", $id)
+            ->first();
+
+        if(!$verifica) {
+            Resultado::insert([
+                [
+                    'user_id' => $id,
+                    'exercicio'=>'cartas',
+                    'insignia'=>'Acordes',
+                    'concluido'=>false
+                ],
+            ]);
+        }
         return view('home');
     }
 
@@ -43,6 +59,7 @@ class HomeController extends Controller
         $resultados = Resultado::all()->whereNotIn("user_id", [1, 2]);
         $ordenar = $resultados->where("exercicio", "ordenar");
         $decifrar = $resultados->where("exercicio", "decifrar");
+        $decifrar = $resultados->where("exercicio", "cartas");
 
         $totais = [
             [
@@ -53,6 +70,12 @@ class HomeController extends Controller
             ],
             [
                 "refere" => "decifrar",
+                "acertos" => $decifrar->pluck("acertos")->sum(),
+                "erros" => $decifrar->pluck("erros")->sum(),
+                "concluidos" => $decifrar->pluck("concluido")->sum()
+            ],
+            [
+                "refere" => "cartas",
                 "acertos" => $decifrar->pluck("acertos")->sum(),
                 "erros" => $decifrar->pluck("erros")->sum(),
                 "concluidos" => $decifrar->pluck("concluido")->sum()

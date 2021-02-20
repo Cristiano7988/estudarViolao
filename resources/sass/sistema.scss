@@ -158,3 +158,98 @@
         }
     }
 }
+
+.cartas-armazenadas {
+    display: flex;
+    justify-content: space-between;
+    .container-cartas {
+        width: 115px;
+        height: 172px;
+        overflow: hidden;
+        display: block;
+        text-align: center;
+        &.costas {
+            .carta {
+                line-height: 14px;
+                letter-spacing: -2px;
+                overflow: hidden;
+
+                .borda {
+                    overflow: hidden;
+                }
+            }
+        }
+        &:last-child {
+            width: 122px;
+            border: 1px dashed;
+        }
+    }
+}
+.container-jogador, .container-cartas {
+    display: flex;
+    padding-bottom: 12px;
+}
+.carta {
+    background: white;
+    border: 1px groove;
+    border-radius: 5px;
+    width: 100px;
+    height: 150px;
+    margin: 12px 10px 0px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    padding: 5px;
+    position: relative;
+    border-style: outset;
+    box-shadow: 1px 1px 3px black;
+
+    .indice {
+        font-size: 0.8rem;
+        position: absolute;
+        color: white;
+        right: 45%;
+        top: 40%;
+    }
+
+    &.espadas, &.ouros {
+        .naipe {
+            right: calc(50% - 22px);
+        }
+    }
+
+    &.copas .naipe {
+        right: calc(50% - 24px);
+    }
+
+    &.paus .naipe {
+        right: calc(50% - 26px);
+    }
+
+    .naipe {
+        font-size: 75px;
+        position: absolute;
+        top: 5%;
+    }
+
+    &.ouros, &.copas {
+        color: red;
+    }
+
+    .nota-naipe {
+        display: flex;
+        flex-direction: column;
+        font: caption;
+        font-weight: bold;
+        span {
+            &:last-child {
+                font-size: x-large;
+            }
+        }
+
+        &:last-child {
+            transform: rotate(180deg);
+        }
+    }
+}

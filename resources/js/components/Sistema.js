@@ -6,6 +6,7 @@ import CriadorDeEscalas from "../components/CriadorDeEscalas";
 import Editor from "../components/Editor";
 import Home from "./Home";
 import CriadorDeAcordes from "./CriadorDeAcordes";
+import Cartas from "./Cartas";
 
 class Sistema extends Component {
     render() {
@@ -17,6 +18,11 @@ class Sistema extends Component {
                             <li className="nav-item">
                                 <Link to="/home" className="nav-link">
                                     Home
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link to="/jogos/cartas" className="nav-link">
+                                    Cartas
                                 </Link>
                             </li>
                             <li className="nav-item dropdown">
@@ -82,6 +88,7 @@ class Sistema extends Component {
                 </div>
                 <Switch>
                     <Route path="/home" exact={true} component={Home} />
+                    <Route path="/jogos/cartas" component={Cartas} />
                     <Route path="/recursos/acordes" component={CriadorDeAcordes} />
                     <Route path="/recursos/escalas" component={CriadorDeEscalas} />
                     <Route path="/recursos/editor" component={Editor} />

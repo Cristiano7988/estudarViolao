@@ -84,6 +84,12 @@ class RegisterController extends Controller
                 'insignia'=>'Pitágoras',
                 'concluido'=>false
             ],
+            [
+                'user_id' => $usuario->id,
+                'exercicio'=>'cartas',
+                'insignia'=>'Acordes',
+                'concluido'=>false
+            ],
         ]);
 
         return $usuario;

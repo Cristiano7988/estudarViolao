@@ -8,7 +8,7 @@ export default class Intervalos {
     atribuiValores(distancia, nome) {
         let casos = [];
         let indices = [];
-        
+
         switch (nome) {
             case "segunda":
                 casos = [0, 0.5, 1, 1.5];
@@ -18,6 +18,27 @@ export default class Intervalos {
                 casos = [1, 1.5, 2, 2.5];
                 indices = [2, 3, 4, 5];
                 break;
+            case "quarta":
+                casos = [2, 2.5, 3];
+                indices = [4, 5, 4];
+                break;
+            case "quinta":
+                casos = [3, 3.5, 4];
+                indices = [4, 5, 4];
+                break;
+            case "sexta":
+                casos = [3.5, 4, 4.5, 5];
+                indices = [5, 4, 5, 4];
+                break;
+            case "setima":
+                casos = [4.5, 5, 5.5, 6];
+                indices = [5, 4, 5, 4];
+                break;
+            case "oitava":
+                casos = [5.5, 0, 6.5];
+                indices = [5, 4, 5];
+                break;
+
         }
 
         let tom = "Tom";
@@ -25,12 +46,12 @@ export default class Intervalos {
         let semitom = String.fromCharCode(189);
 
         let valores = [
-            `unissono`,
-            `${semitom}  ${tom}`,
-            tom,
-            `${tom} e ${semitom}`,
-            `${distancia.diatonica} ${tons}`,
-            `${distancia.diatonica} ${tons}  e ${semitom}`,
+            /* 0 */ `unissono`,           
+            /* 1 */ `${semitom}  ${tom}`, 
+            /* 2 */ tom,                  
+            /* 3 */ `${tom} e ${semitom}`,
+            /* 4 */ `${nome == "oitava" ? 6 : distancia.diatonica } ${tons}`,
+            /* 5 */ `${distancia.diatonica}  ${tons}  e ${semitom}`,
         ];
 
         let intervalo = {};
@@ -41,20 +62,35 @@ export default class Intervalos {
                 break;
             
             case casos[1]:
-                intervalo.nome = "menor";
+                if(nome == "quarta" || nome == "quinta" || nome == "oitava") {
+                    intervalo.nome = "justa"
+                } else {
+                    intervalo.nome = "menor"
+                }
                 intervalo.valor = valores[indices[1]];
                 break;
             
             case casos[2]:
-                intervalo.nome = "maior";
+                if(nome == "quarta" || nome == "quinta" || nome == "oitava") {
+                    intervalo.nome = "aumentada"
+                } else {
+                    intervalo.nome = "maior"
+                }
                 intervalo.valor = valores[indices[2]];
                 break;
 
             case casos[3]:
-                intervalo.nome = "aumentada";
+                if(nome == "quarta" || nome == "quinta" || nome == "oitava") {
+                    intervalo.nome = false
+                } else {
+                    intervalo.nome = "aumentada"
+                }
                 intervalo.valor = valores[indices[3]]
                 break;
         }
+
+        intervalo.prefixo = nome
+        
         return intervalo;
     }
 
@@ -100,6 +136,16 @@ export default class Intervalos {
                 return this.atribuiValores(distancia, "segunda");
             case 2:
                 return this.atribuiValores(distancia, "terça");
+            case 3:
+                return this.atribuiValores(distancia, "quarta");
+            case 4:
+                return this.atribuiValores(distancia, "quinta");
+            case 5:
+                return this.atribuiValores(distancia, "sexta");
+            case 6:
+                return this.atribuiValores(distancia, "setima");
+            case 0:
+                return this.atribuiValores(distancia, "oitava");
             default:
                 break;
         }

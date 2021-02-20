@@ -81437,6 +81437,982 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Cartas/Cartas.jsx":
+/*!***************************************************!*\
+  !*** ./resources/js/components/Cartas/Cartas.jsx ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
+/* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
+/* harmony import */ var _dados_Intervalos__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../dados/Intervalos */ "./resources/js/dados/Intervalos.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+var copiarObj = function copiarObj(obj) {
+  return JSON.parse(JSON.stringify(obj));
+};
+
+var getUser = function getUser(exercicio, item) {
+  var resultados = JSON.parse(document.querySelector("[data-usuario]").dataset.usuario);
+  var resultados_exercicio = resultados.find(function (resultado) {
+    return resultado.exercicio === exercicio;
+  });
+  return resultados_exercicio[item];
+};
+
+var getItemStyle = function getItemStyle(isDragging, draggableStyle) {
+  return _objectSpread({
+    // change background colour if dragging
+    boxShadow: isDragging ? "10px 10px 10px black" : "1px 1px 3px black"
+  }, draggableStyle);
+};
+
+var getListStyle = function getListStyle(isDraggingOver, turno) {
+  return {
+    background: isDraggingOver ? "lightblue" : turno ? "aliceblue" : "unset"
+  };
+}; // a little function to help us with reordering the result
+
+
+var reorder = function reorder(list, startIndex, endIndex) {
+  var result = Array.from(list);
+
+  var _result$splice = result.splice(startIndex, 1),
+      _result$splice2 = _slicedToArray(_result$splice, 1),
+      removed = _result$splice2[0];
+
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+/**
+ * Moves an item from one list to another list.
+ */
+
+
+var move = function move(source, destination, droppableSource, droppableDestination) {
+  var sourceClone = Array.from(source);
+  var destClone = Array.from(destination);
+
+  var _sourceClone$splice = sourceClone.splice(droppableSource.index, 1),
+      _sourceClone$splice2 = _slicedToArray(_sourceClone$splice, 1),
+      removed = _sourceClone$splice2[0];
+
+  destClone.splice(droppableDestination.index, 0, removed);
+  var result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
+  return result;
+};
+
+var Cartas = /*#__PURE__*/function (_Component) {
+  _inherits(Cartas, _Component);
+
+  var _super = _createSuper(Cartas);
+
+  function Cartas() {
+    var _this;
+
+    _classCallCheck(this, Cartas);
+
+    _this = _super.call(this);
+    _this.id2List = {
+      usuario: 'jogador',
+      baralho: 'baralho',
+      lixo: 'lixo'
+    };
+
+    _this.getList = function (id) {
+      return _this.state[_this.id2List[id]];
+    };
+
+    _this.onDragEnd = function (result) {
+      try {
+        if (!_this.state.turno) {
+          _this.setState({
+            mensagem: "Espere a sua vez"
+          });
+
+          return;
+        }
+
+        _this.setState({
+          mensagem: false
+        });
+
+        var source = result.source,
+            destination = result.destination;
+
+        if (source.droppableId == "usuario" && destination.droppableId == "lixo") {
+          destination.index = 0;
+        } // dropped outside the list
+
+
+        if (!destination) {
+          return;
+        }
+
+        if (source.droppableId === destination.droppableId) {
+          var jogador = reorder(_this.getList(source.droppableId), source.index, destination.index);
+
+          if (source.droppableId === 'usuario') {
+            _this.setState({
+              jogador: jogador
+            }, function () {
+              return _this.verificaResposta(jogador);
+            });
+          }
+        } else {
+          var _result = move(_this.getList(source.droppableId), _this.getList(destination.droppableId), source, destination);
+
+          if (_this.state.jogador.length >= 7 && destination.droppableId != "lixo") {
+            _this.setState({
+              mensagem: "Você precisa largar uma carta"
+            });
+
+            return;
+          }
+
+          if (_this.state.largou && source.droppableId == "lixo") {
+            _this.setState({
+              mensagem: "Não é possível recuperar esta carta"
+            });
+
+            return;
+          }
+
+          if (destination.droppableId == "baralho") {
+            _this.setState({
+              mensagem: 'Deste baralho você só pode retirar cartas'
+            });
+
+            return;
+          }
+
+          if (source.droppableId == "baralho" || source.droppableId == "lixo") {
+            if (_this.state.comprou) {
+              _this.setState({
+                mensagem: "Você já pegou uma carta"
+              });
+
+              return;
+            }
+          }
+
+          if (source.droppableId == "baralho" && destination.droppableId == "lixo") {
+            _this.setState({
+              mensagem: 'Seu jogo são as cartas abaixo'
+            });
+
+            return;
+          }
+
+          if (source.droppableId == "baralho" && destination.droppableId == "usuario") {
+            _this.setState({
+              jogador: _result.usuario,
+              baralho: _result.baralho,
+              comprou: true
+            }, function () {
+              return _this.state.comprou && _this.state.largou ? _this.setState({
+                turno: false
+              }) : "";
+            });
+          }
+
+          if (source.droppableId == "lixo") {
+            if (_this.state.jogador.length == 6 || _this.state.jogador.length == 7) {
+              _this.setState({
+                jogador: _result.usuario,
+                lixo: _result.lixo,
+                comprou: true
+              }, function () {
+                if (_this.state.largou && _this.state.comprou) {
+                  _this.setState({
+                    turno: false
+                  });
+                }
+
+                _this.verificaResposta(_result.usuario);
+              });
+            }
+
+            if (_this.state.jogador == 5) {
+              _this.setState({
+                mensagem: "Pegue uma carta do baralho à esquerda"
+              });
+            }
+          }
+
+          if (destination.droppableId == "lixo") {
+            if (_this.state.jogador.length < 6) {
+              _this.setState({
+                mensagem: "Você precisa pegar uma carta do baralho à esquerda antes"
+              });
+
+              return;
+            }
+
+            _this.setState({
+              jogador: _result.usuario,
+              lixo: _result.lixo,
+              largou: true
+            }, function () {
+              if (_this.state.largou && _this.state.comprou) {
+                _this.setState({
+                  turno: false
+                });
+              }
+
+              _this.verificaResposta(_result.usuario);
+            });
+          }
+        }
+      } catch (error) {}
+    };
+
+    _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    _this.intervalo = new _dados_Intervalos__WEBPACK_IMPORTED_MODULE_3__["default"]();
+    _this.passaVez = _this.passaVez.bind(_assertThisInitialized(_this));
+    _this.onDragEnd = _this.onDragEnd.bind(_assertThisInitialized(_this));
+    _this.comecar = _this.comecar.bind(_assertThisInitialized(_this));
+    _this.state = {
+      adversario: null,
+      acertos: getUser('cartas', 'acertos'),
+      erros: getUser('cartas', 'erros'),
+      concluido: parseInt(getUser('cartas', 'concluido')),
+      porcentagem: 0,
+      tonalidade: null,
+      baralho: null,
+      jogador: null,
+      maquina: null,
+      lixo: [],
+      turno: true,
+      comprou: false,
+      largou: false,
+      status: false,
+      mensagem: false
+    }, _this.naipes = {
+      ouros: String.fromCharCode(9830),
+      paus: String.fromCharCode(9827),
+      copas: String.fromCharCode(9829),
+      espadas: String.fromCharCode(9824)
+    };
+    return _this;
+  }
+
+  _createClass(Cartas, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.comecar();
+      this.setState({
+        porcentagem: this.porcentagem()
+      });
+    }
+  }, {
+    key: "getResultados",
+    value: function getResultados(id_exercicio) {
+      var _this2 = this;
+
+      fetch("/resultados/".concat(id_exercicio), {
+        method: "get"
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+      }).then(function (r) {
+        if (_this2.state.acertos != r.acertos || _this2.state.erros != r.erros) {
+          _this2.setState({
+            acertos: r.acertos,
+            erros: r.erros,
+            concluido: parseInt(getUser("cartas", "concluido"))
+          });
+        }
+
+        if (_this2.state.porcentagem == "100%" && !_this2.state.concluido) {
+          fetch("/conclui/".concat(getUser("cartas", "id")));
+
+          _this2.setState({
+            concluido: true
+          });
+        }
+      });
+    }
+  }, {
+    key: "comecar",
+    value: function comecar() {
+      var _this3 = this;
+
+      this.geraBaralho();
+      var adversarios = ["Miles Davis", "Johnny Ramone", "Santana", "Kurt Cobain", "Shakira", "Madonna", "Tom Jobim", "J.S. Bach", "Anitta", "Bobby McFerrin"];
+      var random = parseInt(0 + Math.random() * (adversarios.length - 0));
+      this.setState({
+        status: false,
+        turno: true,
+        adversario: adversarios[random]
+      });
+      setTimeout(function () {
+        return _this3.setState({
+          mensagem: "Forme 2 acordes (tríades) para vencer o jogo"
+        });
+      }, 1000);
+      setTimeout(function () {
+        return _this3.setState({
+          mensagem: false
+        });
+      }, 5000);
+      setTimeout(function () {
+        return _this3.setState({
+          mensagem: "Os acordes devem ser do mesmo naipe!"
+        });
+      }, 6000);
+      setTimeout(function () {
+        return _this3.setState({
+          mensagem: false
+        });
+      }, 10000);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      if (this.state.status) {
+        return;
+      }
+
+      if (this.state.comprou && this.state.largou && !this.state.turno) {
+        this.passaVez();
+      }
+    }
+  }, {
+    key: "separa",
+    value: function separa(lista, excluir) {
+      var _this4 = this;
+
+      var novas = [];
+      excluir = excluir.length > 0 ? excluir[0] : excluir;
+      var fora = lista.map(function (item) {
+        if (item.key != excluir.key) {
+          novas.push(item);
+        } else {
+          return item;
+        }
+      }); // Junta o que tem q colocar fora com o que tá fora
+
+      var descarta = this.state.lixo;
+      descarta.unshift(fora.filter(Boolean)[0]);
+      setTimeout(function () {
+        return _this4.setState({
+          maquina: novas,
+          lixo: descarta,
+          largou: false,
+          comprou: false,
+          turno: true
+        });
+      }, 1000);
+      return fora.filter(Boolean) ? true : false;
+    }
+  }, {
+    key: "registraResultado",
+    value: function registraResultado(status, mensagens) {
+      var random = parseInt(0 + Math.random() * (mensagens.length - 0));
+      this.setState({
+        status: status,
+        mensagem: mensagens[random],
+        turno: false,
+        adversario: false,
+        porcentagem: this.porcentagem()
+      });
+      if (status == "Empatou") return;
+      var token = document.querySelector("input[name=_token]").value;
+      var formData = new FormData();
+      formData.append("id", getUser("cartas", "user_id"));
+      formData.append("resultado", status == "Você Ganhou" ? 1 : 0);
+      formData.append("_token", token);
+      formData.append("exercicio", "cartas");
+      fetch("/salvar-resultado", {
+        method: "post",
+        body: formData
+      }).then(function (r) {
+        return r.json();
+      }).then(function (r) {});
+    }
+  }, {
+    key: "descarta",
+    value: function descarta(jogadas) {
+      var _this5 = this;
+
+      var novas = [];
+      var descartaveis = [];
+      var maquinaJogou = false; // Verifica se a jogada possui um acorde em potencial
+      // E separa esse acorde das outras cartas
+
+      var acordes = jogadas.map(function (jogada, indice) {
+        var resultado = jogada.map(function (nota) {
+          var proximo = (indice + 1) % jogada.length;
+          var ultimo = (indice + 2) % jogada.length;
+
+          var resultado = _this5.verificaTriade(_this5.intervalo.classificaIntervalo(nota.cifra, jogada[proximo].cifra), _this5.intervalo.classificaIntervalo(jogada[proximo].cifra, jogada[ultimo].cifra));
+
+          if (resultado) {
+            var acorde = [nota, jogada[proximo], jogada[ultimo]];
+            return acorde;
+          }
+
+          return resultado;
+        });
+
+        if (resultado.filter(Boolean)[0]) {
+          return resultado.filter(Boolean)[0];
+        }
+      });
+      acordes = acordes.filter(Boolean);
+      jogadas.map(function (jogada) {
+        !acordes.length ? descartaveis.push(jogada) : '';
+        var sobras = jogada.map(function (carta) {
+          var sobras = acordes.map(function (acorde) {
+            if (acorde.includes(carta)) {
+              return false;
+            } else {
+              return carta;
+            }
+          });
+
+          if (sobras.length) {
+            return sobras.filter(Boolean)[0];
+          }
+        });
+        sobras = sobras.filter(Boolean);
+
+        if (sobras) {
+          descartaveis.push(sobras);
+        }
+      });
+
+      if (acordes.length == 2) {
+        this.separa(this.state.maquina, descartaveis[0]);
+        var mensagens = ["Que pena!\nMas veja pelo lado bom,\nagora você tem um motivo pra uma melodia\ne outro motivo pra jogar! ;)", "Puxa!\nJá que não deu pra ganhar...\nserá que dá pra fazer um som com elas?", "Ah que droga!!\nTava tão perto, né?\nAcho que se você tentar de novo você consegue!", "Aff!!\nTalvez seja mais fácil tocar elas no violão", "Que coisa, né!?\nTudo bem, quem sabe tocar essas notas te ajude na próxima"];
+        this.registraResultado("Você perdeu", mensagens);
+        return;
+      } // Exclui se a jogada tiver duas cartas com notas e naipes iguais
+      // (Independente de quantas cartas tenha na jogada)
+
+
+      descartaveis.map(function (jogada) {
+        novas = [];
+        var repetida = jogada.find(function (nota, i) {
+          if (jogada.length > 1) {
+            var proxima = (i + 1) % jogada.length;
+
+            var intervalo = _this5.intervalo.classificaIntervalo(nota.cifra, jogada[proxima].cifra);
+
+            if (intervalo.prefixo == "oitava") {
+              return nota;
+            }
+          }
+        });
+
+        if (repetida != undefined) {
+          _this5.separa(_this5.state.maquina, repetida);
+
+          maquinaJogou = true;
+        }
+      }); // Exclui a carta que estiver em um intervalo de segunda ou sétima
+      // Se a jogada tiver 2 ou 3 cartas
+
+      if (!maquinaJogou) {
+        descartaveis.map(function (jogada) {
+          novas = [];
+          var ruim = jogada.find(function (nota, i) {
+            var intervalo = _this5.intervalo.classificaIntervalo(nota.cifra, jogada[(i + 1) % jogada.length].cifra);
+
+            if (intervalo.prefixo == "segunda" || intervalo.prefixo == "setima") {
+              return nota;
+            }
+          });
+
+          if (ruim != undefined) {
+            _this5.separa(_this5.state.maquina, ruim);
+
+            maquinaJogou = true;
+          }
+        });
+      } // Exclui o jogo que tiver uma carta
+
+
+      if (!maquinaJogou) {
+        descartaveis.map(function (jogada) {
+          novas = [];
+
+          if (jogada.length == 1) {
+            _this5.separa(_this5.state.maquina, jogada[0]);
+
+            maquinaJogou = true;
+          }
+        });
+      } // Exclui uma carta qualquer, pra evitar de ficar com 7 cartas
+
+
+      if (!maquinaJogou) {
+        descartaveis.map(function (jogada) {
+          novas = [];
+
+          if (jogada.length) {
+            _this5.separa(_this5.state.maquina, jogada[0]);
+
+            maquinaJogou = true;
+          }
+        });
+      }
+    }
+  }, {
+    key: "separaNaipes",
+    value: function separaNaipes(maquina) {
+      var _this6 = this;
+
+      var novas = []; // Agrupa as notas por naipes
+
+      var ouros = [],
+          espadas = [],
+          copas = [],
+          paus = [];
+      maquina.map(function (nota) {
+        _this6.naipes.ouros == nota.naipe.simbolo ? ouros.push(nota) : '';
+        _this6.naipes.espadas == nota.naipe.simbolo ? espadas.push(nota) : '';
+        _this6.naipes.copas == nota.naipe.simbolo ? copas.push(nota) : '';
+        _this6.naipes.paus == nota.naipe.simbolo ? paus.push(nota) : '';
+      });
+      var jogadas = [ouros, espadas, copas, paus]; // salva as notas
+
+      jogadas.map(function (jogada) {
+        jogada.map(function (nota) {
+          return novas.push(nota);
+        });
+      });
+      setTimeout(function () {
+        return _this6.setState({
+          maquina: novas
+        }, function () {
+          return _this6.descarta(jogadas);
+        });
+      }, 1000);
+    }
+  }, {
+    key: "pegaCarta",
+    value: function pegaCarta(maquina) {
+      var _this7 = this;
+
+      // Pega uma carta do baralho
+      var baralho = this.state.baralho;
+      maquina.push(baralho.slice(0, 1)[0]);
+      baralho = baralho.slice(1);
+      setTimeout(function () {
+        return _this7.setState({
+          baralho: baralho,
+          maquina: maquina,
+          turno: false
+        }, function () {
+          return _this7.separaNaipes(maquina);
+        });
+      }, 500);
+    }
+  }, {
+    key: "passaVez",
+    value: function passaVez() {
+      var _this8 = this;
+
+      if (!this.state.baralho.length) {
+        var mensagens = ["Ué?!\nUma dica boa pra ganhar é:\nDescarte primeiro as notas iguais de naipes iguais\nDepois as notas de naipes iguais, mas em intervalo de segunda\nou seja, que o número seja subsequente", "Xii!\nFicou na dominante e não resolveu rsrs", "Mas que coisa?\nSerá que dá pra aproveitar as notas pelo menos\npra fazer uma música?"];
+        this.registraResultado("Empatou", mensagens);
+        return;
+      }
+
+      this.setState({
+        comprou: false,
+        largou: false
+      }, function () {
+        return _this8.pegaCarta(_this8.state.maquina);
+      });
+    }
+  }, {
+    key: "verificaTriade",
+    value: function verificaTriade(modo, quinta) {
+      var jogo = false;
+
+      if (modo.prefixo == "terça" && quinta.prefixo == "terça") {
+        jogo = true;
+      }
+
+      if (modo.prefixo == "sexta" && quinta.prefixo == "sexta") {
+        jogo = true;
+      }
+
+      if (modo.prefixo == "quarta" && quinta.prefixo == "terça" || modo.prefixo == "terça" && quinta.prefixo == "quarta") {
+        jogo = true;
+      }
+
+      if (modo.prefixo == "sexta" && quinta.prefixo == "quinta" || modo.prefixo == "quinta" && quinta.prefixo == "sexta") {
+        jogo = true;
+      }
+
+      return jogo;
+    }
+  }, {
+    key: "verificaResposta",
+    value: function verificaResposta(notas) {
+      if (!(notas[0].naipe.nome == notas[1].naipe.nome && notas[1].naipe.nome == notas[2].naipe.nome)) {
+        return;
+      }
+
+      if (!(notas[3].naipe.nome == notas[4].naipe.nome && notas[4].naipe.nome == notas[5].naipe.nome)) {
+        return;
+      }
+
+      if (notas.length != 6) {
+        return;
+      }
+
+      var jogo1 = this.verificaTriade(this.intervalo.classificaIntervalo(notas[0].cifra, notas[1].cifra), this.intervalo.classificaIntervalo(notas[1].cifra, notas[2].cifra));
+      var jogo2 = this.verificaTriade(this.intervalo.classificaIntervalo(notas[3].cifra, notas[4].cifra), this.intervalo.classificaIntervalo(notas[4].cifra, notas[5].cifra));
+
+      if (jogo1 && jogo2) {
+        var mensagens = ["Parabéns!\nAgora experimente tocar o som das tuas cartas\ne das cartas do seu oponente!", "Muito bem!\nCombinação interessante de notas, né?\nQue tal fazer uma música usando elas?", "Arrasou!!\nTu sabe qual é o nome desses acordes?\nQueres que eu te conte?", "Aaaeeeww!!\nAgora experimente jogar com o violão junto.\nA cada jogada faça um improviso usando as notas como tema!", "Isso aí! Mandou bem!\nDois acordes bem básicos,\nmas se tu enxergar todas as cartas como um acorde,\nque acorde que fica?"];
+        this.registraResultado("Você Ganhou", mensagens);
+        return;
+      }
+    }
+    /**
+     * A semi-generic way to handle multiple lists. Matches
+     * the IDs of the droppable container to the names of the
+     * source arrays stored in the state.
+     */
+
+  }, {
+    key: "embaralha",
+    value: function embaralha(baralho) {
+      var m = baralho.length,
+          t,
+          i;
+
+      while (m) {
+        i = Math.floor(Math.random() * m--);
+        t = baralho[m];
+        baralho[m] = baralho[i];
+        baralho[i] = t;
+      }
+
+      return baralho;
+    }
+  }, {
+    key: "geraBaralho",
+    value: function geraBaralho() {
+      var _this9 = this;
+
+      var tonalidade = this.escala.geraEscalaAleatoria();
+      this.escala.aumentaUmaOitava(tonalidade.notas);
+      var baralho = [];
+      Object.keys(this.naipes).forEach(function (nome, index) {
+        var _baralho;
+
+        var notas = copiarObj(tonalidade).notas;
+        notas.map(function (nota) {
+          nota.naipe = {
+            nome: nome,
+            simbolo: Object.entries(_this9.naipes)[index][1]
+          };
+        });
+
+        (_baralho = baralho).push.apply(_baralho, _toConsumableArray(notas));
+      });
+      baralho = this.embaralha(baralho);
+      baralho.map(function (carta, index) {
+        return carta.key = index.toString();
+      });
+      var jogador = baralho.slice(0, 6);
+      baralho = baralho.slice(jogador.length, baralho.length);
+      var maquina = baralho.slice(0, 6);
+      baralho = baralho.slice(maquina.length, baralho.length);
+      this.setState({
+        tonalidade: tonalidade.notas,
+        baralho: baralho,
+        jogador: jogador,
+        maquina: maquina
+      });
+    }
+  }, {
+    key: "porcentagem",
+    value: function porcentagem() {
+      var acertos = parseInt(this.state.acertos);
+      var erros = parseInt(this.state.erros);
+      var total = (acertos - erros) * 10;
+      total = total <= 0 ? "0%" : total + "%";
+      return total;
+    }
+  }, {
+    key: "classeInsignia",
+    value: function classeInsignia() {
+      var nome = getUser("cartas", "insignia");
+      return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
+    }
+  }, {
+    key: "citacao",
+    value: function citacao(insignia) {
+      switch (insignia) {
+        case "guidodarezzo":
+          return "\"Benedito Guido d'Arezzo foi (...) o inventor inconsciente dos nomes atuais dos sons,\npor ter se utilizado (...) das silabas Ut Re Mi Fa Sol La, tiradas da abertura de cada\nhemist\xEDquio do Hino a S\xE3o Jo\xE3o Batista\"\n\nANDRADE, M\xE1rio de. Pequena Hist\xF3ria da M\xFAsica.";
+
+        case "pitagoras":
+          return "\"O advento da escala (...) diat\xF4nica est\xE1 historicamente associado ao\nfil\xF3sofo e matem\xE1tico grego Pit\xE1goras (...).\n\nA partir da experi\xEAncia de subdivis\xE3o da corda de um monoc\xF3rdio, (...)\nPit\xE1goras chegou \xE0 conclus\xE3o de que as combina\xE7\xF5es tidas na \xE9poca\ncomo \"consonantes\" e correspondente ao que hoje designamos por oitava,\nquinta, quarta e un\xEDssono est\xE3o, respectivamente, nas propor\xE7\xF5es:\n\n2:1, 3:2, 4:3, 1:1\"\n\nFILHO, Floriano Menezes. A ac\xFAstica Musical em palavras e sons.";
+
+        case "acordes":
+          return "\"Acorde \xE9 uma combina\xE7\xE3o de sons simult\xE2neos ou sucessivos quando arpejados.\nExemplo de acorde com quatro sons, separados por intervalos de ter\xE7as superpostas.(...)\n\nC E G B\"\n\nChediak, Almir. Dicion\xE1rio de Acordes Cifrados.";
+
+        default:
+          break;
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this10 = this;
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container py-4"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row justify-content-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card d-flex p-4"
+      }, this.state.maquina ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
+        onDragEnd: this.onDragEnd
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
+        droppableId: "usuario",
+        direction: "horizontal"
+      }, function (provided, snapshot) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+          className: "container-cartas  mb-2",
+          ref: provided.innerRef,
+          style: getListStyle(snapshot.isDraggingOver, !_this10.state.turno)
+        }, provided.droppableProps), _this10.state.maquina.map(function (carta, index) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
+            key: carta.key,
+            draggableId: carta.key,
+            index: index
+          }, function (provided, snapshot) {
+            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+              className: "carta ".concat(carta.naipe.nome),
+              ref: provided.innerRef
+            }, provided.draggableProps, provided.dragHandleProps, {
+              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "nota-naipe"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "naipe"
+            }, carta.naipe.simbolo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "indice"
+            }, parseInt(carta.id) + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "nota-naipe"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)));
+          });
+        }), provided.placeholder), !_this10.state.turno ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+          className: "text-center"
+        }, _this10.state.adversario) : "");
+      })) : "", this.state.jogador ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
+        onDragEnd: this.onDragEnd
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "cartas-armazenadas"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
+        droppableId: "baralho",
+        direction: "horizontal"
+      }, function (provided, snapshot) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+          className: "container-cartas costas",
+          ref: provided.innerRef,
+          style: getListStyle(snapshot.isDraggingOver)
+        }, provided.droppableProps), _this10.state.baralho.map(function (carta, index) {
+          return index <= 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
+            key: carta.key,
+            draggableId: carta.key,
+            index: index
+          }, function (provided, snapshot) {
+            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+              className: "carta ".concat(carta.naipe.nome),
+              ref: provided.innerRef
+            }, provided.draggableProps, provided.dragHandleProps, {
+              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "borda"
+            }, "\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69"));
+          }) : "";
+        }), provided.placeholder);
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "m-auto text-center"
+      }, this.state.status ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, this.state.status), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.comecar,
+        className: "btn btn-primary"
+      }, "Recome\xE7ar")) : "", this.state.mensagem ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "p-2 text-center",
+        style: {
+          whiteSpace: "break-spaces"
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, this.state.mensagem)) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
+        droppableId: "lixo",
+        direction: "horizontal"
+      }, function (provided, snapshot) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+          className: "container-cartas",
+          ref: provided.innerRef,
+          style: getListStyle(snapshot.isDraggingOver)
+        }, provided.droppableProps), _this10.state.lixo.length ? _this10.state.lixo.map(function (carta, index) {
+          return index <= 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
+            key: carta.key,
+            draggableId: carta.key,
+            index: index
+          }, function (provided, snapshot) {
+            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+              className: "carta ".concat(carta.naipe.nome),
+              ref: provided.innerRef
+            }, provided.draggableProps, provided.dragHandleProps, {
+              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "nota-naipe"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "naipe"
+            }, carta.naipe.simbolo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "indice"
+            }, parseInt(carta.id) + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "nota-naipe"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)));
+          }) : "";
+        }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "m-auto"
+        }, "Descarte aqui"), provided.placeholder);
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
+        droppableId: "usuario",
+        direction: "horizontal"
+      }, function (provided, snapshot) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, _this10.state.turno ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+          className: "text-center"
+        }, "Voc\xEA") : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+          className: "container-jogador",
+          ref: provided.innerRef,
+          style: getListStyle(snapshot.isDraggingOver, _this10.state.turno)
+        }, provided.droppableProps), _this10.state.jogador.map(function (carta, index) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
+            key: carta.key,
+            draggableId: carta.key,
+            index: index
+          }, function (provided, snapshot) {
+            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+              className: "carta ".concat(carta.naipe.nome),
+              ref: provided.innerRef
+            }, provided.draggableProps, provided.dragHandleProps, {
+              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
+            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "nota-naipe"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "naipe"
+            }, carta.naipe.simbolo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "indice"
+            }, parseInt(carta.id) + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "nota-naipe"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)));
+          });
+        }), provided.placeholder));
+      })) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "nivelamento-container alert text-center mt-2"
+      }, this.state.concluido ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container-insignia"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "insignia ".concat(this.classeInsignia()),
+        title: this.citacao(this.classeInsignia())
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, getUser("cartas", "insignia"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "text-left"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Progresso: ", this.state.porcentagem), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "barra-progresso m-0",
+        style: {
+          width: this.state.porcentagem
+        }
+      }))))));
+    }
+  }]);
+
+  return Cartas;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (Cartas);
+
+/***/ }),
+
+/***/ "./resources/js/components/Cartas/index.js":
+/*!*************************************************!*\
+  !*** ./resources/js/components/Cartas/index.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Cartas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Cartas */ "./resources/js/components/Cartas/Cartas.jsx");
+
+/* harmony default export */ __webpack_exports__["default"] = (_Cartas__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
 /***/ "./resources/js/components/CriadorDeAcordes/CriadorDeAcordes.jsx":
 /*!***********************************************************************!*\
   !*** ./resources/js/components/CriadorDeAcordes/CriadorDeAcordes.jsx ***!
@@ -82959,6 +83935,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Editor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Editor */ "./resources/js/components/Editor/index.js");
 /* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home/index.js");
 /* harmony import */ var _CriadorDeAcordes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CriadorDeAcordes */ "./resources/js/components/CriadorDeAcordes/index.js");
+/* harmony import */ var _Cartas__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Cartas */ "./resources/js/components/Cartas/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -82980,6 +83957,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -83018,6 +83996,11 @@ var Sistema = /*#__PURE__*/function (_Component) {
         to: "/home",
         className: "nav-link"
       }, "Home")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: "nav-item"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+        to: "/jogos/cartas",
+        className: "nav-link"
+      }, "Cartas")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: "nav-item dropdown"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         id: "dLabel",
@@ -83074,6 +84057,9 @@ var Sistema = /*#__PURE__*/function (_Component) {
         path: "/home",
         exact: true,
         component: _Home__WEBPACK_IMPORTED_MODULE_6__["default"]
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "/jogos/cartas",
+        component: _Cartas__WEBPACK_IMPORTED_MODULE_8__["default"]
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/recursos/acordes",
         component: _CriadorDeAcordes__WEBPACK_IMPORTED_MODULE_7__["default"]
@@ -83478,12 +84464,49 @@ var Intervalos = /*#__PURE__*/function () {
           casos = [1, 1.5, 2, 2.5];
           indices = [2, 3, 4, 5];
           break;
+
+        case "quarta":
+          casos = [2, 2.5, 3];
+          indices = [4, 5, 4];
+          break;
+
+        case "quinta":
+          casos = [3, 3.5, 4];
+          indices = [4, 5, 4];
+          break;
+
+        case "sexta":
+          casos = [3.5, 4, 4.5, 5];
+          indices = [5, 4, 5, 4];
+          break;
+
+        case "setima":
+          casos = [4.5, 5, 5.5, 6];
+          indices = [5, 4, 5, 4];
+          break;
+
+        case "oitava":
+          casos = [5.5, 0, 6.5];
+          indices = [5, 4, 5];
+          break;
       }
 
       var tom = "Tom";
       var tons = "Tons";
       var semitom = String.fromCharCode(189);
-      var valores = ["unissono", "".concat(semitom, "  ").concat(tom), tom, "".concat(tom, " e ").concat(semitom), "".concat(distancia.diatonica, " ").concat(tons), "".concat(distancia.diatonica, " ").concat(tons, "  e ").concat(semitom)];
+      var valores = [
+      /* 0 */
+      "unissono",
+      /* 1 */
+      "".concat(semitom, "  ").concat(tom),
+      /* 2 */
+      tom,
+      /* 3 */
+      "".concat(tom, " e ").concat(semitom),
+      /* 4 */
+      "".concat(nome == "oitava" ? 6 : distancia.diatonica, " ").concat(tons),
+      /* 5 */
+      "".concat(distancia.diatonica, "  ").concat(tons, "  e ").concat(semitom)];
       var intervalo = {};
 
       switch (distancia.semitons) {
@@ -83493,21 +84516,37 @@ var Intervalos = /*#__PURE__*/function () {
           break;
 
         case casos[1]:
-          intervalo.nome = "menor";
+          if (nome == "quarta" || nome == "quinta" || nome == "oitava") {
+            intervalo.nome = "justa";
+          } else {
+            intervalo.nome = "menor";
+          }
+
           intervalo.valor = valores[indices[1]];
           break;
 
         case casos[2]:
-          intervalo.nome = "maior";
+          if (nome == "quarta" || nome == "quinta" || nome == "oitava") {
+            intervalo.nome = "aumentada";
+          } else {
+            intervalo.nome = "maior";
+          }
+
           intervalo.valor = valores[indices[2]];
           break;
 
         case casos[3]:
-          intervalo.nome = "aumentada";
+          if (nome == "quarta" || nome == "quinta" || nome == "oitava") {
+            intervalo.nome = false;
+          } else {
+            intervalo.nome = "aumentada";
+          }
+
           intervalo.valor = valores[indices[3]];
           break;
       }
 
+      intervalo.prefixo = nome;
       return intervalo;
     }
   }, {
@@ -83563,6 +84602,21 @@ var Intervalos = /*#__PURE__*/function () {
 
         case 2:
           return this.atribuiValores(distancia, "terça");
+
+        case 3:
+          return this.atribuiValores(distancia, "quarta");
+
+        case 4:
+          return this.atribuiValores(distancia, "quinta");
+
+        case 5:
+          return this.atribuiValores(distancia, "sexta");
+
+        case 6:
+          return this.atribuiValores(distancia, "setima");
+
+        case 0:
+          return this.atribuiValores(distancia, "oitava");
 
         default:
           break;
