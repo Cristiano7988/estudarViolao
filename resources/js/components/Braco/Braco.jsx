@@ -189,6 +189,11 @@ class Braco extends Component {
                                             corda[inicio % corda.length].cifra
                                         )
                                     }
+                                    title={
+                                        this.props.escala
+                                            ? nota.cifra
+                                            : this.escala.pegaHomonimos(corda[inicio % corda.length].cifra)
+                                    }
                                 ></span>
                             </div>
                          : ("")

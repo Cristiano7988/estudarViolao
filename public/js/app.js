@@ -81409,7 +81409,8 @@ var Braco = /*#__PURE__*/function (_Component) {
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
             "data-corda": posicao,
             "data-casa": inicio,
-            "data-nota": _this3.escala.pegaHomonimos(corda[inicio % corda.length].cifra)
+            "data-nota": _this3.escala.pegaHomonimos(corda[inicio % corda.length].cifra),
+            title: _this3.props.escala ? nota.cifra : _this3.escala.pegaHomonimos(corda[inicio % corda.length].cifra)
           })) : "";
         }));
       }))));
