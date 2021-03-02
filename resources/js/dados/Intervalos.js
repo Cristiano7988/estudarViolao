@@ -3,42 +3,50 @@ import Escalas from "./Escalas";
 export default class Intervalos {
     constructor() {
         this.escala = new Escalas();
+        this.encontraAcorde = this.encontraAcorde.bind();
     }
 
-    atribuiValores(distancia, nome) {
+    atribuiValores(distancia) {
         let casos = [];
         let indices = [];
+        let nome;
 
-        switch (nome) {
-            case "segunda":
+        switch (distancia.diatonica) {
+            case 2:
+                nome = "segunda"
                 casos = [0, 0.5, 1, 1.5];
                 indices = [0, 1, 2, 3];
                 break;
-            case "terça":
+            case 3:
+                nome = "terça"
                 casos = [1, 1.5, 2, 2.5];
                 indices = [2, 3, 4, 5];
                 break;
-            case "quarta":
+            case 4:
+                nome = "quarta"
                 casos = [2, 2.5, 3];
                 indices = [4, 5, 4];
                 break;
-            case "quinta":
+            case 5:
+                nome = "quinta"
                 casos = [3, 3.5, 4];
                 indices = [4, 5, 4];
                 break;
-            case "sexta":
+            case 6:
+                nome = "sexta"
                 casos = [3.5, 4, 4.5, 5];
                 indices = [5, 4, 5, 4];
                 break;
-            case "setima":
+            case 7:
+                nome = "setima"
                 casos = [4.5, 5, 5.5, 6];
                 indices = [5, 4, 5, 4];
                 break;
-            case "oitava":
+            case 0:
+                nome = "oitava"
                 casos = [5.5, 0, 6.5];
                 indices = [5, 4, 5];
                 break;
-
         }
 
         let tom = "Tom";
@@ -50,8 +58,8 @@ export default class Intervalos {
             /* 1 */ `${semitom}  ${tom}`, 
             /* 2 */ tom,                  
             /* 3 */ `${tom} e ${semitom}`,
-            /* 4 */ `${nome == "oitava" ? 6 : distancia.diatonica } ${tons}`,
-            /* 5 */ `${distancia.diatonica}  ${tons}  e ${semitom}`,
+            /* 4 */ `${nome == "oitava" ? 6 : distancia.diatonica - 1} ${tons}`,
+            /* 5 */ `${distancia.diatonica - 1}  ${tons}  e ${semitom}`,
         ];
 
         let intervalo = {};
@@ -90,64 +98,64 @@ export default class Intervalos {
         }
 
         intervalo.prefixo = nome
+        intervalo.categoria = distancia.diatonica
         
         return intervalo;
     }
 
-    classificaIntervalo(nota1, nota2) {
-        var cromatica = this.escala.formarEscala(nota1, 0);
-        var cromatica2 = this.escala.formarEscala(nota2, 0);
+    distanciaDiatonica(atual, proxima) {
+        var intervalo;
+        for( let i = atual; (i % 7) != proxima; i++) {
+            intervalo = i - atual + 2;
+        }
+        return intervalo == undefined ? 0 : intervalo;
+    }
 
-        let homonimos1 = this.escala.pegaHomonimos(nota1);
-        let homonimos2 = this.escala.pegaHomonimos(nota2);
-        
-        // pega a posição dos homonimos da escala diatonica na escala cromatica
-        let index = cromatica.notas.findIndex( nota=> new RegExp(`\\[${nota.cifra}\\]`).test(homonimos1) );
-        let index2 = cromatica.notas.findIndex( nota=> new RegExp(`\\[${nota.cifra}\\]`).test(homonimos2) );
-    
-        let diatonica = this.escala.diatonica.notas;
+    classifica(notas) {
+        var cromatica = this.escala.formarEscala(notas[0].cifra, 0);
 
-        let id = diatonica.findIndex(nota=>nota.cifra==nota1[0]);
-        let id2 = diatonica.findIndex(nota=>nota.cifra == nota2[0]);
+        let indices = notas.map(nota => {
+            let homonimos = this.escala.pegaHomonimos(nota.cifra);
+            return cromatica.notas.findIndex( n => new RegExp(`\\[${n.cifra}\\]`).test(homonimos) );
+        })
 
-        // Calculo distancia entre as notas
+        let ids = notas.map(nota=> { return parseInt(nota.id) })
+
+        let intervalo = this.distanciaDiatonica(ids[0], ids[1]);
+
         let distancia = {
-            diatonica: id2 - id,
-            cromatica: index2 - index
+            diatonica: intervalo,
+            cromatica: indices[1] - indices[0]
         };
-
-        if(index2 == -1) {
-            index = cromatica2.notas.findIndex( nota=> new RegExp(`\\[${nota.cifra}\\]`).test(homonimos1) );
-            index2 = cromatica2.notas.findIndex( nota=> new RegExp(`\\[${nota.cifra}\\]`).test(homonimos2) );
-        }
-        
-        // Calculo para 2 oitavas
-        if(distancia.cromatica < 0) {
-            distancia.cromatica = ((index2 + 12) - index) % 13;
-        }
-        if(distancia.diatonica < 0 ) {
-            distancia.diatonica = ( (id2 + 7) - id ) % 9;
-        }
 
         distancia.semitons = distancia.cromatica * 0.5;
 
-        switch (distancia.diatonica) {
-            case 1:
-                return this.atribuiValores(distancia, "segunda");
-            case 2:
-                return this.atribuiValores(distancia, "terça");
-            case 3:
-                return this.atribuiValores(distancia, "quarta");
-            case 4:
-                return this.atribuiValores(distancia, "quinta");
-            case 5:
-                return this.atribuiValores(distancia, "sexta");
-            case 6:
-                return this.atribuiValores(distancia, "setima");
-            case 0:
-                return this.atribuiValores(distancia, "oitava");
-            default:
-                break;
-        }
+        return this.atribuiValores(distancia);
+    }
+
+    verificaTriade(modo, quinta) {
+        var validos = ["33","66","43","34","65","56"];
+        
+        return validos.includes(`${modo.valor}${quinta.valor}`);
+    }
+
+    encontraAcorde(notas) {
+        var acordes = [];
+
+        notas.forEach( (nota, indice) => {
+            let proxima = (indice + 1 ) % notas.length;
+            let ultima = (indice + 2) % notas.length;
+
+            let resultado = this.verificaTriade(
+                this.classifica([ nota, notas[proxima] ]),
+                this.classifica([ notas[proxima], notas[ultima] ])
+            );
+
+            if(resultado && !acordes.includes(nota) && !acordes.includes(notas[ultima])) {
+                acordes.push( nota, notas[proxima], notas[ultima] )
+            }
+        })
+
+        return acordes.length ? acordes : false;
     }
 }

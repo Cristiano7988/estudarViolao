@@ -64,7 +64,7 @@ class CriadorDeEscalas extends Component {
 
             var intervalos = []
             escala.notas.map( (nota, indice)=> {
-                intervalos.push(this.intervalos.classificaIntervalo(nota.cifra, escala.notas[(indice + 1) % escala.notas.length].cifra))
+                intervalos.push(this.intervalos.classifica([nota, escala.notas[(indice + 1) % escala.notas.length]]))
             });
 
             escala

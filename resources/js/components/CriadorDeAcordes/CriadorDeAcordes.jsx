@@ -61,7 +61,7 @@ class CriadorDeAcordes extends Component {
         let terca = escala.notas[2];
         let quinta = escala.notas[4];
 
-        let modo = this.intervalo.classificaIntervalo(fundamental.cifra, terca.cifra);
+        let modo = this.intervalo.classifica([fundamental, terca]);
 
         let acorde = {
             notas: [fundamental, terca, quinta],
@@ -69,7 +69,7 @@ class CriadorDeAcordes extends Component {
             cifra: fundamental.cifra,
             intervalos: [
                 modo,
-                this.intervalo.classificaIntervalo(terca.cifra, quinta.cifra)
+                this.intervalo.classifica([terca, quinta])
             ]
         }
 

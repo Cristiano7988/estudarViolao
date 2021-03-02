@@ -158,6 +158,12 @@
         }
     }
 }
+.usuario {
+    background-color: aliceblue;
+}
+.dragging {
+    background-color: lightblue;
+}
 
 .cartas-armazenadas {
     display: flex;
@@ -168,7 +174,7 @@
         overflow: hidden;
         display: block;
         text-align: center;
-        &.costas {
+        &.baralho {
             .carta {
                 line-height: 14px;
                 letter-spacing: -2px;
@@ -179,7 +185,7 @@
                 }
             }
         }
-        &:last-child {
+        &.lixo {
             width: 122px;
             border: 1px dashed;
         }

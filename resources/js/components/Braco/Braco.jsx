@@ -169,6 +169,7 @@ class Braco extends Component {
                                     data-corda={posicao}
                                     data-casa={indice}
                                     data-nota={this.escala.pegaHomonimos(nota.cifra)}
+                                    title={this.escala.pegaHomonimos(nota.cifra)}
                                     onClick={this.marcar}
                                 ></span>
                             </div>

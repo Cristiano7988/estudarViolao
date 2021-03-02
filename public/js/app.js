@@ -81397,6 +81397,7 @@ var Braco = /*#__PURE__*/function (_Component) {
             "data-corda": posicao,
             "data-casa": indice,
             "data-nota": _this3.escala.pegaHomonimos(nota.cifra),
+            title: _this3.escala.pegaHomonimos(nota.cifra),
             onClick: _this3.marcar
           })) : inicio <= _final ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
             key: indice,
@@ -81451,17 +81452,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
 /* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
 /* harmony import */ var _dados_Intervalos__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../dados/Intervalos */ "./resources/js/dados/Intervalos.js");
+/* harmony import */ var _Draganddrop_Draganddrop__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Draganddrop/Draganddrop */ "./resources/js/components/Draganddrop/Draganddrop.jsx");
+/* harmony import */ var _tools_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../tools.js */ "./resources/js/tools.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -81483,84 +81488,12 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
 
 
-var copiarObj = function copiarObj(obj) {
-  return JSON.parse(JSON.stringify(obj));
-};
-
-var getUser = function getUser(exercicio, item) {
-  var resultados = JSON.parse(document.querySelector("[data-usuario]").dataset.usuario);
-  var resultados_exercicio = resultados.find(function (resultado) {
-    return resultado.exercicio === exercicio;
-  });
-  return resultados_exercicio[item];
-};
-
-var getItemStyle = function getItemStyle(isDragging, draggableStyle) {
-  return _objectSpread({
-    // change background colour if dragging
-    boxShadow: isDragging ? "10px 10px 10px black" : "1px 1px 3px black"
-  }, draggableStyle);
-};
-
-var getListStyle = function getListStyle(isDraggingOver, turno) {
-  return {
-    background: isDraggingOver ? "lightblue" : turno ? "aliceblue" : "unset"
-  };
-}; // a little function to help us with reordering the result
-
-
-var reorder = function reorder(list, startIndex, endIndex) {
-  var result = Array.from(list);
-
-  var _result$splice = result.splice(startIndex, 1),
-      _result$splice2 = _slicedToArray(_result$splice, 1),
-      removed = _result$splice2[0];
-
-  result.splice(endIndex, 0, removed);
-  return result;
-};
-/**
- * Moves an item from one list to another list.
- */
-
-
-var move = function move(source, destination, droppableSource, droppableDestination) {
-  var sourceClone = Array.from(source);
-  var destClone = Array.from(destination);
-
-  var _sourceClone$splice = sourceClone.splice(droppableSource.index, 1),
-      _sourceClone$splice2 = _slicedToArray(_sourceClone$splice, 1),
-      removed = _sourceClone$splice2[0];
-
-  destClone.splice(droppableDestination.index, 0, removed);
-  var result = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
-  return result;
-};
 
 var Cartas = /*#__PURE__*/function (_Component) {
   _inherits(Cartas, _Component);
@@ -81584,171 +81517,88 @@ var Cartas = /*#__PURE__*/function (_Component) {
     };
 
     _this.onDragEnd = function (result) {
-      try {
-        if (!_this.state.turno) {
-          _this.setState({
-            mensagem: "Espere a sua vez"
-          });
+      if (!_this.state.turno) {
+        _this.setState({
+          mensagem: "Espere a sua vez"
+        });
 
-          return;
+        return;
+      }
+
+      var mensagem = false;
+      var source = result.source,
+          destination = result.destination; // dropped outside the list
+
+      if (!destination) {
+        return;
+      }
+
+      if (source.droppableId === destination.droppableId) {
+        var jogador = _this.tools.reorder(_this.getList(source.droppableId), source.index, destination.index);
+
+        if (source.droppableId === 'usuario') {
+          _this.setState({
+            jogador: jogador
+          }, _this.verificaResposta(jogador));
+        }
+      } else {
+        var _result = _this.tools.move(_this.getList(source.droppableId), _this.getList(destination.droppableId), source, destination);
+
+        if (_this.state.jogador.length >= 7 && destination.droppableId != "lixo") {
+          mensagem = "Você precisa largar uma carta";
+        }
+
+        if (_this.state.largou && source.droppableId == "lixo") {
+          mensagem = "Não é possível recuperar esta carta";
+        }
+
+        if (destination.droppableId == "baralho") {
+          mensagem = 'Deste baralho você só pode retirar cartas';
+        }
+
+        if ((source.droppableId == "baralho" || source.droppableId == "lixo") && _this.state.comprou) {
+          mensagem = "Você já pegou uma carta";
+        }
+
+        if (source.droppableId == "baralho" && destination.droppableId == "lixo") {
+          mensagem = 'Seu jogo são as cartas abaixo';
         }
 
         _this.setState({
-          mensagem: false
+          mensagem: mensagem
         });
 
-        var source = result.source,
-            destination = result.destination;
+        if (mensagem) return;
 
-        if (source.droppableId == "usuario" && destination.droppableId == "lixo") {
-          destination.index = 0;
-        } // dropped outside the list
-
-
-        if (!destination) {
-          return;
+        if (source.droppableId == "baralho" && destination.droppableId == "usuario") {
+          _this.setState({
+            jogador: _result.usuario,
+            baralho: _result.baralho,
+            comprou: true
+          }, function () {
+            return _this.state.comprou && _this.state.largou ? _this.setState({
+              turno: false
+            }) : "";
+          });
         }
 
-        if (source.droppableId === destination.droppableId) {
-          var jogador = reorder(_this.getList(source.droppableId), source.index, destination.index);
-
-          if (source.droppableId === 'usuario') {
-            _this.setState({
-              jogador: jogador
-            }, function () {
-              return _this.verificaResposta(jogador);
-            });
-          }
-        } else {
-          var _result = move(_this.getList(source.droppableId), _this.getList(destination.droppableId), source, destination);
-
-          if (_this.state.jogador.length >= 7 && destination.droppableId != "lixo") {
-            _this.setState({
-              mensagem: "Você precisa largar uma carta"
-            });
-
-            return;
-          }
-
-          if (_this.state.largou && source.droppableId == "lixo") {
-            _this.setState({
-              mensagem: "Não é possível recuperar esta carta"
-            });
-
-            return;
-          }
-
-          if (destination.droppableId == "baralho") {
-            _this.setState({
-              mensagem: 'Deste baralho você só pode retirar cartas'
-            });
-
-            return;
-          }
-
-          if (source.droppableId == "baralho" || source.droppableId == "lixo") {
-            if (_this.state.comprou) {
-              _this.setState({
-                mensagem: "Você já pegou uma carta"
-              });
-
-              return;
-            }
-          }
-
-          if (source.droppableId == "baralho" && destination.droppableId == "lixo") {
-            _this.setState({
-              mensagem: 'Seu jogo são as cartas abaixo'
-            });
-
-            return;
-          }
-
-          if (source.droppableId == "baralho" && destination.droppableId == "usuario") {
-            _this.setState({
-              jogador: _result.usuario,
-              baralho: _result.baralho,
-              comprou: true
-            }, function () {
-              return _this.state.comprou && _this.state.largou ? _this.setState({
-                turno: false
-              }) : "";
-            });
-          }
-
-          if (source.droppableId == "lixo") {
-            if (_this.state.jogador.length == 6 || _this.state.jogador.length == 7) {
-              _this.setState({
-                jogador: _result.usuario,
-                lixo: _result.lixo,
-                comprou: true
-              }, function () {
-                if (_this.state.largou && _this.state.comprou) {
-                  _this.setState({
-                    turno: false
-                  });
-                }
-
-                _this.verificaResposta(_result.usuario);
-              });
-            }
-
-            if (_this.state.jogador == 5) {
-              _this.setState({
-                mensagem: "Pegue uma carta do baralho à esquerda"
-              });
-            }
-          }
-
-          if (destination.droppableId == "lixo") {
-            if (_this.state.jogador.length < 6) {
-              _this.setState({
-                mensagem: "Você precisa pegar uma carta do baralho à esquerda antes"
-              });
-
-              return;
-            }
-
-            _this.setState({
-              jogador: _result.usuario,
-              lixo: _result.lixo,
-              largou: true
-            }, function () {
-              if (_this.state.largou && _this.state.comprou) {
-                _this.setState({
-                  turno: false
-                });
-              }
-
-              _this.verificaResposta(_result.usuario);
-            });
-          }
+        if (source.droppableId == "lixo") {
+          _this.salvaJogada(0, _result);
         }
-      } catch (error) {}
+
+        if (destination.droppableId == "lixo") {
+          _this.salvaJogada(1, _result);
+        }
+      }
     };
 
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__["default"]();
     _this.intervalo = new _dados_Intervalos__WEBPACK_IMPORTED_MODULE_3__["default"]();
-    _this.passaVez = _this.passaVez.bind(_assertThisInitialized(_this));
+    _this.tools = new _tools_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
     _this.onDragEnd = _this.onDragEnd.bind(_assertThisInitialized(_this));
+    _this.classifica = _this.classifica.bind(_assertThisInitialized(_this));
     _this.comecar = _this.comecar.bind(_assertThisInitialized(_this));
-    _this.state = {
-      adversario: null,
-      acertos: getUser('cartas', 'acertos'),
-      erros: getUser('cartas', 'erros'),
-      concluido: parseInt(getUser('cartas', 'concluido')),
-      porcentagem: 0,
-      tonalidade: null,
-      baralho: null,
-      jogador: null,
-      maquina: null,
-      lixo: [],
-      turno: true,
-      comprou: false,
-      largou: false,
-      status: false,
-      mensagem: false
-    }, _this.naipes = {
+    _this.state = {}, _this.naipes = {
       ouros: String.fromCharCode(9830),
       paus: String.fromCharCode(9827),
       copas: String.fromCharCode(9829),
@@ -81761,9 +81611,6 @@ var Cartas = /*#__PURE__*/function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.comecar();
-      this.setState({
-        porcentagem: this.porcentagem()
-      });
     }
   }, {
     key: "getResultados",
@@ -81781,12 +81628,12 @@ var Cartas = /*#__PURE__*/function (_Component) {
           _this2.setState({
             acertos: r.acertos,
             erros: r.erros,
-            concluido: parseInt(getUser("cartas", "concluido"))
+            concluido: parseInt(_this2.tools.getUser("cartas", "concluido"))
           });
         }
 
         if (_this2.state.porcentagem == "100%" && !_this2.state.concluido) {
-          fetch("/conclui/".concat(getUser("cartas", "id")));
+          fetch("/conclui/".concat(_this2.tools.getUser("cartas", "id")));
 
           _this2.setState({
             concluido: true
@@ -81802,10 +81649,19 @@ var Cartas = /*#__PURE__*/function (_Component) {
       this.geraBaralho();
       var adversarios = ["Miles Davis", "Johnny Ramone", "Santana", "Kurt Cobain", "Shakira", "Madonna", "Tom Jobim", "J.S. Bach", "Anitta", "Bobby McFerrin"];
       var random = parseInt(0 + Math.random() * (adversarios.length - 0));
+      var acertos = this.tools.getUser('cartas', 'acertos');
+      var erros = this.tools.getUser('cartas', 'erros');
       this.setState({
+        acertos: acertos,
+        erros: erros,
+        concluido: parseInt(this.tools.getUser('cartas', 'concluido')),
+        porcentagem: this.tools.porcentagem(parseInt(acertos), parseInt(erros)),
         status: false,
         turno: true,
-        adversario: adversarios[random]
+        adversario: adversarios[random],
+        lixo: [],
+        largou: false,
+        comprou: false
       });
       setTimeout(function () {
         return _this3.setState({
@@ -81844,28 +81700,29 @@ var Cartas = /*#__PURE__*/function (_Component) {
     value: function separa(lista, excluir) {
       var _this4 = this;
 
-      var novas = [];
+      var maquina = [];
       excluir = excluir.length > 0 ? excluir[0] : excluir;
       var fora = lista.map(function (item) {
         if (item.key != excluir.key) {
-          novas.push(item);
+          maquina.push(item);
         } else {
           return item;
         }
-      }); // Junta o que tem q colocar fora com o que tá fora
+      });
+      fora = fora.filter(Boolean); // Junta o que tem q colocar fora com o que tá fora
 
-      var descarta = this.state.lixo;
-      descarta.unshift(fora.filter(Boolean)[0]);
+      var lixo = this.state.lixo;
+      lixo.unshift(fora[0]);
       setTimeout(function () {
         return _this4.setState({
-          maquina: novas,
-          lixo: descarta,
+          maquina: maquina,
+          lixo: lixo,
           largou: false,
           comprou: false,
           turno: true
         });
       }, 1000);
-      return fora.filter(Boolean) ? true : false;
+      return fora ? true : false;
     }
   }, {
     key: "registraResultado",
@@ -81876,12 +81733,12 @@ var Cartas = /*#__PURE__*/function (_Component) {
         mensagem: mensagens[random],
         turno: false,
         adversario: false,
-        porcentagem: this.porcentagem()
+        porcentagem: this.tools.porcentagem(this.state.acertos, this.state.erros)
       });
       if (status == "Empatou") return;
       var token = document.querySelector("input[name=_token]").value;
       var formData = new FormData();
-      formData.append("id", getUser("cartas", "user_id"));
+      formData.append("id", this.tools.getUser("cartas", "user_id"));
       formData.append("resultado", status == "Você Ganhou" ? 1 : 0);
       formData.append("_token", token);
       formData.append("exercicio", "cartas");
@@ -81893,188 +81750,165 @@ var Cartas = /*#__PURE__*/function (_Component) {
       }).then(function (r) {});
     }
   }, {
-    key: "descarta",
-    value: function descarta(jogadas) {
+    key: "classifica",
+    value: function classifica(notas) {
       var _this5 = this;
 
-      var novas = [];
-      var descartaveis = [];
-      var maquinaJogou = false; // Verifica se a jogada possui um acorde em potencial
-      // E separa esse acorde das outras cartas
+      var cromatica = this.escala.formarEscala(notas[0].cifra, 0);
+      var indices = notas.map(function (nota) {
+        var homonimos = _this5.escala.pegaHomonimos(nota.cifra);
 
-      var acordes = jogadas.map(function (jogada, indice) {
-        var resultado = jogada.map(function (nota) {
-          var proximo = (indice + 1) % jogada.length;
-          var ultimo = (indice + 2) % jogada.length;
-
-          var resultado = _this5.verificaTriade(_this5.intervalo.classificaIntervalo(nota.cifra, jogada[proximo].cifra), _this5.intervalo.classificaIntervalo(jogada[proximo].cifra, jogada[ultimo].cifra));
-
-          if (resultado) {
-            var acorde = [nota, jogada[proximo], jogada[ultimo]];
-            return acorde;
-          }
-
-          return resultado;
+        return cromatica.notas.findIndex(function (n) {
+          return new RegExp("\\[".concat(n.cifra, "\\]")).test(homonimos);
         });
+      });
+      var ids = notas.map(function (nota) {
+        return parseInt(nota.id);
+      });
+      var intervalo = this.intervalo.distanciaDiatonica(ids[0], ids[1]);
+      var distancia = {
+        diatonica: intervalo,
+        cromatica: indices[1] - indices[0]
+      };
+      distancia.semitons = distancia.cromatica * 0.5;
+      return this.intervalo.atribuiValores(distancia);
+    }
+  }, {
+    key: "procuraIntervalo",
+    value: function procuraIntervalo(array, valores) {
+      var _this6 = this;
 
-        if (resultado.filter(Boolean)[0]) {
-          return resultado.filter(Boolean)[0];
+      var notas = array.map(function (nota, indice) {
+        var proxima = array[(indice + 1) % array.length];
+
+        var intervalo = _this6.classifica([nota, proxima]);
+
+        if (valores.includes(intervalo.categoria)) {
+          return nota;
+        } else {
+          return false;
         }
       });
-      acordes = acordes.filter(Boolean);
-      jogadas.map(function (jogada) {
-        !acordes.length ? descartaveis.push(jogada) : '';
-        var sobras = jogada.map(function (carta) {
-          var sobras = acordes.map(function (acorde) {
-            if (acorde.includes(carta)) {
-              return false;
-            } else {
-              return carta;
-            }
-          });
+      notas = notas.filter(Boolean);
+      return notas.length ? notas : false;
+    } // Verifica se a jogada possui um acorde
 
-          if (sobras.length) {
-            return sobras.filter(Boolean)[0];
+  }, {
+    key: "encontraAcorde",
+    value: function encontraAcorde(jogadas) {
+      var _this7 = this;
+
+      var acordes = [];
+      jogadas.forEach(function (jogada) {
+        jogada.forEach(function (nota, indice) {
+          var proxima = (indice + 1) % jogada.length;
+          var ultima = (indice + 2) % jogada.length;
+
+          var resultado = _this7.verificaTriade(_this7.classifica([nota, jogada[proxima]]), _this7.classifica([jogada[proxima], jogada[ultima]]));
+
+          if (resultado && !acordes.includes(nota) && !acordes.includes(jogada[ultima])) {
+            acordes.push(nota, jogada[proxima], jogada[ultima]);
           }
         });
-        sobras = sobras.filter(Boolean);
+      });
+      return acordes;
+    }
+  }, {
+    key: "descarta",
+    value: function descarta(jogadas) {
+      var descartar = false;
+      var acordes = this.encontraAcorde(jogadas); // Separa os acordes das outras cartas
 
-        if (sobras) {
-          descartaveis.push(sobras);
+      var descartaveis = this.state.maquina.map(function (carta) {
+        if (!acordes.includes(carta)) {
+          return carta;
+        } else {
+          return false;
         }
       });
+      descartaveis = descartaveis.filter(Boolean);
 
-      if (acordes.length == 2) {
+      if (acordes.length == 6) {
         this.separa(this.state.maquina, descartaveis[0]);
         var mensagens = ["Que pena!\nMas veja pelo lado bom,\nagora você tem um motivo pra uma melodia\ne outro motivo pra jogar! ;)", "Puxa!\nJá que não deu pra ganhar...\nserá que dá pra fazer um som com elas?", "Ah que droga!!\nTava tão perto, né?\nAcho que se você tentar de novo você consegue!", "Aff!!\nTalvez seja mais fácil tocar elas no violão", "Que coisa, né!?\nTudo bem, quem sabe tocar essas notas te ajude na próxima"];
         this.registraResultado("Você perdeu", mensagens);
         return;
       } // Exclui se a jogada tiver duas cartas com notas e naipes iguais
-      // (Independente de quantas cartas tenha na jogada)
 
 
-      descartaveis.map(function (jogada) {
-        novas = [];
-        var repetida = jogada.find(function (nota, i) {
-          if (jogada.length > 1) {
-            var proxima = (i + 1) % jogada.length;
+      descartar = this.procuraIntervalo(descartaveis, [0]); // Exclui a carta da jogada que tiver 1 carta
 
-            var intervalo = _this5.intervalo.classificaIntervalo(nota.cifra, jogada[proxima].cifra);
-
-            if (intervalo.prefixo == "oitava") {
-              return nota;
-            }
+      if (!descartar) {
+        descartaveis.every(function (descartavel) {
+          if (descartavel.length != 1) {
+            return;
+          } else {
+            descartar = descartavel[0];
           }
         });
-
-        if (repetida != undefined) {
-          _this5.separa(_this5.state.maquina, repetida);
-
-          maquinaJogou = true;
-        }
-      }); // Exclui a carta que estiver em um intervalo de segunda ou sétima
-      // Se a jogada tiver 2 ou 3 cartas
-
-      if (!maquinaJogou) {
-        descartaveis.map(function (jogada) {
-          novas = [];
-          var ruim = jogada.find(function (nota, i) {
-            var intervalo = _this5.intervalo.classificaIntervalo(nota.cifra, jogada[(i + 1) % jogada.length].cifra);
-
-            if (intervalo.prefixo == "segunda" || intervalo.prefixo == "setima") {
-              return nota;
-            }
-          });
-
-          if (ruim != undefined) {
-            _this5.separa(_this5.state.maquina, ruim);
-
-            maquinaJogou = true;
-          }
-        });
-      } // Exclui o jogo que tiver uma carta
+      } // Exclui a carta que estiver em um intervalo de segunda ou sétima
 
 
-      if (!maquinaJogou) {
-        descartaveis.map(function (jogada) {
-          novas = [];
-
-          if (jogada.length == 1) {
-            _this5.separa(_this5.state.maquina, jogada[0]);
-
-            maquinaJogou = true;
-          }
-        });
+      if (!descartar) {
+        descartar = this.procuraIntervalo(descartaveis, [2, 7]);
       } // Exclui uma carta qualquer, pra evitar de ficar com 7 cartas
 
 
-      if (!maquinaJogou) {
-        descartaveis.map(function (jogada) {
-          novas = [];
-
-          if (jogada.length) {
-            _this5.separa(_this5.state.maquina, jogada[0]);
-
-            maquinaJogou = true;
-          }
-        });
+      if (!descartar) {
+        descartar = descartaveis[0];
       }
+
+      this.separa(this.state.maquina, descartar);
+    }
+  }, {
+    key: "agrupaNaipes",
+    value: function agrupaNaipes(cartas) {
+      var jogadas = Object.keys(this.naipes).map(function (naipe) {
+        return cartas.filter(function (nota) {
+          return nota.naipe.nome == naipe;
+        });
+      });
+      return jogadas;
     }
   }, {
     key: "separaNaipes",
-    value: function separaNaipes(maquina) {
-      var _this6 = this;
+    value: function separaNaipes(cartas) {
+      var _this8 = this;
 
-      var novas = []; // Agrupa as notas por naipes
+      // Agrupa as notas por naipes  
+      var jogadas = this.agrupaNaipes(cartas); // Ordena as cartas do jogador pelo nome dos naipes
 
-      var ouros = [],
-          espadas = [],
-          copas = [],
-          paus = [];
-      maquina.map(function (nota) {
-        _this6.naipes.ouros == nota.naipe.simbolo ? ouros.push(nota) : '';
-        _this6.naipes.espadas == nota.naipe.simbolo ? espadas.push(nota) : '';
-        _this6.naipes.copas == nota.naipe.simbolo ? copas.push(nota) : '';
-        _this6.naipes.paus == nota.naipe.simbolo ? paus.push(nota) : '';
-      });
-      var jogadas = [ouros, espadas, copas, paus]; // salva as notas
-
-      jogadas.map(function (jogada) {
-        jogada.map(function (nota) {
-          return novas.push(nota);
-        });
+      var maquina = cartas.sort(function (proxima, nota) {
+        return nota.naipe.nome.localeCompare(proxima.naipe.nome);
       });
       setTimeout(function () {
-        return _this6.setState({
-          maquina: novas
-        }, function () {
-          return _this6.descarta(jogadas);
-        });
+        return _this8.setState({
+          maquina: maquina
+        }, _this8.descarta(jogadas));
       }, 1000);
-    }
+    } // Pega uma carta do baralho
+
   }, {
     key: "pegaCarta",
     value: function pegaCarta(maquina) {
-      var _this7 = this;
+      var _this9 = this;
 
-      // Pega uma carta do baralho
-      var baralho = this.state.baralho;
-      maquina.push(baralho.slice(0, 1)[0]);
-      baralho = baralho.slice(1);
+      var baralho = this.state.baralho.reverse();
+      var removida = baralho.pop();
+      maquina.push(removida);
+      baralho.reverse();
       setTimeout(function () {
-        return _this7.setState({
+        return _this9.setState({
           baralho: baralho,
           maquina: maquina,
           turno: false
-        }, function () {
-          return _this7.separaNaipes(maquina);
-        });
+        }, _this9.separaNaipes(maquina));
       }, 500);
     }
   }, {
     key: "passaVez",
     value: function passaVez() {
-      var _this8 = this;
+      var _this10 = this;
 
       if (!this.state.baralho.length) {
         var mensagens = ["Ué?!\nUma dica boa pra ganhar é:\nDescarte primeiro as notas iguais de naipes iguais\nDepois as notas de naipes iguais, mas em intervalo de segunda\nou seja, que o número seja subsequente", "Xii!\nFicou na dominante e não resolveu rsrs", "Mas que coisa?\nSerá que dá pra aproveitar as notas pelo menos\npra fazer uma música?"];
@@ -82086,55 +81920,50 @@ var Cartas = /*#__PURE__*/function (_Component) {
         comprou: false,
         largou: false
       }, function () {
-        return _this8.pegaCarta(_this8.state.maquina);
+        return _this10.pegaCarta(_this10.state.maquina);
       });
     }
   }, {
     key: "verificaTriade",
     value: function verificaTriade(modo, quinta) {
-      var jogo = false;
-
-      if (modo.prefixo == "terça" && quinta.prefixo == "terça") {
-        jogo = true;
-      }
-
-      if (modo.prefixo == "sexta" && quinta.prefixo == "sexta") {
-        jogo = true;
-      }
-
-      if (modo.prefixo == "quarta" && quinta.prefixo == "terça" || modo.prefixo == "terça" && quinta.prefixo == "quarta") {
-        jogo = true;
-      }
-
-      if (modo.prefixo == "sexta" && quinta.prefixo == "quinta" || modo.prefixo == "quinta" && quinta.prefixo == "sexta") {
-        jogo = true;
-      }
-
-      return jogo;
+      var validos = ["33", "66", "43", "34", "65", "56"];
+      return validos.includes("".concat(modo.categoria).concat(quinta.categoria));
     }
   }, {
     key: "verificaResposta",
     value: function verificaResposta(notas) {
-      if (!(notas[0].naipe.nome == notas[1].naipe.nome && notas[1].naipe.nome == notas[2].naipe.nome)) {
-        return;
-      }
-
-      if (!(notas[3].naipe.nome == notas[4].naipe.nome && notas[4].naipe.nome == notas[5].naipe.nome)) {
-        return;
-      }
-
       if (notas.length != 6) {
         return;
       }
 
-      var jogo1 = this.verificaTriade(this.intervalo.classificaIntervalo(notas[0].cifra, notas[1].cifra), this.intervalo.classificaIntervalo(notas[1].cifra, notas[2].cifra));
-      var jogo2 = this.verificaTriade(this.intervalo.classificaIntervalo(notas[3].cifra, notas[4].cifra), this.intervalo.classificaIntervalo(notas[4].cifra, notas[5].cifra));
+      var novas = this.agrupaNaipes(notas);
+      var acordes = this.encontraAcorde(novas);
 
-      if (jogo1 && jogo2) {
+      if (acordes.length == 6) {
         var mensagens = ["Parabéns!\nAgora experimente tocar o som das tuas cartas\ne das cartas do seu oponente!", "Muito bem!\nCombinação interessante de notas, né?\nQue tal fazer uma música usando elas?", "Arrasou!!\nTu sabe qual é o nome desses acordes?\nQueres que eu te conte?", "Aaaeeeww!!\nAgora experimente jogar com o violão junto.\nA cada jogada faça um improviso usando as notas como tema!", "Isso aí! Mandou bem!\nDois acordes bem básicos,\nmas se tu enxergar todas as cartas como um acorde,\nque acorde que fica?"];
         this.registraResultado("Você Ganhou", mensagens);
         return;
       }
+    }
+  }, {
+    key: "salvaJogada",
+    value: function salvaJogada(tipo, result) {
+      var _this11 = this;
+
+      this.setState({
+        jogador: result.usuario,
+        lixo: result.lixo,
+        comprou: !tipo ? true : this.state.comprou,
+        largou: tipo ? true : this.state.largou
+      }, function () {
+        if (_this11.state.largou && _this11.state.comprou) {
+          _this11.setState({
+            turno: false
+          });
+        }
+
+        _this11.verificaResposta(result.usuario, tipo);
+      });
     }
     /**
      * A semi-generic way to handle multiple lists. Matches
@@ -82161,7 +81990,7 @@ var Cartas = /*#__PURE__*/function (_Component) {
   }, {
     key: "geraBaralho",
     value: function geraBaralho() {
-      var _this9 = this;
+      var _this12 = this;
 
       var tonalidade = this.escala.geraEscalaAleatoria();
       this.escala.aumentaUmaOitava(tonalidade.notas);
@@ -82169,11 +81998,12 @@ var Cartas = /*#__PURE__*/function (_Component) {
       Object.keys(this.naipes).forEach(function (nome, index) {
         var _baralho;
 
-        var notas = copiarObj(tonalidade).notas;
+        var notas = _this12.tools.copiarObj(tonalidade).notas;
+
         notas.map(function (nota) {
           nota.naipe = {
             nome: nome,
-            simbolo: Object.entries(_this9.naipes)[index][1]
+            simbolo: Object.entries(_this12.naipes)[index][1]
           };
         });
 
@@ -82188,6 +82018,7 @@ var Cartas = /*#__PURE__*/function (_Component) {
       var maquina = baralho.slice(0, 6);
       baralho = baralho.slice(maquina.length, baralho.length);
       this.setState({
+        mensagem: null,
         tonalidade: tonalidade.notas,
         baralho: baralho,
         jogador: jogador,
@@ -82195,42 +82026,8 @@ var Cartas = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
-    key: "porcentagem",
-    value: function porcentagem() {
-      var acertos = parseInt(this.state.acertos);
-      var erros = parseInt(this.state.erros);
-      var total = (acertos - erros) * 10;
-      total = total <= 0 ? "0%" : total + "%";
-      return total;
-    }
-  }, {
-    key: "classeInsignia",
-    value: function classeInsignia() {
-      var nome = getUser("cartas", "insignia");
-      return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
-    }
-  }, {
-    key: "citacao",
-    value: function citacao(insignia) {
-      switch (insignia) {
-        case "guidodarezzo":
-          return "\"Benedito Guido d'Arezzo foi (...) o inventor inconsciente dos nomes atuais dos sons,\npor ter se utilizado (...) das silabas Ut Re Mi Fa Sol La, tiradas da abertura de cada\nhemist\xEDquio do Hino a S\xE3o Jo\xE3o Batista\"\n\nANDRADE, M\xE1rio de. Pequena Hist\xF3ria da M\xFAsica.";
-
-        case "pitagoras":
-          return "\"O advento da escala (...) diat\xF4nica est\xE1 historicamente associado ao\nfil\xF3sofo e matem\xE1tico grego Pit\xE1goras (...).\n\nA partir da experi\xEAncia de subdivis\xE3o da corda de um monoc\xF3rdio, (...)\nPit\xE1goras chegou \xE0 conclus\xE3o de que as combina\xE7\xF5es tidas na \xE9poca\ncomo \"consonantes\" e correspondente ao que hoje designamos por oitava,\nquinta, quarta e un\xEDssono est\xE3o, respectivamente, nas propor\xE7\xF5es:\n\n2:1, 3:2, 4:3, 1:1\"\n\nFILHO, Floriano Menezes. A ac\xFAstica Musical em palavras e sons.";
-
-        case "acordes":
-          return "\"Acorde \xE9 uma combina\xE7\xE3o de sons simult\xE2neos ou sucessivos quando arpejados.\nExemplo de acorde com quatro sons, separados por intervalos de ter\xE7as superpostas.(...)\n\nC E G B\"\n\nChediak, Almir. Dicion\xE1rio de Acordes Cifrados.";
-
-        default:
-          break;
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this10 = this;
-
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-4"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -82243,66 +82040,21 @@ var Cartas = /*#__PURE__*/function (_Component) {
         className: "card d-flex p-4"
       }, this.state.maquina ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
         onDragEnd: this.onDragEnd
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
-        droppableId: "maquina",
-        direction: "horizontal"
-      }, function (provided, snapshot) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-          className: "container-cartas  mb-2",
-          ref: provided.innerRef,
-          style: getListStyle(snapshot.isDraggingOver, !_this10.state.turno)
-        }, provided.droppableProps), _this10.state.maquina.map(function (carta, index) {
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
-            key: carta.key,
-            draggableId: carta.key,
-            index: index
-          }, function (provided, snapshot) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-              className: "carta ".concat(carta.naipe.nome),
-              ref: provided.innerRef
-            }, provided.draggableProps, provided.dragHandleProps, {
-              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
-            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-              className: "nota-naipe"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-              className: "naipe"
-            }, carta.naipe.simbolo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-              className: "indice"
-            }, parseInt(carta.id) + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-              className: "nota-naipe"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)));
-          });
-        }), provided.placeholder), !_this10.state.turno ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
-          className: "text-center"
-        }, _this10.state.adversario) : "");
-      })) : "", this.state.jogador ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Draganddrop_Draganddrop__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        nome: "maquina",
+        cartas: this.state.maquina,
+        turno: this.state.turno
+      }), !this.state.turno ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "text-center"
+      }, this.state.adversario) : "") : "", this.state.jogador ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
         onDragEnd: this.onDragEnd
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "cartas-armazenadas"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
-        droppableId: "baralho",
-        direction: "horizontal"
-      }, function (provided, snapshot) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-          className: "container-cartas costas",
-          ref: provided.innerRef,
-          style: getListStyle(snapshot.isDraggingOver)
-        }, provided.droppableProps), _this10.state.baralho.map(function (carta, index) {
-          return index <= 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
-            key: carta.key,
-            draggableId: carta.key,
-            index: index
-          }, function (provided, snapshot) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-              className: "carta ".concat(carta.naipe.nome),
-              ref: provided.innerRef
-            }, provided.draggableProps, provided.dragHandleProps, {
-              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
-            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-              className: "borda"
-            }, "\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69"));
-          }) : "";
-        }), provided.placeholder);
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Draganddrop_Draganddrop__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        nome: "baralho",
+        cartas: this.state.baralho,
+        costas: true,
+        limite: 1
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "m-auto text-center"
       }, this.state.status ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, this.state.status), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -82313,78 +82065,24 @@ var Cartas = /*#__PURE__*/function (_Component) {
         style: {
           whiteSpace: "break-spaces"
         }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, this.state.mensagem)) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
-        droppableId: "lixo",
-        direction: "horizontal"
-      }, function (provided, snapshot) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-          className: "container-cartas",
-          ref: provided.innerRef,
-          style: getListStyle(snapshot.isDraggingOver)
-        }, provided.droppableProps), _this10.state.lixo.length ? _this10.state.lixo.map(function (carta, index) {
-          return index <= 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
-            key: carta.key,
-            draggableId: carta.key,
-            index: index
-          }, function (provided, snapshot) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-              className: "carta ".concat(carta.naipe.nome),
-              ref: provided.innerRef
-            }, provided.draggableProps, provided.dragHandleProps, {
-              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
-            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-              className: "nota-naipe"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-              className: "naipe"
-            }, carta.naipe.simbolo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-              className: "indice"
-            }, parseInt(carta.id) + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-              className: "nota-naipe"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)));
-          }) : "";
-        }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "m-auto"
-        }, "Descarte aqui"), provided.placeholder);
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
-        droppableId: "usuario",
-        direction: "horizontal"
-      }, function (provided, snapshot) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, _this10.state.turno ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
-          className: "text-center"
-        }, "Voc\xEA") : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-          className: "container-jogador",
-          ref: provided.innerRef,
-          style: getListStyle(snapshot.isDraggingOver, _this10.state.turno)
-        }, provided.droppableProps), _this10.state.jogador.map(function (carta, index) {
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
-            key: carta.key,
-            draggableId: carta.key,
-            index: index
-          }, function (provided, snapshot) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-              className: "carta ".concat(carta.naipe.nome),
-              ref: provided.innerRef
-            }, provided.draggableProps, provided.dragHandleProps, {
-              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
-            }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-              className: "nota-naipe"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-              className: "naipe"
-            }, carta.naipe.simbolo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-              className: "indice"
-            }, parseInt(carta.id) + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-              className: "nota-naipe"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)));
-          });
-        }), provided.placeholder));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, this.state.mensagem)) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Draganddrop_Draganddrop__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        nome: "lixo",
+        cartas: this.state.lixo,
+        limite: 1
+      })), this.state.turno ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "text-center"
+      }, "Voc\xEA") : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Draganddrop_Draganddrop__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        nome: "usuario",
+        cartas: this.state.jogador,
+        turno: this.state.turno
       })) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "nivelamento-container alert text-center mt-2"
       }, this.state.concluido ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container-insignia"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "insignia ".concat(this.classeInsignia()),
-        title: this.citacao(this.classeInsignia())
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, getUser("cartas", "insignia"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "insignia ".concat(this.tools.classeInsignia(this.tools.getUser("cartas", "insignia"))),
+        title: this.tools.citacao(this.tools.classeInsignia(this.tools.getUser("cartas", "insignia")))
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, this.tools.getUser("cartas", "insignia"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "text-left"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Progresso: ", this.state.porcentagem), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
         className: "barra-progresso m-0",
@@ -82531,12 +82229,12 @@ var CriadorDeAcordes = /*#__PURE__*/function (_Component) {
       var fundamental = escala.notas[0];
       var terca = escala.notas[2];
       var quinta = escala.notas[4];
-      var modo = this.intervalo.classificaIntervalo(fundamental.cifra, terca.cifra);
+      var modo = this.intervalo.classifica([fundamental, terca]);
       var acorde = {
         notas: [fundamental, terca, quinta],
         modo: modo.nome,
         cifra: fundamental.cifra,
-        intervalos: [modo, this.intervalo.classificaIntervalo(terca.cifra, quinta.cifra)]
+        intervalos: [modo, this.intervalo.classifica([terca, quinta])]
       };
       this.setState({
         acorde: acorde
@@ -82745,7 +82443,7 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
         var escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
         var intervalos = [];
         escala.notas.map(function (nota, indice) {
-          intervalos.push(_this2.intervalos.classificaIntervalo(nota.cifra, escala.notas[(indice + 1) % escala.notas.length].cifra));
+          intervalos.push(_this2.intervalos.classifica([nota, escala.notas[(indice + 1) % escala.notas.length]]));
         });
         escala ? this.setState({
           erro: false,
@@ -83041,6 +82739,118 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Decifrar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Decifrar */ "./resources/js/components/Decifrar/Decifrar.jsx");
 
 /* harmony default export */ __webpack_exports__["default"] = (_Decifrar__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
+/***/ "./resources/js/components/Draganddrop/Draganddrop.jsx":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/Draganddrop/Draganddrop.jsx ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+var getItemStyle = function getItemStyle(isDragging, draggableStyle) {
+  return _objectSpread({
+    // change background colour if dragging
+    boxShadow: isDragging ? "10px 10px 10px black" : "1px 1px 3px black"
+  }, draggableStyle);
+};
+
+var Draganddrop = /*#__PURE__*/function (_Component) {
+  _inherits(Draganddrop, _Component);
+
+  var _super = _createSuper(Draganddrop);
+
+  function Draganddrop(props) {
+    _classCallCheck(this, Draganddrop);
+
+    return _super.call(this, props);
+  }
+
+  _createClass(Draganddrop, [{
+    key: "render",
+    value: function render() {
+      var _this = this;
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
+        droppableId: this.props.nome,
+        direction: "horizontal"
+      }, function (provided, snapshot) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+          className: "container-cartas ".concat(_this.props.nome, " ").concat(snapshot.isDraggingOver ? "dragging" : '', " mb-2"),
+          ref: provided.innerRef
+        }, provided.droppableProps), _this.props.cartas.length ? _this.props.cartas.map(function (carta, index) {
+          return index <= (_this.props.limite ? _this.props.limite : _this.props.cartas.length) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
+            key: carta.key,
+            draggableId: carta.key,
+            index: index
+          }, function (provided, snapshot) {
+            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+              className: "carta ".concat(carta.naipe.nome),
+              ref: provided.innerRef
+            }, provided.draggableProps, provided.dragHandleProps, {
+              style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
+            }), _this.props.costas ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "borda"
+            }, "\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69\uD83D\uDE69") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "nota-naipe"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "naipe"
+            }, carta.naipe.simbolo), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "indice"
+            }, parseInt(carta.id) + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "nota-naipe"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, carta.naipe.simbolo))));
+          }) : "";
+        }) : _this.props.nome == "lixo" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "m-auto"
+        }, "Descarte aqui") : "", provided.placeholder));
+      });
+    }
+  }]);
+
+  return Draganddrop;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (Draganddrop);
 
 /***/ }),
 
@@ -84450,46 +84260,55 @@ var Intervalos = /*#__PURE__*/function () {
     _classCallCheck(this, Intervalos);
 
     this.escala = new _Escalas__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.encontraAcorde = this.encontraAcorde.bind();
   }
 
   _createClass(Intervalos, [{
     key: "atribuiValores",
-    value: function atribuiValores(distancia, nome) {
+    value: function atribuiValores(distancia) {
       var casos = [];
       var indices = [];
+      var nome;
 
-      switch (nome) {
-        case "segunda":
+      switch (distancia.diatonica) {
+        case 2:
+          nome = "segunda";
           casos = [0, 0.5, 1, 1.5];
           indices = [0, 1, 2, 3];
           break;
 
-        case "terça":
+        case 3:
+          nome = "terça";
           casos = [1, 1.5, 2, 2.5];
           indices = [2, 3, 4, 5];
           break;
 
-        case "quarta":
+        case 4:
+          nome = "quarta";
           casos = [2, 2.5, 3];
           indices = [4, 5, 4];
           break;
 
-        case "quinta":
+        case 5:
+          nome = "quinta";
           casos = [3, 3.5, 4];
           indices = [4, 5, 4];
           break;
 
-        case "sexta":
+        case 6:
+          nome = "sexta";
           casos = [3.5, 4, 4.5, 5];
           indices = [5, 4, 5, 4];
           break;
 
-        case "setima":
+        case 7:
+          nome = "setima";
           casos = [4.5, 5, 5.5, 6];
           indices = [5, 4, 5, 4];
           break;
 
-        case "oitava":
+        case 0:
+          nome = "oitava";
           casos = [5.5, 0, 6.5];
           indices = [5, 4, 5];
           break;
@@ -84508,9 +84327,9 @@ var Intervalos = /*#__PURE__*/function () {
       /* 3 */
       "".concat(tom, " e ").concat(semitom),
       /* 4 */
-      "".concat(nome == "oitava" ? 6 : distancia.diatonica, " ").concat(tons),
+      "".concat(nome == "oitava" ? 6 : distancia.diatonica - 1, " ").concat(tons),
       /* 5 */
-      "".concat(distancia.diatonica, "  ").concat(tons, "  e ").concat(semitom)];
+      "".concat(distancia.diatonica - 1, "  ").concat(tons, "  e ").concat(semitom)];
       var intervalo = {};
 
       switch (distancia.semitons) {
@@ -84551,80 +84370,67 @@ var Intervalos = /*#__PURE__*/function () {
       }
 
       intervalo.prefixo = nome;
+      intervalo.categoria = distancia.diatonica;
       return intervalo;
     }
   }, {
-    key: "classificaIntervalo",
-    value: function classificaIntervalo(nota1, nota2) {
-      var cromatica = this.escala.formarEscala(nota1, 0);
-      var cromatica2 = this.escala.formarEscala(nota2, 0);
-      var homonimos1 = this.escala.pegaHomonimos(nota1);
-      var homonimos2 = this.escala.pegaHomonimos(nota2); // pega a posição dos homonimos da escala diatonica na escala cromatica
+    key: "distanciaDiatonica",
+    value: function distanciaDiatonica(atual, proxima) {
+      var intervalo;
 
-      var index = cromatica.notas.findIndex(function (nota) {
-        return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos1);
-      });
-      var index2 = cromatica.notas.findIndex(function (nota) {
-        return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
-      });
-      var diatonica = this.escala.diatonica.notas;
-      var id = diatonica.findIndex(function (nota) {
-        return nota.cifra == nota1[0];
-      });
-      var id2 = diatonica.findIndex(function (nota) {
-        return nota.cifra == nota2[0];
-      }); // Calculo distancia entre as notas
+      for (var i = atual; i % 7 != proxima; i++) {
+        intervalo = i - atual + 2;
+      }
 
+      return intervalo == undefined ? 0 : intervalo;
+    }
+  }, {
+    key: "classifica",
+    value: function classifica(notas) {
+      var _this = this;
+
+      var cromatica = this.escala.formarEscala(notas[0].cifra, 0);
+      var indices = notas.map(function (nota) {
+        var homonimos = _this.escala.pegaHomonimos(nota.cifra);
+
+        return cromatica.notas.findIndex(function (n) {
+          return new RegExp("\\[".concat(n.cifra, "\\]")).test(homonimos);
+        });
+      });
+      var ids = notas.map(function (nota) {
+        return parseInt(nota.id);
+      });
+      var intervalo = this.distanciaDiatonica(ids[0], ids[1]);
       var distancia = {
-        diatonica: id2 - id,
-        cromatica: index2 - index
+        diatonica: intervalo,
+        cromatica: indices[1] - indices[0]
       };
-
-      if (index2 == -1) {
-        index = cromatica2.notas.findIndex(function (nota) {
-          return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos1);
-        });
-        index2 = cromatica2.notas.findIndex(function (nota) {
-          return new RegExp("\\[".concat(nota.cifra, "\\]")).test(homonimos2);
-        });
-      } // Calculo para 2 oitavas
-
-
-      if (distancia.cromatica < 0) {
-        distancia.cromatica = (index2 + 12 - index) % 13;
-      }
-
-      if (distancia.diatonica < 0) {
-        distancia.diatonica = (id2 + 7 - id) % 9;
-      }
-
       distancia.semitons = distancia.cromatica * 0.5;
+      return this.atribuiValores(distancia);
+    }
+  }, {
+    key: "verificaTriade",
+    value: function verificaTriade(modo, quinta) {
+      var validos = ["33", "66", "43", "34", "65", "56"];
+      return validos.includes("".concat(modo.valor).concat(quinta.valor));
+    }
+  }, {
+    key: "encontraAcorde",
+    value: function encontraAcorde(notas) {
+      var _this2 = this;
 
-      switch (distancia.diatonica) {
-        case 1:
-          return this.atribuiValores(distancia, "segunda");
+      var acordes = [];
+      notas.forEach(function (nota, indice) {
+        var proxima = (indice + 1) % notas.length;
+        var ultima = (indice + 2) % notas.length;
 
-        case 2:
-          return this.atribuiValores(distancia, "terça");
+        var resultado = _this2.verificaTriade(_this2.classifica([nota, notas[proxima]]), _this2.classifica([notas[proxima], notas[ultima]]));
 
-        case 3:
-          return this.atribuiValores(distancia, "quarta");
-
-        case 4:
-          return this.atribuiValores(distancia, "quinta");
-
-        case 5:
-          return this.atribuiValores(distancia, "sexta");
-
-        case 6:
-          return this.atribuiValores(distancia, "setima");
-
-        case 0:
-          return this.atribuiValores(distancia, "oitava");
-
-        default:
-          break;
-      }
+        if (resultado && !acordes.includes(nota) && !acordes.includes(notas[ultima])) {
+          acordes.push(nota, notas[proxima], notas[ultima]);
+        }
+      });
+      return acordes.length ? acordes : false;
     }
   }]);
 
@@ -84804,6 +84610,143 @@ var Ordens = /*#__PURE__*/function () {
   }]);
 
   return Ordens;
+}();
+
+
+
+/***/ }),
+
+/***/ "./resources/js/tools.js":
+/*!*******************************!*\
+  !*** ./resources/js/tools.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Tools; });
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Tools = /*#__PURE__*/function () {
+  function Tools() {
+    _classCallCheck(this, Tools);
+
+    this.getUser = this.getUser.bind();
+    this.copiarObj = this.copiarObj.bind();
+    this.porcentagem = this.porcentagem.bind(); // this.getItemStyle = this.getItemStyle();
+    // this.getListStyle = this.getListStyle();
+
+    this.reorder = this.reorder.bind();
+    this.move = this.move.bind();
+    this.classeInsignia = this.classeInsignia.bind();
+    this.citacao = this.citacao.bind();
+  }
+
+  _createClass(Tools, [{
+    key: "getUser",
+    value: function getUser(exercicio, item) {
+      var resultados = JSON.parse(document.querySelector("[data-usuario]").dataset.usuario);
+      var resultados_exercicio = resultados.find(function (resultado) {
+        return resultado.exercicio === exercicio;
+      });
+      return resultados_exercicio[item];
+    }
+  }, {
+    key: "copiarObj",
+    value: function copiarObj(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+  }, {
+    key: "porcentagem",
+    value: function porcentagem(acertos, erros) {
+      var total = (acertos - erros) * 10;
+      total = total <= 0 ? "0%" : total + "%";
+      return total;
+    } // getItemStyle(isDragging, draggableStyle) {
+    //     // change background colour if dragging
+    //     boxShadow: isDragging ? "10px 10px 10px black" : "1px 1px 3px black",
+    //     // styles we need to apply on draggables
+    //     ...draggableStyle
+    // };
+    // getListStyle(isDraggingOver, turno) {
+    //     background: isDraggingOver ? "lightblue" : turno ? "aliceblue" : "unset"
+    // };
+    // a little function to help us with reordering the result
+
+  }, {
+    key: "reorder",
+    value: function reorder(list, startIndex, endIndex) {
+      var result = Array.from(list);
+
+      var _result$splice = result.splice(startIndex, 1),
+          _result$splice2 = _slicedToArray(_result$splice, 1),
+          removed = _result$splice2[0];
+
+      result.splice(endIndex, 0, removed);
+      return result;
+    }
+  }, {
+    key: "move",
+
+    /**
+     * Moves an item from one list to another list.
+     */
+    value: function move(source, destination, droppableSource, droppableDestination) {
+      var sourceClone = Array.from(source);
+      var destClone = Array.from(destination);
+
+      var _sourceClone$splice = sourceClone.splice(droppableSource.index, 1),
+          _sourceClone$splice2 = _slicedToArray(_sourceClone$splice, 1),
+          removed = _sourceClone$splice2[0];
+
+      destClone.splice(droppableDestination.index, 0, removed);
+      var result = {};
+      result[droppableSource.droppableId] = sourceClone;
+      result[droppableDestination.droppableId] = destClone;
+      return result;
+    }
+  }, {
+    key: "classeInsignia",
+    value: function classeInsignia(nome) {
+      return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
+    }
+  }, {
+    key: "citacao",
+    value: function citacao(insignia) {
+      switch (insignia) {
+        case "guidodarezzo":
+          return "\"Benedito Guido d'Arezzo foi (...) o inventor inconsciente dos nomes atuais dos sons,\npor ter se utilizado (...) das silabas Ut Re Mi Fa Sol La, tiradas da abertura de cada\nhemist\xEDquio do Hino a S\xE3o Jo\xE3o Batista\"\n\nANDRADE, M\xE1rio de. Pequena Hist\xF3ria da M\xFAsica.";
+
+        case "pitagoras":
+          return "\"O advento da escala (...) diat\xF4nica est\xE1 historicamente associado ao\nfil\xF3sofo e matem\xE1tico grego Pit\xE1goras (...).\n\nA partir da experi\xEAncia de subdivis\xE3o da corda de um monoc\xF3rdio, (...)\nPit\xE1goras chegou \xE0 conclus\xE3o de que as combina\xE7\xF5es tidas na \xE9poca\ncomo \"consonantes\" e correspondente ao que hoje designamos por oitava,\nquinta, quarta e un\xEDssono est\xE3o, respectivamente, nas propor\xE7\xF5es:\n\n2:1, 3:2, 4:3, 1:1\"\n\nFILHO, Floriano Menezes. A ac\xFAstica Musical em palavras e sons.";
+
+        case "acordes":
+          return "\"Acorde \xE9 uma combina\xE7\xE3o de sons simult\xE2neos ou sucessivos quando arpejados.\nExemplo de acorde com quatro sons, separados por intervalos de ter\xE7as superpostas.(...)\n\nC E G B\"\n\nChediak, Almir. Dicion\xE1rio de Acordes Cifrados.";
+
+        default:
+          break;
+      }
+    }
+  }]);
+
+  return Tools;
 }();
 
 

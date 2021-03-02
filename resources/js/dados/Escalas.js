@@ -219,6 +219,8 @@ export default class Escalas {
         let ordena = this.ordem.ordena(input);
         let escala;
 
+
+
         if(parseInt(diatonica)) {
             escala = this.adicionarAcidentes(ordena, input, complemento);
             escala.notas ? this.reduzPraUmaOitava(escala.notas) : ''
