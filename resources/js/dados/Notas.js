@@ -1,49 +1,24 @@
+const arrayCifras = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+const arrayNomes = ['Lá', 'Si', 'Dó', 'Ré', 'Mi', 'Fá', 'Sol'];
+
 export default class Notas {
     constructor() {
-        this.notas = [
-            {
-                cifra: "A",
-                nome: "Lá"
-            },
-            {
-                cifra: "B",
-                nome: "Si"
-            },
-            {
-                cifra: "C",
-                nome: "Dó"
-            },
-            {
-                cifra: "D",
-                nome: "Ré"
-            },
-            {
-                cifra: "E",
-                nome: "Mi"
-            },
-            {
-                cifra: "F",
-                nome: "Fá"
-            },
-            {
-                cifra: "G",
-                nome: "Sol"
-            }
-        ];
+        const notasObj =
+            arrayCifras.map( (cifra, indice)=>{
+                return {
+                    cifra,
+                    nome: arrayNomes[indice]
+                }
+            });
+
+        this.notas = notasObj;   
     }
 
     // Verifica se a nota está na escala diatonica
     verificaNota(input) {
-        let nota = this.notas.filter((nota)=>{
-            if(nota.cifra == input[0]) {
-                return input;
-            }
-        })
-        
-        if(nota.length) {
-            return input;
-        } else {
-            return false;
-        }
+        let nota = this.notas.filter( nota => nota.cifra == input[0] );
+        if(!nota.length) return false;
+
+        return input;
     }
 }
