@@ -11,46 +11,35 @@ export default class Escalas {
         this.acidente = new Acidentes();
     }
 
-    geraNumeroAleatorio(array) {
+    escolhe(array) {
         const random = parseInt(0 + Math.random() * (array.length - 0));
-        return random;
+        return array[random];
     }
 
     aumentaUmaOitava(escala) {
-        escala.forEach(nota => {
-            escala.push(nota);
-        });
-        return escala
+        escala.push(...escala);
+        return escala;
     }
 
     reduzPraUmaOitava(escala) {
-        escala.forEach( (nota, index) => {
-            if(index <= 7) {
-                escala.splice(escala.length - 1);
-            }
-        });
+        return escala.splice(7);
     }
 
     // Escolhe uma ordem (bemol ou sustenido)
     geraEscalaAleatoria() {
-        let complementos = ["natural", "harmonica", "melodica"];
-        let index;
-        let escolhe = this.geraNumeroAleatorio(["b", "#"]);
-        let tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
+        let tonalidade = this.escolhe([this.ordem.bemois, this.ordem.sustenidos]);
+        let tom = this.escolhe(tonalidade).cifra + this.escolhe(["", "m"]);
+        let complemento =
+            tom.match(/m/)
+                ? this.escolhe(["natural", "harmonica", "melodica"])
+                : "";
+        let escala = this.formarEscala(tom, 1, complemento);
 
-        let tom = tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra;
-        
-        escolhe = this.geraNumeroAleatorio(["M", "m"]);
-        escolhe ? tom += "m" : ''
-
-        if(tom.match(/m/)) {
-            index = this.geraNumeroAleatorio(complementos);
-        }
-        let escala = this.formarEscala( tom, 1, complementos[index]);
         return escala;
     }
 
     // Define o limite das tonalidades utilizadas no modo
+    // Ex.: F, C, [G, D, A, E, B];
     limitarEscala(s, b) {
         let limite = {
             sustenidos: s,
@@ -59,6 +48,9 @@ export default class Escalas {
         return limite;
     }
 
+    // Define a posição de um acidente da tonalidade em relação a uma escala
+    // Ex. Sensivel: F, C, [G] => A, B, C#, D, E, F#, [G#], A 
+    // Ex. Fundamental: F, C, [G] => F#, [G#], A, B, C, D, E, F#
     definePosicao(s, f) {
        let posicao = {
             sensivel: s,
@@ -76,9 +68,15 @@ export default class Escalas {
     // Adiciona sustenidos ou bemois para formar escalas maiores
     adicionarAcidentes(escala, input, complemento) {
         try {
-            var menor = input.match(/m/) ? 1 : 0;
-            var tom = { cifra: input }
-    
+
+            const menor = input.match(/m/);
+            const sobrenome = menor
+                ? " menor " + complemento
+                : " maior ";
+            const tom = {
+                cifra: input,
+                nome: escala[0].nome + sobrenome
+            };
             this.aumentaUmaOitava(escala)
             
             let limite = menor
@@ -102,7 +100,7 @@ export default class Escalas {
 
             var dados = {
                 notas: escala,
-                tom: tom,
+                tom,
                 modo: menor ? "menor" : "maior",
                 complemento: menor ? complemento : ""
             }
@@ -127,9 +125,7 @@ export default class Escalas {
             tonalidades.map( (tonalidade, i) => {
                 // Pega o indice dessa tonalidade na escala quando
                 // a cifra da escala for a mesma que a da tonalidade
-                let index = escala.findIndex(n => {
-                    return n.cifra == tonalidade.cifra;
-                });
+                let index = escala.findIndex(n => n.cifra == tonalidade.cifra );
     
                 if (!(fundamental && sensivel)) {
                     // Na escala
@@ -215,15 +211,13 @@ export default class Escalas {
     }
 
     formarEscala(input, diatonica, complemento) {
-        input = this.diatonica.verificaNota(input);
+        this.diatonica.verificaNota(input); 
         let ordena = this.ordem.ordena(input);
         let escala;
 
-
-
         if(parseInt(diatonica)) {
             escala = this.adicionarAcidentes(ordena, input, complemento);
-            escala.notas ? this.reduzPraUmaOitava(escala.notas) : ''
+            this.reduzPraUmaOitava(escala.notas);
         } else {
             escala = this.cromatica(input, ordena)
         }
