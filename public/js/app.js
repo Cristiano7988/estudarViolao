@@ -81167,6 +81167,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../dados/Escalas */ "./resources/js/dados/Escalas.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -81204,6 +81210,8 @@ var Braco = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__["default"]();
     _this.state = {
+      cifra: "Nome",
+      braco: _this.props.braco,
       cordas: [_this.escala.aumentaUmaOitava(_this.escala.formarEscala("E", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("A", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("D", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("G", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("B", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("E", 0).notas)],
       tessitura: {
         inicio: 0,
@@ -81215,7 +81223,7 @@ var Braco = /*#__PURE__*/function (_Component) {
       notas: []
     };
     _this.afina = _this.afina.bind(_assertThisInitialized(_this));
-    _this.marcar = _this.marcar.bind(_assertThisInitialized(_this));
+    _this.nomear = _this.nomear.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -81223,44 +81231,104 @@ var Braco = /*#__PURE__*/function (_Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
       // Limpa o braço para poder atualizá-lo em seguida
-      document.querySelectorAll(".active").forEach(function (el) {
+      document.querySelectorAll("[data-id='".concat(this.props.id, "'] .active")).forEach(function (el) {
         return el.classList.remove("active");
       });
+      if (this.props.digitar) this.habilitaMarcador();
+      if (this.props.escala) this.digitaEscala();
+    }
+  }, {
+    key: "habilitaMarcador",
+    value: function habilitaMarcador() {
+      var _this2 = this;
 
-      if (this.props.digitar) {
-        this.props.retomar();
-      }
+      this.state.braco.cordas.forEach(function (corda) {
+        if (!corda.notas) return false;
+        corda.notas.forEach(function (nota) {
+          var elementos = Array.prototype.slice.call(document.querySelectorAll("[data-id=\"".concat(_this2.props.id, "\"] [data-corda=\"").concat(corda.numero, "\"]")));
+          elementos.forEach(function (elemento) {
+            var notas = nota.split(" ");
+            notas.forEach(function (notaProcurada) {
+              var regex = new RegExp("".concat(notaProcurada.replace(/\[|\]/, "")));
 
-      this.digitaEscala();
+              if (elemento.dataset.nota.match(regex)) {
+                elemento.classList.add('active');
+              }
+            });
+          });
+        });
+      });
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.digitaEscala();
+      if (this.props.escala) this.digitaEscala();
     }
   }, {
     key: "nomear",
-    value: function nomear(e, index) {
+    value: function nomear(e) {
       e.preventDefault();
-      var braco = document.querySelector(".braco[data-id=\"".concat(index, "\"]"));
-      braco.dataset.cifra = e.target.value;
+      this.setState({
+        cifra: e.target.value
+      });
+    }
+  }, {
+    key: "verificaSaves",
+    value: function verificaSaves(indice, nota) {
+      var apagar = false;
+      var cordas = this.state.braco.cordas;
+      var corda = cordas[indice - 1];
+      if (!corda) return false;
+      var notas = corda.notas.map(function (notaVerificada) {
+        if (notaVerificada == nota) {
+          apagar = true;
+          return false;
+        } else {
+          return notaVerificada;
+        }
+
+        ;
+      });
+      notas = notas.filter(Boolean);
+
+      if (Object(lodash__WEBPACK_IMPORTED_MODULE_0__["isEmpty"])(notas)) {
+        cordas.splice(indice - 1, 1, false);
+        this.setState({
+          braco: {
+            cordas: cordas
+          }
+        });
+        return true;
+      } else if (apagar) {
+        cordas[indice - 1].notas = notas;
+        this.setState({
+          braco: {
+            cordas: cordas
+          }
+        });
+        return true;
+      }
     }
   }, {
     key: "marcar",
-    value: function marcar(e) {
-      e.preventDefault();
+    value: function marcar(indiceCorda, nota) {
+      if (!this.props.digitar) return false;
+      if (this.verificaSaves(indiceCorda, nota)) return false;
+      var cordas = this.state.braco.cordas;
+      var notas = cordas[indiceCorda - 1] ? cordas[indiceCorda - 1].notas : [];
+      notas.push(nota);
+      cordas[indiceCorda - 1] = {
+        numero: indiceCorda,
+        notas: notas
+      };
 
-      if (this.props.digitar) {
-        var casa = e.target.closest('.casa, .afinacao');
-        var braco = e.target.closest('.braco'); // Salva no componente pai
+      var braco = _objectSpread(_objectSpread({}, this.state.braco), {}, {
+        cordas: cordas
+      });
 
-        this.props.salvar({
-          corda: casa.lastChild.dataset.corda,
-          nota: casa.lastChild.dataset.nota,
-          braco: braco.dataset.id,
-          cifra: braco.dataset.cifra ? braco.dataset.cifra : ""
-        });
-      }
+      this.setState({
+        braco: braco
+      });
     }
   }, {
     key: "afina",
@@ -81307,13 +81375,16 @@ var Braco = /*#__PURE__*/function (_Component) {
   }, {
     key: "digitaEscala",
     value: function digitaEscala() {
-      var _this2 = this;
+      var _this3 = this;
 
+      document.querySelectorAll('.active').forEach(function (elemento) {
+        elemento.classList.remove('active');
+      });
       var casas = Array.prototype.slice.call(document.querySelectorAll("[data-nota]"));
 
       if (this.props.escala) {
         casas.every(function (casa) {
-          _this2.props.escala.every(function (nota) {
+          _this3.props.escala.every(function (nota) {
             var homonimos = new RegExp("\\[".concat(nota.cifra, "\\]"));
 
             if (casa.dataset.nota.match(homonimos)) {
@@ -81331,20 +81402,18 @@ var Braco = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, this.props.digitar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "cifra"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+        value: this.state.cifra,
         type: "text",
         "data-input": this.props.id,
-        onChange: function onChange(e) {
-          return _this3.nomear(e, _this3.props.id);
-        },
+        onChange: this.nomear,
         style: {
           border: "none"
         },
-        placeholder: "Nome",
         className: "text-center cifra"
       })) : "", this.state.erro.afinacao ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "text-danger"
@@ -81357,37 +81426,38 @@ var Braco = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "seta up",
         onClick: function onClick(e) {
-          return _this3.mudaPosicao(0);
+          return _this4.mudaPosicao(0);
         }
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "seta down",
         onClick: function onClick(e) {
-          return _this3.mudaPosicao(1);
+          return _this4.mudaPosicao(1);
         }
       }))) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "braco",
         "data-id": this.props.id
-      }, this.state.cordas.map(function (corda, index) {
-        var posicao = (index - 6) * -1;
+      }, this.state.cordas.map(function (corda, indiceCorda) {
+        var posicao = (indiceCorda - 6) * -1;
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-          key: index,
+          key: indiceCorda,
           className: "corda corda-".concat(posicao)
-        }, corda.map(function (nota, indice) {
-          var inicio = _this3.props.estender ? indice : indice + _this3.state.tessitura.inicio;
+        }, corda.map(function (nota, indiceCasa) {
+          var inicio = _this4.props.estender ? indiceCasa : indiceCasa + _this4.state.tessitura.inicio;
 
-          var _final = _this3.props.estender ? 16 : _this3.state.tessitura.fim;
+          var _final = _this4.props.estender ? 16 : _this4.state.tessitura.fim;
 
-          return indice == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-            key: indice,
+          var notaAtual = corda[inicio % corda.length].cifra;
+          return indiceCasa == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+            key: indiceCasa,
             className: "afinacao",
             style: {
-              cursor: _this3.props.digitar ? "pointer" : "unset"
+              cursor: _this4.props.digitar ? "pointer" : "unset"
             }
-          }, _this3.props.afinar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+          }, _this4.props.afinar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
             type: "text",
             title: "Clique para editar a afina\xE7\xE3o",
-            onChange: _this3.afina,
-            "data-id": index,
+            onChange: _this4.afina,
+            "data-id": indiceCorda,
             placeholder: nota.cifra,
             style: {
               width: "15px",
@@ -81395,22 +81465,26 @@ var Braco = /*#__PURE__*/function (_Component) {
             }
           }) : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
             "data-corda": posicao,
-            "data-casa": indice,
-            "data-nota": _this3.escala.pegaHomonimos(nota.cifra),
-            title: _this3.escala.pegaHomonimos(nota.cifra),
-            onClick: _this3.marcar
+            "data-casa": indiceCasa,
+            "data-nota": _this4.escala.pegaHomonimos(nota.cifra),
+            title: _this4.escala.pegaHomonimos(nota.cifra),
+            onClick: function onClick() {
+              return _this4.marcar(posicao, _this4.escala.pegaHomonimos(notaAtual));
+            }
           })) : inicio <= _final ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-            key: indice,
+            key: indiceCasa,
             className: "casa",
             style: {
-              cursor: _this3.props.digitar ? "pointer" : "unset"
+              cursor: _this4.props.digitar ? "pointer" : "unset"
             },
-            onClick: _this3.marcar
+            onClick: function onClick() {
+              return _this4.marcar(posicao, _this4.escala.pegaHomonimos(notaAtual));
+            }
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
             "data-corda": posicao,
             "data-casa": inicio,
-            "data-nota": _this3.escala.pegaHomonimos(corda[inicio % corda.length].cifra),
-            title: _this3.props.escala ? nota.cifra : _this3.escala.pegaHomonimos(corda[inicio % corda.length].cifra)
+            "data-nota": _this4.escala.pegaHomonimos(notaAtual),
+            title: _this4.props.escala ? nota.cifra : _this4.escala.pegaHomonimos(notaAtual)
           })) : "";
         }));
       }))));
@@ -82903,67 +82977,21 @@ var Editor = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, Editor);
 
     _this = _super.call(this);
-    _this.retomar = _this.retomar.bind(_assertThisInitialized(_this));
-    _this.salvar = _this.salvar.bind(_assertThisInitialized(_this));
     _this.afinar = _this.afinar.bind(_assertThisInitialized(_this));
     _this.remover = _this.remover.bind(_assertThisInitialized(_this));
     _this.adicionar = _this.adicionar.bind(_assertThisInitialized(_this));
     _this.estender = _this.estender.bind(_assertThisInitialized(_this));
     _this.state = {
-      contador: [''],
+      contador: [{
+        cordas: []
+      }],
       afinar: false,
-      estender: false,
-      marcadas: []
+      estender: false
     };
     return _this;
   }
 
   _createClass(Editor, [{
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      this.retomar();
-    }
-  }, {
-    key: "verificaSaves",
-    value: function verificaSaves(nota) {
-      var marcadas = this.state.marcadas;
-      var desmarcar = this.state.marcadas.findIndex(function (marcadas) {
-        return marcadas.corda == nota.corda && marcadas.nota == nota.nota && marcadas.braco == nota.braco;
-      });
-
-      if (desmarcar > -1) {
-        marcadas.splice(desmarcar, 1);
-        this.setState({
-          marcadas: marcadas
-        });
-        return true;
-      }
-    }
-  }, {
-    key: "salvar",
-    value: function salvar(notas) {
-      if (this.verificaSaves(notas)) {
-        return false;
-      }
-
-      var marcadas = this.state.marcadas;
-      marcadas.push(notas);
-      this.setState({
-        marcadas: marcadas
-      });
-    }
-  }, {
-    key: "retomar",
-    value: function retomar() {
-      this.state.marcadas.forEach(function (posicao) {
-        var elemento = document.querySelector("[data-id=\"".concat(posicao.braco, "\"] [data-corda=\"").concat(posicao.corda, "\"][data-nota=\"").concat(posicao.nota, "\"]"));
-        elemento ? elemento.classList.add('active') : '';
-        var input = document.querySelector("[data-input=\"".concat(posicao.braco, "\"]"));
-        input ? input.value = posicao.cifra : '';
-      });
-      return this.state.marcadas;
-    }
-  }, {
     key: "estender",
     value: function estender(e) {
       e.preventDefault();
@@ -82971,7 +82999,6 @@ var Editor = /*#__PURE__*/function (_Component) {
       this.setState({
         estender: e.target.classList.contains('estender')
       });
-      this.retomar();
     }
   }, {
     key: "afinar",
@@ -82986,24 +83013,22 @@ var Editor = /*#__PURE__*/function (_Component) {
     key: "remover",
     value: function remover(e) {
       e.preventDefault();
-      var remove = this.state.contador;
+      var contador = this.state.contador;
 
-      if (remove.length > 1) {
-        remove.splice(remove.length - 1, 1);
-        this.setState({
-          contador: remove
-        });
+      if (contador.length > 1) {
+        contador.pop();
+        this.setState(contador);
       }
     }
   }, {
     key: "adicionar",
     value: function adicionar(e) {
       e.preventDefault();
-      var adiciona = this.state.contador;
-      adiciona.push('');
-      this.setState({
-        contador: adiciona
+      var contador = this.state.contador;
+      contador.push({
+        cordas: []
       });
+      this.setState(contador);
     }
   }, {
     key: "render",
@@ -83024,14 +83049,12 @@ var Editor = /*#__PURE__*/function (_Component) {
         className: "mb-5"
       }, "Cifras"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row m-auto pb-5"
-      }, this.state.contador.map(function (b, id) {
+      }, this.state.contador.map(function (braco, id) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: id
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_1__["default"], {
           id: id,
-          notas: _this2.state.marcadas,
-          retomar: _this2.retomar,
-          salvar: _this2.salvar,
+          braco: braco,
           escala: false,
           digitar: true,
           afinar: _this2.state.afinar,
@@ -83979,6 +84002,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Acidentes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Acidentes */ "./resources/js/dados/Acidentes.js");
 /* harmony import */ var _Notas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Notas */ "./resources/js/dados/Notas.js");
 /* harmony import */ var _Ordens__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ordens */ "./resources/js/dados/Ordens.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -84003,47 +84038,33 @@ var Escalas = /*#__PURE__*/function () {
   }
 
   _createClass(Escalas, [{
-    key: "geraNumeroAleatorio",
-    value: function geraNumeroAleatorio(array) {
+    key: "escolhe",
+    value: function escolhe(array) {
       var random = parseInt(0 + Math.random() * (array.length - 0));
-      return random;
+      return array[random];
     }
   }, {
     key: "aumentaUmaOitava",
     value: function aumentaUmaOitava(escala) {
-      escala.forEach(function (nota) {
-        escala.push(nota);
-      });
+      escala.push.apply(escala, _toConsumableArray(escala));
       return escala;
     }
   }, {
     key: "reduzPraUmaOitava",
     value: function reduzPraUmaOitava(escala) {
-      escala.forEach(function (nota, index) {
-        if (index <= 7) {
-          escala.splice(escala.length - 1);
-        }
-      });
+      return escala.splice(7);
     } // Escolhe uma ordem (bemol ou sustenido)
 
   }, {
     key: "geraEscalaAleatoria",
     value: function geraEscalaAleatoria() {
-      var complementos = ["natural", "harmonica", "melodica"];
-      var index;
-      var escolhe = this.geraNumeroAleatorio(["b", "#"]);
-      var tonalidade = escolhe ? this.ordem.bemois : this.ordem.sustenidos;
-      var tom = tonalidade[this.geraNumeroAleatorio(tonalidade)].cifra;
-      escolhe = this.geraNumeroAleatorio(["M", "m"]);
-      escolhe ? tom += "m" : '';
-
-      if (tom.match(/m/)) {
-        index = this.geraNumeroAleatorio(complementos);
-      }
-
-      var escala = this.formarEscala(tom, 1, complementos[index]);
+      var tonalidade = this.escolhe([this.ordem.bemois, this.ordem.sustenidos]);
+      var tom = this.escolhe(tonalidade).cifra + this.escolhe(["", "m"]);
+      var complemento = tom.match(/m/) ? this.escolhe(["natural", "harmonica", "melodica"]) : "";
+      var escala = this.formarEscala(tom, 1, complemento);
       return escala;
     } // Define o limite das tonalidades utilizadas no modo
+    // Ex.: F, C, [G, D, A, E, B];
 
   }, {
     key: "limitarEscala",
@@ -84053,7 +84074,10 @@ var Escalas = /*#__PURE__*/function () {
         bemois: b
       };
       return limite;
-    }
+    } // Define a posição de um acidente da tonalidade em relação a uma escala
+    // Ex. Sensivel: F, C, [G] => A, B, C#, D, E, F#, [G#], A 
+    // Ex. Fundamental: F, C, [G] => F#, [G#], A, B, C, D, E, F#
+
   }, {
     key: "definePosicao",
     value: function definePosicao(s, f) {
@@ -84076,9 +84100,11 @@ var Escalas = /*#__PURE__*/function () {
       var _this = this;
 
       try {
-        var menor = input.match(/m/) ? 1 : 0;
+        var menor = input.match(/m/);
+        var sobrenome = menor ? " menor " + complemento : " maior ";
         var tom = {
-          cifra: input
+          cifra: input,
+          nome: escala[0].nome + sobrenome
         };
         this.aumentaUmaOitava(escala);
         var limite = menor ? this.limitarEscala(5, 3) : this.limitarEscala(2, 6);
@@ -84192,13 +84218,13 @@ var Escalas = /*#__PURE__*/function () {
   }, {
     key: "formarEscala",
     value: function formarEscala(input, diatonica, complemento) {
-      input = this.diatonica.verificaNota(input);
+      this.diatonica.verificaNota(input);
       var ordena = this.ordem.ordena(input);
       var escala;
 
       if (parseInt(diatonica)) {
         escala = this.adicionarAcidentes(ordena, input, complemento);
-        escala.notas ? this.reduzPraUmaOitava(escala.notas) : '';
+        this.reduzPraUmaOitava(escala.notas);
       } else {
         escala = this.cromatica(input, ordena);
       }
@@ -84458,32 +84484,20 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+var arrayCifras = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+var arrayNomes = ['Lá', 'Si', 'Dó', 'Ré', 'Mi', 'Fá', 'Sol'];
+
 var Notas = /*#__PURE__*/function () {
   function Notas() {
     _classCallCheck(this, Notas);
 
-    this.notas = [{
-      cifra: "A",
-      nome: "Lá"
-    }, {
-      cifra: "B",
-      nome: "Si"
-    }, {
-      cifra: "C",
-      nome: "Dó"
-    }, {
-      cifra: "D",
-      nome: "Ré"
-    }, {
-      cifra: "E",
-      nome: "Mi"
-    }, {
-      cifra: "F",
-      nome: "Fá"
-    }, {
-      cifra: "G",
-      nome: "Sol"
-    }];
+    var notasObj = arrayCifras.map(function (cifra, indice) {
+      return {
+        cifra: cifra,
+        nome: arrayNomes[indice]
+      };
+    });
+    this.notas = notasObj;
   } // Verifica se a nota está na escala diatonica
 
 
@@ -84491,16 +84505,10 @@ var Notas = /*#__PURE__*/function () {
     key: "verificaNota",
     value: function verificaNota(input) {
       var nota = this.notas.filter(function (nota) {
-        if (nota.cifra == input[0]) {
-          return input;
-        }
+        return nota.cifra == input[0];
       });
-
-      if (nota.length) {
-        return input;
-      } else {
-        return false;
-      }
+      if (!nota.length) return false;
+      return input;
     }
   }]);
 
