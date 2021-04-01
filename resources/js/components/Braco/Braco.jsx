@@ -1,4 +1,4 @@
-import { remove } from 'lodash';
+import { isEmpty } from 'lodash';
 import React, { Component } from 'react';
 import Escalas from '../../dados/Escalas';
 
@@ -7,6 +7,8 @@ class Braco extends Component {
         super(props)
         this.escala = new Escalas()
         this.state = { 
+            cifra: "Nome",
+            braco: this.props.braco,
             cordas: [
                 this.escala.aumentaUmaOitava(this.escala.formarEscala("E", 0).notas),
                 this.escala.aumentaUmaOitava(this.escala.formarEscala("A", 0).notas),
@@ -25,41 +27,83 @@ class Braco extends Component {
             notas: []
         }
         this.afina = this.afina.bind(this)
-        this.marcar = this.marcar.bind(this)
+        this.nomear = this.nomear.bind(this)
     }
 
     componentDidUpdate() {
         // Limpa o braço para poder atualizá-lo em seguida
-        document.querySelectorAll(".active").forEach(el=>el.classList.remove("active"));
-        if(this.props.digitar) {
-            this.props.retomar()
-        }
-        this.digitaEscala();
+        document.querySelectorAll(`[data-id='${this.props.id}'] .active`).forEach(el=>el.classList.remove("active"));
+        if(this.props.digitar) this.habilitaMarcador();
+        if(this.props.escala) this.digitaEscala(); 
+    }
+
+    habilitaMarcador() {
+        this.state.braco.cordas.forEach(corda => {
+            if(!corda.notas) return false;
+
+            corda.notas.forEach(nota => {
+                let elemento = document.querySelector(`[data-id="${this.props.id}"] [data-corda="${corda.numero}"][data-nota="${nota}"]`);
+                if(elemento) elemento.classList.add('active');
+            });
+        });
     }
 
     componentDidMount() {
-        this.digitaEscala()
+        if(this.props.escala) this.digitaEscala();
     }
 
-    nomear(e, index) {
+    nomear(e) { 
         e.preventDefault();
-        let braco = document.querySelector(`.braco[data-id="${index}"]`)
-        braco.dataset.cifra = e.target.value
+        this.setState({cifra: e.target.value});
     }
 
-    marcar(e) {
-        e.preventDefault();
-        if(this.props.digitar) {
-            let casa = e.target.closest('.casa, .afinacao');
-            let braco = e.target.closest('.braco');
-            // Salva no componente pai
-            this.props.salvar({
-                corda: casa.lastChild.dataset.corda,
-                nota: casa.lastChild.dataset.nota,
-                braco: braco.dataset.id,
-                cifra: braco.dataset.cifra ? braco.dataset.cifra : ""
-            })
+    verificaSaves(indice, nota) {
+        let apagar = false;
+        const cordas = this.state.braco.cordas;
+        const corda = cordas[indice-1];
+
+        if(!corda) return false;
+
+        let notas = corda.notas.map(notaVerificada => {
+            if(notaVerificada == nota) {
+                apagar = true;
+                return false;
+            } else {
+                return notaVerificada;
+            };
+        });
+
+        notas = notas.filter(Boolean);
+        
+        if(isEmpty(notas)) {
+            cordas.splice(indice - 1, 1, false);
+            
+            this.setState({ braco: {cordas} });
+            return true;
         }
+        else if(apagar) {
+            cordas[indice - 1].notas = notas;
+            
+            this.setState({ braco: {cordas} });
+            return true;
+        }
+    }
+
+    marcar(indiceCorda, nota) {
+        if(!this.props.digitar) return false;
+        if(this.verificaSaves(indiceCorda, nota)) return false;
+
+        const cordas = this.state.braco.cordas;
+        const notas = cordas[indiceCorda - 1]
+            ? cordas[indiceCorda - 1].notas
+            : [];
+        notas.push(nota);
+        cordas[indiceCorda - 1] = {
+            numero: indiceCorda,
+            notas
+        }
+        const braco = {...this.state.braco, cordas};
+        this.setState({braco: braco});
     }
 
     afina(e) {
@@ -82,7 +126,7 @@ class Braco extends Component {
             casas[0].firstChild.placeholder = e.target.value
 
             this.setState({
-                cordas: cordas,
+                cordas,
                 erro: {
                     afinacao: false
                 }
@@ -136,7 +180,14 @@ class Braco extends Component {
         <>
         {this.props.digitar ?
             <div className="cifra">
-                <input type="text" data-input={this.props.id} onChange={(e)=>this.nomear(e,this.props.id)} style={{border: "none"}} placeholder="Nome" className="text-center cifra" />
+                <input
+                    value={this.state.cifra}
+                    type="text"
+                    data-input={this.props.id}
+                    onChange={this.nomear}
+                    style={{border: "none"}}
+                    className="text-center cifra"
+                />
             </div>
         :""}
         {this.state.erro.afinacao ?
@@ -153,46 +204,60 @@ class Braco extends Component {
             </div>
             : ""}
             <div className="braco" data-id={this.props.id}>
-                {this.state.cordas.map( (corda,index) =>{
+                {this.state.cordas.map( (corda, index) =>{
                     let posicao = ((index - 6) * -1 );
 
                     return <div key={index} className={`corda corda-${posicao}`}>{corda.map( (nota, indice)=> {
-                        let inicio = this.props.estender ? indice  : indice + this.state.tessitura.inicio;
-                        let final = this.props.estender ? 16 : this.state.tessitura.fim;
+                        let inicio = this.props.estender
+                            ? indice 
+                            : indice + this.state.tessitura.inicio;
+                        let final = this.props.estender
+                            ? 16
+                            : this.state.tessitura.fim;
+                        const notaAtual = corda[inicio % corda.length].cifra;
 
                         return indice == 0 ? (
                             <div key={indice} className="afinacao" style={{cursor: this.props.digitar ? "pointer" : "unset"}}>
                                 {this.props.afinar ?
-                                    <input type="text" title="Clique para editar a afinação" onChange={this.afina} data-id={index} placeholder={nota.cifra} style={{width: "15px", border: "none"}}/>
+                                    <input
+                                        type="text"
+                                        title="Clique para editar a afinação"
+                                        onChange={this.afina}
+                                        data-id={index}
+                                        placeholder={nota.cifra}
+                                        style={{width: "15px", border: "none"}}
+                                    />
                                 : ''}
                                 <span
                                     data-corda={posicao}
                                     data-casa={indice}
                                     data-nota={this.escala.pegaHomonimos(nota.cifra)}
                                     title={this.escala.pegaHomonimos(nota.cifra)}
-                                    onClick={this.marcar}
+                                    onClick={()=>this.marcar(
+                                        posicao,
+                                        this.escala.pegaHomonimos(notaAtual),
+                                    )}
                                 ></span>
                             </div>
-                        ) : ( inicio <= final ?
-     
+                        ) : ( inicio <= final ? 
+
                             <div key={indice}
                                 className="casa"
                                 style={{cursor: this.props.digitar ? "pointer" : "unset"}}
-                                onClick={this.marcar}                  
+                                onClick={()=>this.marcar(
+                                    posicao,
+                                    this.escala.pegaHomonimos(notaAtual),
+                                )}               
                             >
                                 <hr />
                                 <span
                                     data-corda={posicao}
-                                    data-casa={(inicio)}
-                                    data-nota={
-                                        this.escala.pegaHomonimos(
-                                            corda[inicio % corda.length].cifra
-                                        )
-                                    }
+                                    data-casa={inicio}
+                                    data-nota={this.escala.pegaHomonimos(notaAtual)}
                                     title={
                                         this.props.escala
                                             ? nota.cifra
-                                            : this.escala.pegaHomonimos(corda[inicio % corda.length].cifra)
+                                            : this.escala.pegaHomonimos(notaAtual)
                                     }
                                 ></span>
                             </div>
@@ -203,7 +268,7 @@ class Braco extends Component {
             </div>
         </div>
         </>
-         );
+        );
     }
 }
  
