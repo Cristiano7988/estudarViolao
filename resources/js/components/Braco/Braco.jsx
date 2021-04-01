@@ -41,16 +41,12 @@ class Braco extends Component {
         this.state.braco.cordas.forEach(corda => {
             if(!corda.notas) return false;
 
-            console.log(corda)
-
             corda.notas.forEach(nota => {
                 let elementos = Array.prototype.slice.call(
                     document.querySelectorAll(`[data-id="${this.props.id}"] [data-corda="${corda.numero}"]`)
                 );
                 elementos.forEach(elemento => {
                     const notas = nota.split(" ");
-
-                    console.log(elemento)
 
                     notas.forEach(notaProcurada => {
                         const regex = new RegExp(`${ notaProcurada.replace(/\[|\]/, "") }`);
@@ -223,33 +219,34 @@ class Braco extends Component {
             </div>
             : ""}
             <div className="braco" data-id={this.props.id}>
-                {this.state.cordas.map( (corda, index) =>{
-                    let posicao = ((index - 6) * -1 );
+                {this.state.cordas.map( (corda, indiceCorda) =>{
+                    let posicao = ((indiceCorda - 6) * -1 );
 
-                    return <div key={index} className={`corda corda-${posicao}`}>{corda.map( (nota, indice)=> {
+                    return <div key={indiceCorda} className={`corda corda-${posicao}`}>
+                        {corda.map( (nota, indiceCasa)=> {
                         let inicio = this.props.estender
-                            ? indice 
-                            : indice + this.state.tessitura.inicio;
+                            ? indiceCasa 
+                            : indiceCasa + this.state.tessitura.inicio;
                         let final = this.props.estender
                             ? 16
                             : this.state.tessitura.fim;
                         const notaAtual = corda[inicio % corda.length].cifra;
 
-                        return indice == 0 ? (
-                            <div key={indice} className="afinacao" style={{cursor: this.props.digitar ? "pointer" : "unset"}}>
+                        return indiceCasa == 0 ? (
+                            <div key={indiceCasa} className="afinacao" style={{cursor: this.props.digitar ? "pointer" : "unset"}}>
                                 {this.props.afinar ?
                                     <input
                                         type="text"
                                         title="Clique para editar a afinação"
                                         onChange={this.afina}
-                                        data-id={index}
+                                        data-id={indiceCorda}
                                         placeholder={nota.cifra}
                                         style={{width: "15px", border: "none"}}
                                     />
                                     : ''}
                                 <span
                                     data-corda={posicao}
-                                    data-casa={indice}
+                                    data-casa={indiceCasa}
                                     data-nota={this.escala.pegaHomonimos(nota.cifra)}
                                     title={this.escala.pegaHomonimos(nota.cifra)}
                                     onClick={()=>this.marcar(
@@ -260,7 +257,7 @@ class Braco extends Component {
                             </div>
                         ) : ( inicio <= final ? 
                             
-                            <div key={indice}
+                            <div key={indiceCasa}
                                 className="casa"
                                 style={{cursor: this.props.digitar ? "pointer" : "unset"}}
                                 onClick={()=>this.marcar(
