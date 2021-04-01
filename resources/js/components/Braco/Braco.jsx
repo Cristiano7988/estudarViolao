@@ -41,9 +41,25 @@ class Braco extends Component {
         this.state.braco.cordas.forEach(corda => {
             if(!corda.notas) return false;
 
+            console.log(corda)
+
             corda.notas.forEach(nota => {
-                let elemento = document.querySelector(`[data-id="${this.props.id}"] [data-corda="${corda.numero}"][data-nota="${nota}"]`);
-                if(elemento) elemento.classList.add('active');
+                let elementos = Array.prototype.slice.call(
+                    document.querySelectorAll(`[data-id="${this.props.id}"] [data-corda="${corda.numero}"]`)
+                );
+                elementos.forEach(elemento => {
+                    const notas = nota.split(" ");
+
+                    console.log(elemento)
+
+                    notas.forEach(notaProcurada => {
+                        const regex = new RegExp(`${ notaProcurada.replace(/\[|\]/, "") }`);
+
+                        if(elemento.dataset.nota.match(regex) ) {
+                            elemento.classList.add('active');
+                        }
+                    });
+                });
             });
         });
     }
@@ -153,6 +169,9 @@ class Braco extends Component {
     }
 
     digitaEscala() {
+        document.querySelectorAll('.active').forEach(elemento=>{
+            elemento.classList.remove('active');
+        });
         let casas = Array.prototype.slice.call(document.querySelectorAll("[data-nota]"));
 
         if(this.props.escala) {
@@ -227,7 +246,7 @@ class Braco extends Component {
                                         placeholder={nota.cifra}
                                         style={{width: "15px", border: "none"}}
                                     />
-                                : ''}
+                                    : ''}
                                 <span
                                     data-corda={posicao}
                                     data-casa={indice}
@@ -236,18 +255,18 @@ class Braco extends Component {
                                     onClick={()=>this.marcar(
                                         posicao,
                                         this.escala.pegaHomonimos(notaAtual),
-                                    )}
-                                ></span>
+                                        )}
+                                        ></span>
                             </div>
                         ) : ( inicio <= final ? 
-
+                            
                             <div key={indice}
                                 className="casa"
                                 style={{cursor: this.props.digitar ? "pointer" : "unset"}}
                                 onClick={()=>this.marcar(
                                     posicao,
                                     this.escala.pegaHomonimos(notaAtual),
-                                )}               
+                                    )}               
                             >
                                 <hr />
                                 <span
