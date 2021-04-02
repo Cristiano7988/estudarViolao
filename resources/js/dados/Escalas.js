@@ -17,7 +17,11 @@ export default class Escalas {
     }
 
     aumentaUmaOitava(escala) {
-        escala.push(...escala);
+        const novaOitava = copiarObj(escala);
+
+        escala.push(...novaOitava);
+        escala.forEach((nota, indice)=>nota.idOitava = indice.toString());
+
         return escala;
     }
 

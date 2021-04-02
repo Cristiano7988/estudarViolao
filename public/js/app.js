@@ -81244,14 +81244,17 @@ var Braco = /*#__PURE__*/function (_Component) {
 
       this.state.braco.cordas.forEach(function (corda) {
         if (!corda.notas) return false;
-        corda.notas.forEach(function (nota) {
+        corda.notas.forEach(function (nota, indiceArray) {
           var elementos = Array.prototype.slice.call(document.querySelectorAll("[data-id=\"".concat(_this2.props.id, "\"] [data-corda=\"").concat(corda.numero, "\"]")));
           elementos.forEach(function (elemento) {
             var notas = nota.split(" ");
             notas.forEach(function (notaProcurada) {
-              var regex = new RegExp("".concat(notaProcurada.replace(/\[|\]/, "")));
+              // Rever /(\[C#])/ ou /(\[C#\])/
+              var regex = new RegExp("\\".concat(notaProcurada));
+              var oitavaElemento = parseInt(elemento.dataset.idoitava / 13);
+              var oitavaArray = parseInt(corda.oitavas[indiceArray] / 13);
 
-              if (elemento.dataset.nota.match(regex)) {
+              if (elemento.dataset.nota.match(regex) && oitavaElemento == oitavaArray) {
                 elemento.classList.add('active');
               }
             });
@@ -81274,13 +81277,13 @@ var Braco = /*#__PURE__*/function (_Component) {
     }
   }, {
     key: "verificaSaves",
-    value: function verificaSaves(indice, nota) {
+    value: function verificaSaves(indice, idOitava, nota) {
       var apagar = false;
       var cordas = this.state.braco.cordas;
       var corda = cordas[indice - 1];
       if (!corda) return false;
-      var notas = corda.notas.map(function (notaVerificada) {
-        if (notaVerificada == nota) {
+      var notas = corda.notas.map(function (notaVerificada, indiceArray) {
+        if (notaVerificada == nota && corda.oitavas[indiceArray] == idOitava) {
           apagar = true;
           return false;
         } else {
@@ -81289,7 +81292,17 @@ var Braco = /*#__PURE__*/function (_Component) {
 
         ;
       });
+      var oitavas = corda.oitavas.map(function (oitavaVerificada) {
+        if (oitavaVerificada == idOitava && apagar) {
+          return false;
+        } else {
+          return oitavaVerificada;
+        }
+
+        ;
+      });
       notas = notas.filter(Boolean);
+      oitavas = oitavas.filter(Boolean);
 
       if (Object(lodash__WEBPACK_IMPORTED_MODULE_0__["isEmpty"])(notas)) {
         cordas.splice(indice - 1, 1, false);
@@ -81301,6 +81314,7 @@ var Braco = /*#__PURE__*/function (_Component) {
         return true;
       } else if (apagar) {
         cordas[indice - 1].notas = notas;
+        cordas[indice - 1].oitavas = oitavas;
         this.setState({
           braco: {
             cordas: cordas
@@ -81311,14 +81325,17 @@ var Braco = /*#__PURE__*/function (_Component) {
     }
   }, {
     key: "marcar",
-    value: function marcar(indiceCorda, nota) {
+    value: function marcar(indiceCorda, idOitava, nota) {
       if (!this.props.digitar) return false;
-      if (this.verificaSaves(indiceCorda, nota)) return false;
+      if (this.verificaSaves(indiceCorda, idOitava, nota)) return false;
       var cordas = this.state.braco.cordas;
       var notas = cordas[indiceCorda - 1] ? cordas[indiceCorda - 1].notas : [];
+      var oitavas = cordas[indiceCorda - 1] ? cordas[indiceCorda - 1].oitavas : [];
       notas.push(nota);
+      oitavas.push(idOitava);
       cordas[indiceCorda - 1] = {
         numero: indiceCorda,
+        oitavas: oitavas,
         notas: notas
       };
 
@@ -81447,6 +81464,9 @@ var Braco = /*#__PURE__*/function (_Component) {
           var _final = _this4.props.estender ? 16 : _this4.state.tessitura.fim;
 
           var notaAtual = corda[inicio % corda.length].cifra;
+
+          var homonimos = _this4.escala.pegaHomonimos(notaAtual);
+
           return indiceCasa == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
             key: indiceCasa,
             className: "afinacao",
@@ -81466,10 +81486,11 @@ var Braco = /*#__PURE__*/function (_Component) {
           }) : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
             "data-corda": posicao,
             "data-casa": indiceCasa,
-            "data-nota": _this4.escala.pegaHomonimos(nota.cifra),
-            title: _this4.escala.pegaHomonimos(nota.cifra),
+            "data-idoitava": nota.idOitava,
+            "data-nota": homonimos,
+            title: homonimos,
             onClick: function onClick() {
-              return _this4.marcar(posicao, _this4.escala.pegaHomonimos(notaAtual));
+              return _this4.marcar(posicao, nota.idOitava, homonimos);
             }
           })) : inicio <= _final ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
             key: indiceCasa,
@@ -81478,13 +81499,14 @@ var Braco = /*#__PURE__*/function (_Component) {
               cursor: _this4.props.digitar ? "pointer" : "unset"
             },
             onClick: function onClick() {
-              return _this4.marcar(posicao, _this4.escala.pegaHomonimos(notaAtual));
+              return _this4.marcar(posicao, nota.idOitava, homonimos);
             }
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
             "data-corda": posicao,
             "data-casa": inicio,
-            "data-nota": _this4.escala.pegaHomonimos(notaAtual),
-            title: _this4.props.escala ? nota.cifra : _this4.escala.pegaHomonimos(notaAtual)
+            "data-idoitava": nota.idOitava,
+            "data-nota": homonimos,
+            title: _this4.props.escala ? nota.cifra : homonimos
           })) : "";
         }));
       }))));
@@ -84046,7 +84068,11 @@ var Escalas = /*#__PURE__*/function () {
   }, {
     key: "aumentaUmaOitava",
     value: function aumentaUmaOitava(escala) {
-      escala.push.apply(escala, _toConsumableArray(escala));
+      var novaOitava = copiarObj(escala);
+      escala.push.apply(escala, _toConsumableArray(novaOitava));
+      escala.forEach(function (nota, indice) {
+        return nota.idOitava = indice.toString();
+      });
       return escala;
     }
   }, {
