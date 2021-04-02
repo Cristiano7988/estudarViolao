@@ -81251,8 +81251,8 @@ var Braco = /*#__PURE__*/function (_Component) {
             notas.forEach(function (notaProcurada) {
               // Rever /(\[C#])/ ou /(\[C#\])/
               var regex = new RegExp("\\".concat(notaProcurada));
-              var oitavaElemento = parseInt(elemento.dataset.idoitava / 13);
-              var oitavaArray = parseInt(corda.oitavas[indiceArray] / 13);
+              var oitavaElemento = parseInt(elemento.dataset.idoitava / 12);
+              var oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);
 
               if (elemento.dataset.nota.match(regex) && oitavaElemento == oitavaArray) {
                 elemento.classList.add('active');
