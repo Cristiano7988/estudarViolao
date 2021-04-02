@@ -81487,10 +81487,10 @@ var Braco = /*#__PURE__*/function (_Component) {
             "data-corda": posicao,
             "data-casa": indiceCasa,
             "data-idoitava": nota.idOitava,
-            "data-nota": homonimos,
-            title: homonimos,
+            "data-nota": _this4.escala.pegaHomonimos(nota.cifra),
+            title: _this4.escala.pegaHomonimos(nota.cifra),
             onClick: function onClick() {
-              return _this4.marcar(posicao, nota.idOitava, homonimos);
+              return _this4.marcar(posicao, nota.idOitava, _this4.escala.pegaHomonimos(nota.cifra));
             }
           })) : inicio <= _final ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
             key: indiceCasa,

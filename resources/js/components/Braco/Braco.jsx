@@ -273,9 +273,9 @@ class Braco extends Component {
                                     data-corda={posicao}
                                     data-casa={indiceCasa}
                                     data-idoitava={nota.idOitava}
-                                    data-nota={homonimos}
-                                    title={homonimos}
-                                    onClick={()=>this.marcar(posicao, nota.idOitava, homonimos )}
+                                    data-nota={this.escala.pegaHomonimos(nota.cifra)}
+                                    title={this.escala.pegaHomonimos(nota.cifra)}
+                                    onClick={()=>this.marcar(posicao, nota.idOitava, this.escala.pegaHomonimos(nota.cifra) )}
                                 ></span>
                             </div>
                         ) : ( inicio <= final ? 
