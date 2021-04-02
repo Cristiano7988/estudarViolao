@@ -54,9 +54,13 @@ class Braco extends Component {
                     notas.forEach(notaProcurada => {
                         // Rever /(\[C#])/ ou /(\[C#\])/
                         const regex = new RegExp(`\\${ notaProcurada }`);
+                        
+                        let idOitava = this.props.estender
+                            ? elemento.dataset.idoitava
+                            : elemento.dataset.casa;
 
-                        const oitavaElemento = parseInt(elemento.dataset.idoitava / 12);
                         const oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);
+                        const oitavaElemento = parseInt(idOitava / 12);
 
                         if(elemento.dataset.nota.match(regex) && oitavaElemento == oitavaArray) {
                             elemento.classList.add('active');
