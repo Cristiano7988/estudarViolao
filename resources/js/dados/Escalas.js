@@ -81,7 +81,7 @@ export default class Escalas {
                 cifra: input,
                 nome: escala[0].nome + sobrenome
             };
-            this.aumentaUmaOitava(escala)
+            escala.push(...escala); // Aumenta uma oitava sem mexer nos idOitavas
             
             let limite = menor
                 ? this.limitarEscala(5, 3)
