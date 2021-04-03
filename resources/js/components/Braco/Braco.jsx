@@ -4,11 +4,13 @@ import Escalas from '../../dados/Escalas';
 
 class Braco extends Component {
     constructor(props) {
-        super(props)
-        this.escala = new Escalas()
+        super(props);
+        this.escala = new Escalas();
+        this.nomear = this.nomear.bind(this);
         this.state = { 
             cifra: "Nome",
             braco: this.props.braco,
+            afinada: false,
             cordas: [
                 this.escala.aumentaUmaOitava(this.escala.formarEscala("E", 0).notas),
                 this.escala.aumentaUmaOitava(this.escala.formarEscala("A", 0).notas),
@@ -21,20 +23,36 @@ class Braco extends Component {
                 inicio: 0,
                 fim: 5
             },
-            erro: {
-                afinacao: false
-            },
-            notas: []
-        }
-        this.afina = this.afina.bind(this)
-        this.nomear = this.nomear.bind(this)
-    }
+        };
+    };
 
     componentDidUpdate() {
         // Limpa o braço para poder atualizá-lo em seguida
         document.querySelectorAll(`[data-id='${this.props.id}'] .active`).forEach(el=>el.classList.remove("active"));
         if(this.props.digitar) this.habilitaMarcador();
         if(this.props.escala) this.digitaEscala(); 
+    }
+
+    mudaAfinacao(nota, indiceCorda) {
+        const cordas = this.state.cordas;
+        const afinada = true;
+
+        if(!nota.match(/##|bb/)) {
+            cordas[indiceCorda] = this.escala.aumentaUmaOitava(this.escala.formarEscala(nota, 0).notas);
+            this.setState({cordas, afinada});
+            return;
+        } else {
+            let homonimos = this.escala.pegaHomonimos(nota);
+            homonimos = homonimos.split(" ");
+            
+            homonimos.forEach(homonimo => {
+                if(!homonimo.match(/##|bb/)) {
+                    homonimo = homonimo.replace(/\[|\]/g, "");
+                    cordas[indiceCorda] = this.escala.aumentaUmaOitava(this.escala.formarEscala(homonimo, 0).notas);
+                    this.setState(cordas);
+                };
+            });
+        };
     }
 
     habilitaMarcador() {
@@ -150,36 +168,6 @@ class Braco extends Component {
         this.setState({braco: braco});
     }
 
-    afina(e) {
-        let valido = e.target.value.match(/^[A-G]|[b#]/)
-        if(!valido) {
-            this.setState({
-                erro: {
-                    afinacao: true
-                }
-            })
-            return false
-        }
-
-        try {
-            let casas = e.target.parentNode.parentNode.childNodes
-            let cordas = this.state.cordas
-    
-            cordas[e.target.dataset.id] = this.escala.aumentaUmaOitava(this.escala.formarEscala(e.target.value, 0).notas)
-
-            casas[0].firstChild.placeholder = e.target.value
-
-            this.setState({
-                cordas,
-                erro: {
-                    afinacao: false
-                }
-            })
-        } catch(error) {
-
-        }
-    }
-
     mudaPosicao(sobe) {
         sobe ?
             this.setState({
@@ -237,12 +225,9 @@ class Braco extends Component {
                 />
             </div>
         :""}
-        {this.state.erro.afinacao ?
-            <i className="text-danger">Nota inválida</i>
-        : ''}
         <div className="d-flex justify-content-center">
         {!this.props.estender ?
-            <div className={`d-flex flex-column ${this.props.afinar ? "pt-5" : "pt-4"}`}>
+            <div className={`d-flex flex-column ${this.props.afinar ? "pt-5 mt-4" : "pt-4"} ${this.state.afinada ? "mt-3": ""}`}>
                 <p>{this.state.tessitura.inicio + 1}ª</p>
                 <div className="d-flex flex-column align-items-center">
                     <i className="seta up" onClick={(e)=>this.mudaPosicao(0)}></i>
@@ -265,18 +250,23 @@ class Braco extends Component {
                         const notaAtual = corda[inicio % corda.length].cifra;
                         const homonimos = this.escala.pegaHomonimos(notaAtual);
 
+                        const proxima = corda[(nota.idOitava + 1) % 12].cifra;
+                        const anterior = corda[(nota.idOitava + 11)  % 12].cifra;
+
                         return indiceCasa == 0 ? (
                             <div key={indiceCasa} className="afinacao" style={{cursor: this.props.digitar ? "pointer" : "unset"}}>
-                                {this.props.afinar ?
-                                    <input
-                                        type="text"
-                                        title="Clique para editar a afinação"
-                                        onChange={this.afina}
-                                        data-id={indiceCorda}
-                                        placeholder={nota.cifra}
-                                        style={{width: "15px", border: "none"}}
-                                    />
+                                {this.props.afinar ? 
+                                    <div className="afinada">
+                                        <b  className="seta up"
+                                            onClick={(e)=>this.mudaAfinacao( proxima, indiceCorda )}
+                                        ></b>
+                                        <b>{nota.cifra}</b>
+                                        <b  className="seta down"
+                                            onClick={(e)=>this.mudaAfinacao( anterior, indiceCorda )}
+                                        ></b>
+                                    </div>
                                     : ''}
+                                {this.state.afinada && !this.props.afinar ? <b>{nota.cifra}</b> : ""}
                                 <span
                                     data-corda={posicao}
                                     data-casa={indiceCasa}

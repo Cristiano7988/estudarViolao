@@ -47,7 +47,11 @@
     background-color: #f9d6d5;
     border-color: #f7c6c5;
 }
-
+.container-braco {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 .braco {
     display: inline-flex;
     background-color: white;
@@ -69,6 +73,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            font-size: 10px;
+            .afinada {
+                display: flex;
+                flex-direction: column;
+            }
             span {
                 width: 13px;
                 height: 13px;

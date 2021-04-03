@@ -56,7 +56,7 @@ class Editor extends Component {
                             <div className="row m-auto pb-5">
                                 {this.state.contador.map((braco, id)=>{
                                     return (
-                                        <div key={id}>
+                                        <div key={id} className="container-braco">
                                             <Braco
                                                 id={id}
                                                 braco={braco}

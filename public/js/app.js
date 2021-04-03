@@ -81209,21 +81209,17 @@ var Braco = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.escala = new _dados_Escalas__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    _this.nomear = _this.nomear.bind(_assertThisInitialized(_this));
     _this.state = {
       cifra: "Nome",
       braco: _this.props.braco,
+      afinada: false,
       cordas: [_this.escala.aumentaUmaOitava(_this.escala.formarEscala("E", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("A", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("D", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("G", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("B", 0).notas), _this.escala.aumentaUmaOitava(_this.escala.formarEscala("E", 0).notas)],
       tessitura: {
         inicio: 0,
         fim: 5
-      },
-      erro: {
-        afinacao: false
-      },
-      notas: []
+      }
     };
-    _this.afina = _this.afina.bind(_assertThisInitialized(_this));
-    _this.nomear = _this.nomear.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -81238,21 +81234,53 @@ var Braco = /*#__PURE__*/function (_Component) {
       if (this.props.escala) this.digitaEscala();
     }
   }, {
+    key: "mudaAfinacao",
+    value: function mudaAfinacao(nota, indiceCorda) {
+      var _this2 = this;
+
+      var cordas = this.state.cordas;
+      var afinada = true;
+
+      if (!nota.match(/##|bb/)) {
+        cordas[indiceCorda] = this.escala.aumentaUmaOitava(this.escala.formarEscala(nota, 0).notas);
+        this.setState({
+          cordas: cordas,
+          afinada: afinada
+        });
+        return;
+      } else {
+        var homonimos = this.escala.pegaHomonimos(nota);
+        homonimos = homonimos.split(" ");
+        homonimos.forEach(function (homonimo) {
+          if (!homonimo.match(/##|bb/)) {
+            homonimo = homonimo.replace(/\[|\]/g, "");
+            cordas[indiceCorda] = _this2.escala.aumentaUmaOitava(_this2.escala.formarEscala(homonimo, 0).notas);
+
+            _this2.setState(cordas);
+          }
+
+          ;
+        });
+      }
+
+      ;
+    }
+  }, {
     key: "habilitaMarcador",
     value: function habilitaMarcador() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.state.braco.cordas.forEach(function (corda) {
         if (!corda.notas) return false;
         corda.notas.forEach(function (nota, indiceArray) {
-          var elementos = Array.prototype.slice.call(document.querySelectorAll("[data-id=\"".concat(_this2.props.id, "\"] [data-corda=\"").concat(corda.numero, "\"]")));
+          var elementos = Array.prototype.slice.call(document.querySelectorAll("[data-id=\"".concat(_this3.props.id, "\"] [data-corda=\"").concat(corda.numero, "\"]")));
           elementos.forEach(function (elemento) {
             var notas = nota.split(" ");
             notas.forEach(function (notaProcurada) {
               // Substitui [C#] por /\[C#\]$/
               notaProcurada = notaProcurada.replace(/\]/g, "\\]$");
               var regex = new RegExp("\\".concat(notaProcurada));
-              var idOitava = _this2.props.estender ? elemento.dataset.idoitava : elemento.dataset.casa;
+              var idOitava = _this3.props.estender ? elemento.dataset.idoitava : elemento.dataset.casa;
               var oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);
               var oitavaElemento = parseInt(idOitava / 12);
 
@@ -81353,33 +81381,6 @@ var Braco = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
-    key: "afina",
-    value: function afina(e) {
-      var valido = e.target.value.match(/^[A-G]|[b#]/);
-
-      if (!valido) {
-        this.setState({
-          erro: {
-            afinacao: true
-          }
-        });
-        return false;
-      }
-
-      try {
-        var casas = e.target.parentNode.parentNode.childNodes;
-        var cordas = this.state.cordas;
-        cordas[e.target.dataset.id] = this.escala.aumentaUmaOitava(this.escala.formarEscala(e.target.value, 0).notas);
-        casas[0].firstChild.placeholder = e.target.value;
-        this.setState({
-          cordas: cordas,
-          erro: {
-            afinacao: false
-          }
-        });
-      } catch (error) {}
-    }
-  }, {
     key: "mudaPosicao",
     value: function mudaPosicao(sobe) {
       sobe ? this.setState({
@@ -81397,7 +81398,7 @@ var Braco = /*#__PURE__*/function (_Component) {
   }, {
     key: "digitaEscala",
     value: function digitaEscala() {
-      var _this3 = this;
+      var _this4 = this;
 
       document.querySelectorAll('.active').forEach(function (elemento) {
         elemento.classList.remove('active');
@@ -81406,7 +81407,7 @@ var Braco = /*#__PURE__*/function (_Component) {
 
       if (this.props.escala) {
         casas.every(function (casa) {
-          _this3.props.escala.every(function (nota) {
+          _this4.props.escala.every(function (nota) {
             var homonimos = new RegExp("\\[".concat(nota.cifra, "\\]"));
 
             if (casa.dataset.nota.match(homonimos)) {
@@ -81424,7 +81425,7 @@ var Braco = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, this.props.digitar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "cifra"
@@ -81437,23 +81438,21 @@ var Braco = /*#__PURE__*/function (_Component) {
           border: "none"
         },
         className: "text-center cifra"
-      })) : "", this.state.erro.afinacao ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
-        className: "text-danger"
-      }, "Nota inv\xE1lida") : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      })) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "d-flex justify-content-center"
       }, !this.props.estender ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-        className: "d-flex flex-column ".concat(this.props.afinar ? "pt-5" : "pt-4")
+        className: "d-flex flex-column ".concat(this.props.afinar ? "pt-5 mt-4" : "pt-4", " ").concat(this.state.afinada ? "mt-3" : "")
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, this.state.tessitura.inicio + 1, "\xAA"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "d-flex flex-column align-items-center"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "seta up",
         onClick: function onClick(e) {
-          return _this4.mudaPosicao(0);
+          return _this5.mudaPosicao(0);
         }
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "seta down",
         onClick: function onClick(e) {
-          return _this4.mudaPosicao(1);
+          return _this5.mudaPosicao(1);
         }
       }))) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "braco",
@@ -81464,54 +81463,58 @@ var Braco = /*#__PURE__*/function (_Component) {
           key: indiceCorda,
           className: "corda corda-".concat(posicao)
         }, corda.map(function (nota, indiceCasa) {
-          var inicio = _this4.props.estender ? indiceCasa : indiceCasa + _this4.state.tessitura.inicio;
+          var inicio = _this5.props.estender ? indiceCasa : indiceCasa + _this5.state.tessitura.inicio;
 
-          var _final = _this4.props.estender ? 16 : _this4.state.tessitura.fim;
+          var _final = _this5.props.estender ? 16 : _this5.state.tessitura.fim;
 
           var notaAtual = corda[inicio % corda.length].cifra;
 
-          var homonimos = _this4.escala.pegaHomonimos(notaAtual);
+          var homonimos = _this5.escala.pegaHomonimos(notaAtual);
 
+          var proxima = corda[(nota.idOitava + 1) % 12].cifra;
+          var anterior = corda[(nota.idOitava + 11) % 12].cifra;
           return indiceCasa == 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
             key: indiceCasa,
             className: "afinacao",
             style: {
-              cursor: _this4.props.digitar ? "pointer" : "unset"
+              cursor: _this5.props.digitar ? "pointer" : "unset"
             }
-          }, _this4.props.afinar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
-            type: "text",
-            title: "Clique para editar a afina\xE7\xE3o",
-            onChange: _this4.afina,
-            "data-id": indiceCorda,
-            placeholder: nota.cifra,
-            style: {
-              width: "15px",
-              border: "none"
+          }, _this5.props.afinar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+            className: "afinada"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", {
+            className: "seta up",
+            onClick: function onClick(e) {
+              return _this5.mudaAfinacao(proxima, indiceCorda);
             }
-          }) : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+          }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, nota.cifra), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", {
+            className: "seta down",
+            onClick: function onClick(e) {
+              return _this5.mudaAfinacao(anterior, indiceCorda);
+            }
+          })) : '', _this5.state.afinada && !_this5.props.afinar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, nota.cifra) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
             "data-corda": posicao,
             "data-casa": indiceCasa,
             "data-idoitava": nota.idOitava,
-            "data-nota": _this4.escala.pegaHomonimos(nota.cifra),
-            title: _this4.escala.pegaHomonimos(nota.cifra),
+            "data-nota": _this5.escala.pegaHomonimos(nota.cifra),
+            title: _this5.escala.pegaHomonimos(nota.cifra),
             onClick: function onClick() {
-              return _this4.marcar(posicao, nota.idOitava, _this4.escala.pegaHomonimos(nota.cifra));
+              return _this5.marcar(posicao, nota.idOitava, _this5.escala.pegaHomonimos(nota.cifra));
             }
           })) : inicio <= _final ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
             key: indiceCasa,
             className: "casa",
             style: {
-              cursor: _this4.props.digitar ? "pointer" : "unset"
+              cursor: _this5.props.digitar ? "pointer" : "unset"
             },
             onClick: function onClick() {
-              return _this4.marcar(posicao, nota.idOitava, homonimos);
+              return _this5.marcar(posicao, nota.idOitava, homonimos);
             }
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
             "data-corda": posicao,
             "data-casa": inicio,
             "data-idoitava": nota.idOitava,
             "data-nota": homonimos,
-            title: _this4.props.escala ? nota.cifra : homonimos
+            title: _this5.props.escala ? nota.cifra : homonimos
           })) : "";
         }));
       }))));
@@ -83078,7 +83081,8 @@ var Editor = /*#__PURE__*/function (_Component) {
         className: "row m-auto pb-5"
       }, this.state.contador.map(function (braco, id) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          key: id
+          key: id,
+          className: "container-braco"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_1__["default"], {
           id: id,
           braco: braco,

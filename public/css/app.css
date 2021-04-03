@@ -11001,6 +11001,12 @@ body main .container .col-md-6 .card h1 {
   border-color: #f7c6c5;
 }
 
+.container-braco {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .braco {
   display: inline-flex;
   background-color: white;
@@ -11027,6 +11033,12 @@ body main .container .col-md-6 .card h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 10px;
+}
+
+.braco .corda .afinacao .afinada {
+  display: flex;
+  flex-direction: column;
 }
 
 .braco .corda .afinacao span {
