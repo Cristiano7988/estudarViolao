@@ -70,10 +70,26 @@ class Editor extends Component {
                                 })}
                                 <div>
                                     <div className="container-btn">
-                                        <span className="btn-editor arm" onClick={this.estender}></span>
-                                        <span className="btn-editor hand" onClick={this.afinar}></span>
-                                        <span className="btn-editor" onClick={this.remover}>-</span>
-                                        <span className="btn-editor" onClick={this.adicionar}>+</span>
+                                        <span
+                                            title="Mudar tamanho do braço"
+                                            className="btn-editor arm"
+                                            onClick={this.estender}
+                                        />
+                                        <span
+                                            title="Habilitar Afinação"
+                                            className="btn-editor hand"
+                                            onClick={this.afinar}
+                                        />
+                                        <span
+                                            title="Remover braço"
+                                            className="btn-editor"
+                                            onClick={this.remover}
+                                        >-</span>
+                                        <span
+                                            title="Adicionar braço"
+                                            className="btn-editor"
+                                            onClick={this.adicionar}
+                                        >+</span>
                                     </div>
                                 </div>
                             </div>

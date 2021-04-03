@@ -272,7 +272,7 @@ class Braco extends Component {
                                     data-casa={indiceCasa}
                                     data-idoitava={nota.idOitava}
                                     data-nota={this.escala.pegaHomonimos(nota.cifra)}
-                                    title={this.escala.pegaHomonimos(nota.cifra)}
+                                    title={this.props.escala ? nota.cifra : this.escala.pegaHomonimos(nota.cifra)}
                                     onClick={()=>this.marcar(posicao, nota.idOitava, this.escala.pegaHomonimos(nota.cifra) )}
                                 ></span>
                             </div>

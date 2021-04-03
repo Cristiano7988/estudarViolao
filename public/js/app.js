@@ -81496,7 +81496,7 @@ var Braco = /*#__PURE__*/function (_Component) {
             "data-casa": indiceCasa,
             "data-idoitava": nota.idOitava,
             "data-nota": _this5.escala.pegaHomonimos(nota.cifra),
-            title: _this5.escala.pegaHomonimos(nota.cifra),
+            title: _this5.props.escala ? nota.cifra : _this5.escala.pegaHomonimos(nota.cifra),
             onClick: function onClick() {
               return _this5.marcar(posicao, nota.idOitava, _this5.escala.pegaHomonimos(nota.cifra));
             }
@@ -82490,7 +82490,11 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
     _this.escolherComplemento = _this.escolherComplemento.bind(_assertThisInitialized(_this));
     _this.defineTom = _this.defineTom.bind(_assertThisInitialized(_this));
     _this.geraEscala = _this.geraEscala.bind(_assertThisInitialized(_this));
+    _this.estender = _this.estender.bind(_assertThisInitialized(_this));
+    _this.afinar = _this.afinar.bind(_assertThisInitialized(_this));
     _this.state = {
+      estender: false,
+      afinar: false,
       escala: null,
       tom: null,
       modo: null,
@@ -82502,6 +82506,24 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
   }
 
   _createClass(CriadorDeEscalas, [{
+    key: "estender",
+    value: function estender(e) {
+      e.preventDefault();
+      e.target.classList.toggle('estender');
+      this.setState({
+        estender: e.target.classList.contains('estender')
+      });
+    }
+  }, {
+    key: "afinar",
+    value: function afinar(e) {
+      e.preventDefault();
+      e.target.classList.toggle('afinar');
+      this.setState({
+        afinar: e.target.classList.contains('afinar')
+      });
+    }
+  }, {
     key: "limpaHighlight",
     value: function limpaHighlight() {
       var casas = Array.prototype.slice.call(document.querySelectorAll('[data-nota]'));
@@ -82686,8 +82708,24 @@ var CriadorDeEscalas = /*#__PURE__*/function (_Component) {
         htmlFor: "melodica"
       }, "Mel\xF3dica"))) : "", this.state.erro ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-danger font-italic"
-      }, "*Escala N\xE3o reconhecida") : '', this.state.escala && parseInt(this.state.tipo) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        escala: this.state.escala
+      }, "*Escala N\xE3o reconhecida") : '', this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container-btn",
+        style: {
+          position: "relative",
+          justifyContent: "center"
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        title: "Mudar tamanho do bra\xE7o",
+        className: "btn-editor arm",
+        onClick: this.estender
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        title: "Habilitar Afina\xE7\xE3o",
+        className: "btn-editor hand",
+        onClick: this.afinar
+      })) : "", this.state.escala && parseInt(this.state.tipo) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Braco__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        escala: this.state.escala,
+        afinar: this.state.afinar,
+        estender: this.state.estender
       })) : '', this.state.escala ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex justify-content-between pr-5 mb-5 mt-5",
         style: {
@@ -83094,15 +83132,19 @@ var Editor = /*#__PURE__*/function (_Component) {
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container-btn"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        title: "Mudar tamanho do bra\xE7o",
         className: "btn-editor arm",
         onClick: this.estender
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        title: "Habilitar Afina\xE7\xE3o",
         className: "btn-editor hand",
         onClick: this.afinar
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        title: "Remover bra\xE7o",
         className: "btn-editor",
         onClick: this.remover
       }, "-"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        title: "Adicionar bra\xE7o",
         className: "btn-editor",
         onClick: this.adicionar
       }, "+"))))))));

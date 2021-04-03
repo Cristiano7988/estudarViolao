@@ -13,7 +13,11 @@ class CriadorDeEscalas extends Component {
         this.escolherComplemento = this.escolherComplemento.bind(this);
         this.defineTom = this.defineTom.bind(this);
         this.geraEscala = this.geraEscala.bind(this);
+        this.estender = this.estender.bind(this);
+        this.afinar = this.afinar.bind(this);
         this.state = {
+            estender: false,
+            afinar: false,
             escala: null,
             tom: null,
             modo: null,
@@ -21,6 +25,18 @@ class CriadorDeEscalas extends Component {
             tipo: "1",
             erro: false
         }
+    }
+
+    estender(e) {
+        e.preventDefault();
+        e.target.classList.toggle('estender');
+        this.setState({estender: e.target.classList.contains('estender')});
+    }
+
+    afinar(e) {
+        e.preventDefault();
+        e.target.classList.toggle('afinar');
+        this.setState({afinar: e.target.classList.contains('afinar')});
     }
 
     limpaHighlight() {
@@ -154,33 +170,51 @@ class CriadorDeEscalas extends Component {
                             {this.state.erro ?
                             <span className="text-danger font-italic">*Escala Não reconhecida</span>
                             :''}
+                            {this.state.escala ?
+                                    <div className="container-btn" style={{position: "relative", justifyContent: "center"}}>
+                                        <span
+                                            title="Mudar tamanho do braço"
+                                            className="btn-editor arm"
+                                            onClick={this.estender}
+                                        />
+                                        <span
+                                            title="Habilitar Afinação"
+                                            className="btn-editor hand"
+                                            onClick={this.afinar}
+                                        />
+                                    </div>
+                            : ""}
                             {this.state.escala && parseInt(this.state.tipo) ?
                                 <div>
-                                    <Braco escala={this.state.escala} />
+                                    <Braco
+                                        escala={this.state.escala}
+                                        afinar={this.state.afinar}
+                                        estender={this.state.estender}
+                                    />
                                 </div>
                             : ''}
-                            {this.state.escala ?                            
-                                <div className="d-flex justify-content-between pr-5 mb-5 mt-5" style={{ background: '#a6540d', borderRadius: '5px'}}>{this.state.escala.map( (nota,index) => {
-                                    return (
-                                        <div
-                                            className="p-2"
-                                            key={index}
-                                            style={{position: 'relative'}}
-                                        >
-                                            <p
-                                                style={{color: 'white',cursor: "pointer"}}
-                                                onMouseOver={()=>this.highlight(nota.cifra)}
-                                                onMouseLeave={()=>this.limpaHighlight()}
-                                            >{nota.cifra}</p>
-                                            {this.state.tipo == "1" ?
-                                                <p
-                                                    title={this.state.intervalos[index].nome}
-                                                    style={{position: "absolute", top: '115%',left: "130%", minWidth: "33px"}}
-                                                >{this.state.intervalos[index].valor}</p>
-                                            : ''}  
-                                        </div>
-                                    )
-                                })}</div>
+                            {this.state.escala ?
+                                <div className="d-flex justify-content-between pr-5 mb-5 mt-5" style={{ background: '#a6540d', borderRadius: '5px'}}>
+                                    {this.state.escala.map( (nota,index) => {
+                                        return (
+                                            <div className="p-2"
+                                                key={index}
+                                                style={{position: 'relative'}}
+                                            >
+                                                <p  style={{color: 'white',cursor: "pointer"}}
+                                                    onMouseOver={()=>this.highlight(nota.cifra)}
+                                                    onMouseLeave={()=>this.limpaHighlight()}
+                                                >{nota.cifra}</p>
+                                                {this.state.tipo == "1" ?
+                                                    <p
+                                                        title={this.state.intervalos[index].nome}
+                                                        style={{position: "absolute", top: '115%',left: "130%", minWidth: "33px"}}
+                                                    >{this.state.intervalos[index].valor}</p>
+                                                : ''}  
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             : ''}
                         </div>
                     </div>
