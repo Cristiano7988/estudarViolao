@@ -84137,7 +84137,8 @@ var Escalas = /*#__PURE__*/function () {
           cifra: input,
           nome: escala[0].nome + sobrenome
         };
-        this.aumentaUmaOitava(escala);
+        escala.push.apply(escala, _toConsumableArray(escala)); // Aumenta uma oitava sem mexer nos idOitavas
+
         var limite = menor ? this.limitarEscala(5, 3) : this.limitarEscala(2, 6);
 
         if (this.ordem.verificaOrdem(tom.cifra, this.ordem.sustenidos, limite.sustenidos)) {

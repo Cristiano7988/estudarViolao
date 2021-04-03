@@ -80,6 +80,9 @@
                         background: #3490dc;
                     }
                 }
+                &:hover {
+                    background: #bfdef7;
+                }
             }
         }
         .casa {
@@ -102,15 +105,19 @@
                 color: white;
                 font-size: 11px;
                 font-weight: bold;
-                display: none;
                 justify-content: center;
                 align-items: center;
                 font-family: sans-serif;
+                opacity: 0;
                 &.active {
-                    display: flex;
+                    opacity: 1;
                     &.highlight {
                         background: #3490dc;
                     }
+                }
+                &:hover {
+                    background: #bfdef7;
+                    opacity: 1 !important;
                 }
             }
         }
