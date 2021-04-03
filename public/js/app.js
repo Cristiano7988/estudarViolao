@@ -81249,7 +81249,8 @@ var Braco = /*#__PURE__*/function (_Component) {
           elementos.forEach(function (elemento) {
             var notas = nota.split(" ");
             notas.forEach(function (notaProcurada) {
-              // Rever /(\[C#])/ ou /(\[C#\])/
+              // Substitui [C#] por /\[C#\]$/
+              notaProcurada = notaProcurada.replace(/\]/g, "\\]$");
               var regex = new RegExp("\\".concat(notaProcurada));
               var idOitava = _this2.props.estender ? elemento.dataset.idoitava : elemento.dataset.casa;
               var oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);

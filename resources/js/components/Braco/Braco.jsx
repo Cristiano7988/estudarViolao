@@ -52,9 +52,10 @@ class Braco extends Component {
                     const notas = nota.split(" ");
 
                     notas.forEach(notaProcurada => {
-                        // Rever /(\[C#])/ ou /(\[C#\])/
-                        const regex = new RegExp(`\\${ notaProcurada }`);
-                        
+                        // Substitui [C#] por /\[C#\]$/
+                        notaProcurada = notaProcurada.replace(/\]/g, "\\]$")
+                        const regex = new RegExp(`\\${notaProcurada}`);
+
                         let idOitava = this.props.estender
                             ? elemento.dataset.idoitava
                             : elemento.dataset.casa;
