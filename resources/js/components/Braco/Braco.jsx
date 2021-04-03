@@ -62,7 +62,7 @@ class Braco extends Component {
 
                         const oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);
                         const oitavaElemento = parseInt(idOitava / 12);
-
+                        
                         if(elemento.dataset.nota.match(regex) && oitavaElemento == oitavaArray) {
                             elemento.classList.add('active');
                         }
@@ -71,25 +71,28 @@ class Braco extends Component {
             });
         });
     }
-
+    
     componentDidMount() {
         if(this.props.escala) this.digitaEscala();
     }
-
+    
     nomear(e) { 
         e.preventDefault();
         this.setState({cifra: e.target.value});
     }
-
+    
     verificaSaves(indice, idOitava, nota) {
         let apagar = false;
         const cordas = this.state.braco.cordas;
         const corda = cordas[indice-1];
-
+        
         if(!corda) return false;
+            
+        let notas = corda.notas.map( (notaVerificada, indiceArray) => {        
+            const oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);
+            const oitavaElemento = parseInt(idOitava / 12);
 
-        let notas = corda.notas.map( (notaVerificada, indiceArray) => {
-            if(notaVerificada == nota && corda.oitavas[indiceArray] == idOitava) {
+            if(notaVerificada == nota && oitavaArray == oitavaElemento) {
                 apagar = true;
                 return false;
             } else {
@@ -103,7 +106,7 @@ class Braco extends Component {
                 return oitavaVerificada;
             };
         });
-
+        
         notas = notas.filter(Boolean);
         oitavas = oitavas.filter(Boolean);
         

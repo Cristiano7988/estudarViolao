@@ -81285,7 +81285,10 @@ var Braco = /*#__PURE__*/function (_Component) {
       var corda = cordas[indice - 1];
       if (!corda) return false;
       var notas = corda.notas.map(function (notaVerificada, indiceArray) {
-        if (notaVerificada == nota && corda.oitavas[indiceArray] == idOitava) {
+        var oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);
+        var oitavaElemento = parseInt(idOitava / 12);
+
+        if (notaVerificada == nota && oitavaArray == oitavaElemento) {
           apagar = true;
           return false;
         } else {
