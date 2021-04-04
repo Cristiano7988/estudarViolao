@@ -4,8 +4,13 @@
         &, h1, h2 {
             padding-top: 1.5rem;
         }
-        .container-braco {
-            padding-bottom: 3.5rem;
+        .container {
+            &-braco {
+                padding-bottom: 3.5rem;
+            }
+            &-btn .btn-editor{ 
+                border: none;
+            }
         }
     }
 }

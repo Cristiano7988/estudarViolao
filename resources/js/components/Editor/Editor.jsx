@@ -1,37 +1,32 @@
-import { Card, Container, Icon, Typography } from '@material-ui/core';
+import { Card, Container, Typography } from '@material-ui/core';
 import React, { Component } from 'react';
 import Braco from '../Braco';
 
 class Editor extends Component {
   constructor() {
     super();
-    this.afinar = this.afinar.bind(this);
-    this.remover = this.remover.bind(this);
+    this.toggleEstado = this.toggleEstado.bind(this);
     this.adicionar = this.adicionar.bind(this);
-    this.estender = this.estender.bind(this);
+    this.remover = this.remover.bind(this);
     this.state = {
+      afinar: false,
+      estender: false,
       contador: [{
         cordas: []
       }],
-      afinar: false,
-      estender: false,
     }
   }
 
-  estender(e) {
-    e.preventDefault();
-    e.target.classList.toggle('estender')
-    this.setState({estender: e.target.classList.contains('estender')})
+  toggleEstado(e) {
+    const { name } = e.target;
+    const novoEstado = {...this.state};
+
+    e.target.classList.toggle(name);
+    novoEstado[name] = e.target.classList.contains(name);
+    this.setState(novoEstado)
   }
 
-  afinar(e) {
-    e.preventDefault();
-    e.target.classList.toggle('afinar')
-    this.setState({afinar: e.target.classList.contains('afinar')})
-  }
-
-  remover(e) {
-    e.preventDefault();
+  remover() {
     let contador = this.state.contador;
     if(contador.length > 1) {
       contador.pop();
@@ -39,8 +34,7 @@ class Editor extends Component {
     }
   }
 
-  adicionar(e) {
-    e.preventDefault();
+  adicionar() {
     const contador = this.state.contador;
     contador.push({ cordas: [] });
     this.setState(contador);
@@ -75,15 +69,19 @@ class Editor extends Component {
             </div>
           ))}
           <div className="container-btn">
-            <span
+            <input
+              type="button"
+              name="estender"
               title="Mudar tamanho do braço"
               className="btn-editor arm"
-              onClick={this.estender}
+              onClick={this.toggleEstado}
             />
-            <span
+            <input
+              type="button"
+              name="afinar"
               title="Habilitar Afinação"
               className="btn-editor hand"
-              onClick={this.afinar}
+              onClick={this.toggleEstado}
             />
             <span
               title="Remover braço"

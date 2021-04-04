@@ -11294,3 +11294,8 @@ body main .container .col-md-6 .card h1 {
   padding-bottom: 3.5rem;
 }
 
+.editor .container-btn .btn-editor,
+.editor .folder .container-btn .btn-editor {
+  border: none;
+}
+
