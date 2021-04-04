@@ -11002,9 +11002,7 @@ body main .container .col-md-6 .card h1 {
 }
 
 .container-braco {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: inline-block;
 }
 
 .braco {
@@ -11275,5 +11273,24 @@ body main .container .col-md-6 .card h1 {
     left: 0;
     z-index: 1;
   }
+}
+
+.editor,
+.editor .folder {
+  position: relative;
+}
+
+.editor,
+.editor h1,
+.editor h2,
+.editor .folder,
+.editor .folder h1,
+.editor .folder h2 {
+  padding-top: 1.5rem;
+}
+
+.editor .container-braco,
+.editor .folder .container-braco {
+  padding-bottom: 3.5rem;
 }
 
