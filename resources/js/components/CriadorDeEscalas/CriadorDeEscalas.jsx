@@ -311,13 +311,15 @@ class CriadorDeEscalas extends Component {
                             onChange={(e)=>{
                                 e.preventDefault();
 
+                                const escala = contexto.escala.formarEscala(contexto.state.tom, 1, complemento).notas;
+
                                 const intervalos = escala.map( (nota, indice)=> (
                                     contexto.intervalos.classifica([nota, escala[(indice + 1) % escala.length]])
                                 ));
 
                                 contexto.setState({
                                     complemento: complemento,
-                                    escala: contexto.escala.formarEscala(contexto.state.tom, 1, complemento).notas,
+                                    escala,
                                     intervalos
                                 })
                             }}
