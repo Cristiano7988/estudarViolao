@@ -113,19 +113,21 @@ export default class Intervalos {
 
     classifica(notas) {
         var cromatica = this.escala.formarEscala(notas[0].cifra, 0);
-
+        
         let indices = notas.map(nota => {
             let homonimos = this.escala.pegaHomonimos(nota.cifra);
             return cromatica.notas.findIndex( n => new RegExp(`\\[${n.cifra}\\]`).test(homonimos) );
         })
-
-        let ids = notas.map(nota=> { return parseInt(nota.id) })
-
+        let ids = notas.map(nota=> parseInt(nota.id));
+        
         let intervalo = this.distanciaDiatonica(ids[0], ids[1]);
 
+        let calculaDistanciaCromatica = indices[1] - indices[0];
+        calculaDistanciaCromatica = calculaDistanciaCromatica < 0 ? 12 - (calculaDistanciaCromatica * -1)  : calculaDistanciaCromatica;
+        
         let distancia = {
             diatonica: intervalo,
-            cromatica: indices[1] - indices[0]
+            cromatica: calculaDistanciaCromatica
         };
 
         distancia.semitons = distancia.cromatica * 0.5;

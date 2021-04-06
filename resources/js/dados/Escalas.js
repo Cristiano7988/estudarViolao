@@ -258,6 +258,11 @@ export default class Escalas {
         } else {
             proxima = prescede
         }
+
+        if(/b/.test(original)) {
+            anterior = /[E|B]/.test(antecede) || /bb/.test(original) ? anterior.replace("#", "") : anterior;
+            proxima = /bb/.test(original) && /[E|B]/.test(original)  ? proxima + 'b' : proxima
+        }
         
             
         return `[${original}] [${anterior}] [${proxima}]`
