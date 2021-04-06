@@ -28,29 +28,29 @@ class CriadorDeEscalas extends Component {
     const { name } = e.target;
     let novoEstado = {...this.state};
     let {tom, menor, complemento, cromatica} = this.state;
-    let tipo = cromatica ? 0 : 1;
     
     e.target.classList.toggle(name);
     novoEstado[name] = e.target.classList.contains(name);
     novoEstado['complemento'] = complemento;
 
     if(name == 'cromatica') {
-      tipo = cromatica ? 1 : 0;
-
       novoEstado = {
         ...novoEstado,
+        cromatica: !cromatica,
         menor: false,
         complemento: false,
         tom: tom.replace('m', ''),
       };
+    } else {
+      cromatica = !false;
     }
     
     if(name == 'menor') {
       tom = menor
-        ? tom.replace('m', '')
-        : tom + 'm';
+      ? tom.replace('m', '')
+      : tom + 'm';
       
-      complemento = tom.match(/m/) ? 'Natural' : false;
+      complemento = /m/.test(tom) ? 'Natural' : false;
 
       novoEstado = {
         ...novoEstado,
@@ -60,7 +60,7 @@ class CriadorDeEscalas extends Component {
       }
     }
 
-    let escala = this.escala.formarEscala(tom, tipo, complemento).notas
+    let escala = this.escala.formarEscala(tom, cromatica, complemento).notas
     novoEstado['escala'] = escala
 
     novoEstado['intervalos'] = escala.map( (nota, indice)=> (
@@ -74,7 +74,7 @@ class CriadorDeEscalas extends Component {
     let { tom, menor, complemento, escala, cromatica, intervalos } = this.state;
     const regex = new RegExp(acidente);
     const acidenteSalvo = [...tom][1];
-    const tipo = cromatica ? 0 : 1
+
     const adicionaComplemento = menor
         ? acidente + 'm'
         : acidente;
@@ -85,7 +85,7 @@ class CriadorDeEscalas extends Component {
       ? tom.replace(acidente, '')
       : tom.replace('m', '') + adicionaComplemento;
     
-    escala = this.escala.formarEscala(tom, tipo, complemento).notas;
+    escala = this.escala.formarEscala(tom, !cromatica, complemento).notas;
     intervalos = escala.map( (nota, indice)=> ( // Não faz diferença
       this.intervalos.classifica([nota, escala[(indice + 1) % escala.length]])
     ));
@@ -99,12 +99,10 @@ class CriadorDeEscalas extends Component {
     novoEstado[name] = value;
 
     if(name == 'tom') {
-      const tipo = novoEstado['cromatica'] ? 0 : 1
-      novoEstado['menor'] = value.match(/m/);
+      novoEstado['menor'] = /m/.test(value);
       novoEstado['complemento'] = false;
 
-
-      let escala = this.escala.formarEscala(value, tipo, novoEstado['complemento']).notas
+      let escala = this.escala.formarEscala(value, !novoEstado.cromatica, novoEstado.complemento).notas
       novoEstado['escala'] = escala
 
       novoEstado['intervalos'] = escala.map( (nota, indice)=> (
@@ -163,7 +161,7 @@ class CriadorDeEscalas extends Component {
               />
             : ""}
 
-            {!this.state.escala ?
+            {!escala ?
               <Typography
                 color="textSecondary"
                 variant="body2"
@@ -182,7 +180,7 @@ class CriadorDeEscalas extends Component {
                     value={tom ? tom : ""}
                     onChange={this.handleChange}
                     label="Tom"
-                    children={listaDeNotas(notas)}
+                    children={<ListaDeNotas notas={notas} />}
                   />
                 </FormControl>
               </Grid>
@@ -209,10 +207,20 @@ class CriadorDeEscalas extends Component {
                 </Grid>
 
                 {!cromatica ?
-                  SwitchComponent(this, 'Maior', 'menor', menor)
+                  <SwitchComponent
+                    contexto={this}
+                    defaultValue='Maior'
+                    newValue='menor'
+                    estado={menor}
+                  />
                 : ''}
                 
-                {SwitchComponent(this, 'Diatônica', 'Cromática', cromatica)}
+                <SwitchComponent
+                  contexto={this}
+                  defaultValue='Diatônica'
+                  newValue='Cromática'
+                  estado={cromatica}
+                />
               </> : ""}
 
               {menor ?
@@ -220,7 +228,7 @@ class CriadorDeEscalas extends Component {
                   <RadioGroup
                     row
                     defaultValue="Natural"
-                    children={listaDeComplementos(this)}
+                    children={<ListaDeComplementos contexto={this} />}
                   />
                 </Grid>
               : ""}
@@ -286,67 +294,68 @@ class CriadorDeEscalas extends Component {
         </Card>
       </Container>
     );
-
-    function SwitchComponent(contexto, defaultValue, newValue, estado) {
-      const name = newValue.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
-      return (
-        <Grid component="label" container justify="center" alignItems="center" spacing={1}>
-          <Grid item>{defaultValue}</Grid>
-          <Grid item>
-            <Switch
-              color="primary"
-              onChange={contexto.toggleEstado}
-              checked={estado ? estado : false}
-              name={name}
-            />
-          </Grid>
-          <Grid item>{newValue}</Grid>
-        </Grid>
-      );
-    }
-
-    function listaDeComplementos(contexto) {
-      const complementos = ["Natural", "Harmônica","Melódica"];
-      return (
-        complementos.map((complemento, index) => (
-          <Fragment key={index}>
-            <FormControlLabel
-              value={complemento}
-              control={<Radio size="small" color="primary" />}
-              label={<Box fontSize={14} fontFamily="Nunito" children={complemento}/>}
-              onChange={(e)=>{
-                e.preventDefault();
-
-                const escala = contexto.escala.formarEscala(contexto.state.tom, 1, complemento).notas;
-
-                const intervalos = escala.map( (nota, indice)=> (
-                  contexto.intervalos.classifica([nota, escala[(indice + 1) % escala.length]])
-                ));
-
-                contexto.setState({
-                  complemento: complemento,
-                  escala,
-                  intervalos
-                })
-              }}
-            />
-          </Fragment>
-        ))
-      );
-    }
-
-    function listaDeNotas(notas) {
-      return (
-        notas.map((nota, index)=> (
-          <MenuItem
-            key={index}
-            value={nota.cifra}
-            children={nota.cifra}
-          />
-        ))
-      );
-    }
   }
 }
+
+function SwitchComponent({contexto, defaultValue, newValue, estado}) {
+  const nomeEstado = newValue.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
+  return (
+    <Grid component="label" container justify="center" alignItems="center" spacing={1}>
+      <Grid item>{defaultValue}</Grid>
+      <Grid item>
+        <Switch
+          color="primary"
+          onChange={contexto.toggleEstado}
+          checked={estado}
+          name={nomeEstado}
+        />
+      </Grid>
+      <Grid item>{newValue}</Grid>
+    </Grid>
+  );
+}
+
+function ListaDeComplementos({contexto}) {
+  const complementos = ["Natural", "Harmônica","Melódica"];
+  return (
+    complementos.map((complemento, index) => (
+      <Fragment key={index}>
+        <FormControlLabel
+          value={complemento}
+          control={<Radio size="small" color="primary" />}
+          label={<Box fontSize={14} fontFamily="Nunito" children={complemento}/>}
+          onChange={(e)=>{
+            e.preventDefault();
+
+            const escala = contexto.escala.formarEscala(contexto.state.tom, true, complemento).notas;
+
+            const intervalos = escala.map( (nota, indice)=> (
+              contexto.intervalos.classifica([nota, escala[(indice + 1) % escala.length]])
+            ));
+
+            contexto.setState({
+              complemento: complemento,
+              escala,
+              intervalos
+            })
+          }}
+        />
+      </Fragment>
+    ))
+  );
+}
+
+function ListaDeNotas({notas}) {
+  return (
+    notas.map((nota, index)=> (
+      <MenuItem
+        key={index}
+        value={nota.cifra}
+        children={nota.cifra}
+      />
+    ))
+  );
+}
+
  
 export default CriadorDeEscalas;

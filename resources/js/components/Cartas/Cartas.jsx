@@ -162,7 +162,7 @@ class Cartas extends Component {
     }
 
     classifica(notas) {
-        var cromatica = this.escala.formarEscala(notas[0].cifra, 0);
+        var cromatica = this.escala.formarEscala(notas[0].cifra, false);
 
         let indices = notas.map(nota => {
             let homonimos = this.escala.pegaHomonimos(nota.cifra);

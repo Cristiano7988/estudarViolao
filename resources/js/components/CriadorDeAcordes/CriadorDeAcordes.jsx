@@ -55,7 +55,7 @@ class CriadorDeAcordes extends Component {
             return false
         }
 
-        let escala = this.escala.formarEscala(input, 1)
+        let escala = this.escala.formarEscala(input, true)
 
         let fundamental = escala.notas[0];
         let terca = escala.notas[2];

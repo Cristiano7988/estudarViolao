@@ -12,12 +12,12 @@ class Braco extends Component {
             braco: this.props.braco,
             afinada: false,
             cordas: [
-                this.escala.aumentaUmaOitava(this.escala.formarEscala("E", 0).notas),
-                this.escala.aumentaUmaOitava(this.escala.formarEscala("A", 0).notas),
-                this.escala.aumentaUmaOitava(this.escala.formarEscala("D", 0).notas),
-                this.escala.aumentaUmaOitava(this.escala.formarEscala("G", 0).notas),
-                this.escala.aumentaUmaOitava(this.escala.formarEscala("B", 0).notas),
-                this.escala.aumentaUmaOitava(this.escala.formarEscala("E", 0).notas)
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("E", false).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("A", false).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("D", false).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("G", false).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("B", false).notas),
+                this.escala.aumentaUmaOitava(this.escala.formarEscala("E", false).notas)
             ],
             tessitura: {
                 inicio: 0,
@@ -38,7 +38,7 @@ class Braco extends Component {
         const afinada = true;
 
         if(!nota.match(/##|bb/)) {
-            cordas[indiceCorda] = this.escala.aumentaUmaOitava(this.escala.formarEscala(nota, 0).notas);
+            cordas[indiceCorda] = this.escala.aumentaUmaOitava(this.escala.formarEscala(nota, false).notas);
             this.setState({cordas, afinada});
             return;
         } else {
@@ -48,7 +48,7 @@ class Braco extends Component {
             homonimos.forEach(homonimo => {
                 if(!homonimo.match(/##|bb/)) {
                     homonimo = homonimo.replace(/\[|\]/g, "");
-                    cordas[indiceCorda] = this.escala.aumentaUmaOitava(this.escala.formarEscala(homonimo, 0).notas);
+                    cordas[indiceCorda] = this.escala.aumentaUmaOitava(this.escala.formarEscala(homonimo, false).notas);
                     this.setState(cordas);
                 };
             });

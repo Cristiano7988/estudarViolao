@@ -37,7 +37,7 @@ export default class Escalas {
             tom.match(/m/)
                 ? this.escolhe(["natural", "harmonica", "melodica"])
                 : "";
-        let escala = this.formarEscala(tom, 1, complemento);
+        let escala = this.formarEscala(tom, true, complemento);
 
         return escala;
     }
@@ -223,7 +223,7 @@ export default class Escalas {
         let ordena = this.ordem.ordena(input);
         let escala;
 
-        if(parseInt(diatonica)) {
+        if(diatonica) {
             escala = this.adicionarAcidentes(ordena, input, complemento);
             this.reduzPraUmaOitava(escala.notas);
         } else {
@@ -234,7 +234,7 @@ export default class Escalas {
     }
 
     pegaHomonimos(original) {
-        let escala = this.formarEscala(original, 0);
+        let escala = this.formarEscala(original, false);
         let anterior, proxima;
 
         let antecede = escala.notas[(/[FC]/.test(original) ? 11 : 10) % escala.notas.length].cifra.replace(/[b#]/, "");
