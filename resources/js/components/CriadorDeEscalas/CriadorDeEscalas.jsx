@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import { Box, Button, ButtonGroup, Card, Container, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Radio, RadioGroup, Select, Switch, Typography } from '@material-ui/core';
+import React, { Component, Fragment } from 'react';
 import Escalas from "../../dados/Escalas";
 import Intervalos from '../../dados/Intervalos';
 import Braco from '../Braco';
@@ -9,34 +10,109 @@ class CriadorDeEscalas extends Component {
         this.escala = new Escalas();
         this.intervalos = new Intervalos();
         this.nova_escala = null;
-        this.escolherTipo = this.escolherTipo.bind(this);
-        this.escolherComplemento = this.escolherComplemento.bind(this);
-        this.defineTom = this.defineTom.bind(this);
-        this.geraEscala = this.geraEscala.bind(this);
-        this.estender = this.estender.bind(this);
-        this.afinar = this.afinar.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.toggleEstado = this.toggleEstado.bind(this);
         this.state = {
+            tom: null,
+            menor: false,
+            complemento: false,
+            cromatica: false,
             estender: false,
             afinar: false,
             escala: null,
-            tom: null,
-            modo: null,
-            complemento: null,
-            tipo: "1",
-            erro: false
+            intervalos: []
         }
     }
 
-    estender(e) {
-        e.preventDefault();
-        e.target.classList.toggle('estender');
-        this.setState({estender: e.target.classList.contains('estender')});
+    toggleEstado(e) {
+        const { name } = e.target;
+        let novoEstado = {...this.state};
+        let {tom, menor, complemento, cromatica} = this.state;
+        let tipo = cromatica ? 0 : 1;
+        
+        e.target.classList.toggle(name);
+        novoEstado[name] = e.target.classList.contains(name);
+        novoEstado['complemento'] = complemento;
+
+        if(name == 'cromatica') {
+            tipo = cromatica ? 1 : 0;
+
+            novoEstado = {
+                ...novoEstado,
+                menor: false,
+                complemento: false,
+                tom: tom.replace('m', ''),
+            };
+        }
+        
+        if(name == 'menor') {
+            tom = menor
+                ? tom.replace('m', '')
+                : tom + 'm';
+            
+            complemento = tom.match(/m/) ? 'Natural' : false;
+
+            novoEstado = {
+                ...novoEstado,
+                tom,
+                menor: !menor,
+                complemento
+            }
+        }
+
+        let escala = this.escala.formarEscala(tom, tipo, complemento).notas
+        novoEstado['escala'] = escala
+
+        novoEstado['intervalos'] = escala.map( (nota, indice)=> (
+            this.intervalos.classifica([nota, escala[(indice + 1) % escala.length]])
+        ));
+
+        this.setState(novoEstado);
     }
 
-    afinar(e) {
-        e.preventDefault();
-        e.target.classList.toggle('afinar');
-        this.setState({afinar: e.target.classList.contains('afinar')});
+    toggleAcidente(acidente) {
+        let { tom, menor, complemento, escala, cromatica, intervalos } = this.state;
+        const regex = new RegExp(acidente);
+        const acidenteSalvo = [...tom][1];
+        const tipo = cromatica ? 0 : 1
+        const adicionaComplemento = menor
+            ? acidente + 'm'
+            : acidente;
+
+        if(acidenteSalvo != acidente) tom = [...tom][0];
+        
+        tom = tom.match(regex)
+            ? tom.replace(acidente, '')
+            : tom.replace('m', '') + adicionaComplemento;
+        
+        escala = this.escala.formarEscala(tom, tipo, complemento).notas;
+        intervalos = escala.map( (nota, indice)=> ( // Não faz diferença
+            this.intervalos.classifica([nota, escala[(indice + 1) % escala.length]])
+        ));
+        
+        this.setState({ tom, escala, intervalos });
+    }
+
+    handleChange(e) {
+        const {name, value} = e.target;
+        const novoEstado = {...this.state}
+        novoEstado[name] = value;
+
+        if(name == 'tom') {
+            const tipo = novoEstado['cromatica'] ? 0 : 1
+            novoEstado['menor'] = value.match(/m/);
+            novoEstado['complemento'] = false;
+
+
+            let escala = this.escala.formarEscala(value, tipo, novoEstado['complemento']).notas
+            novoEstado['escala'] = escala
+
+            novoEstado['intervalos'] = escala.map( (nota, indice)=> (
+                this.intervalos.classifica([nota, escala[(indice + 1) % escala.length]])
+            ));
+        }
+
+        this.setState(novoEstado);
     }
 
     limpaHighlight() {
@@ -57,170 +133,211 @@ class CriadorDeEscalas extends Component {
         })
     }
 
-    escolherTipo(e) {
-        !this.state.tom ? this.setState({tom: "A"}) : ''
-        this.setState({
-                tipo: e.target.value
-            },
-            this.geraEscala
-        )
-    }
-
-    escolherComplemento(e) {
-        this.setState({
-                complemento: e.target.value
-            },
-            this.geraEscala
-        )
-    }
-
-    geraEscala() {
-        try {
-            let escala = this.escala.formarEscala(this.state.tom, this.state.tipo, this.state.complemento);
-
-            var intervalos = []
-            escala.notas.map( (nota, indice)=> {
-                intervalos.push(this.intervalos.classifica([nota, escala.notas[(indice + 1) % escala.notas.length]]))
-            });
-
-            escala
-                ? this.setState({
-                    erro: false,
-                    escala: escala.notas,
-                    modo: escala.modo,
-                    complemento: escala.complemento,
-                    intervalos: intervalos
-                })
-                : this.setState({ erro: true, escala: null, modo: null, complemento: null, intervalos: null })   
-        } catch (error) {
-            this.setState({ erro: true, escala: null, modo: null, complemento: null, intervalos: null })
-        }
-    }
-
-    defineTom(e) {
-        switch (e.target.value) {
-            case '':
-                this.setState({erro: false, escala: null, modo: null, complemento: null})
-                break;
-        
-            default:
-                this.setState(
-                    {tom: e.target.value,
-                    complemento: e.target.value.match(/m/) ? "natural" : null},
-                    this.geraEscala
-                )
-                break;
-        }
-    }
-
     render() {
+        const {
+            tom,
+            menor,
+            cromatica,
+            complemento,
+            escala,
+            intervalos,
+            afinar,
+            estender
+        } = this.state;
+
+        const notas = [...this.escala.diatonica.notas, {cifra: tom ? tom : ''}];
+        let titulo = 'Escala ';
+        let adicionaComplemento = menor ? 'menor ' : 'Maior ';
+        
+        adicionaComplemento += complemento ? complemento : '';
+        titulo += cromatica ? 'Cromática' : adicionaComplemento;
+
         return ( 
-            <div className="container py-4">
-               <div className="row justify-content-center">
-                    <div className="col-md-6">
-                        <div className="card">
-                            {this.state.modo ?
-                            <h1 className="text-capitalize">Escala {this.state.modo} {this.state.complemento ? this.state.complemento : ""}</h1>
-                            : ""}
-                            {!this.state.escala ?
-                                <span className="text-secondary mb-4">Insira um tom para visualizar sua escala</span>
-                            :''}
-                            <div className="input-group input-group-sm w-25 m-auto">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text" id="inputGroup-sizing-sm">Tom:</span>
-                                </div>
+            <Container maxWidth="sm" align="center" className="criador-de-escalas">
+                <Card className="folder">
+                    {tom ?
+                        <Typography
+                            variant="h4"
+                            component="h1"
+                            children={titulo}
+                        />
+                    : ""}
+
+                    {!this.state.escala ?
+                        <Typography
+                            color="textSecondary"
+                            variant="body2"
+                            component="span"
+                            gutterBottom
+                            children="Insira um tom para visualizar sua escala"
+                        />
+                    :''}
+
+                    <Grid container spacing={1} alignContent="center" justify="center" direction="row">
+                        <Grid item className="campo-tom">
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel>Tom</InputLabel>
+                                <Select
+                                    name="tom"
+                                    value={tom ? tom : ""}
+                                    onChange={this.handleChange}
+                                    label="Tom"
+                                    children={listaDeNotas(notas)}
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {tom ? <>
+                            <Grid item className="container-acidentes">
+                                <ButtonGroup
+                                    size="small"
+                                    orientation="vertical"
+                                    color="default"
+                                    aria-label="vertical outlined primary button group"
+                                >
+                                    <Button
+                                        name="bemol"
+                                        children="&#9837;"
+                                        onClick={()=>this.toggleAcidente('b')}
+                                    />
+                                    <Button
+                                        name="sustenido"
+                                        children="&#9839;"
+                                        onClick={()=>this.toggleAcidente('#')}
+                                    />
+                                </ButtonGroup>
+                            </Grid>
+
+                            {!cromatica ?
+                                <Grid component="label" container justify="center" alignItems="center" spacing={1}>
+                                    <Grid item>Maior</Grid>
+                                    <Grid item>
+                                        <Switch color="primary" onChange={this.toggleEstado} checked={menor ? menor : false} name="menor" />
+                                    </Grid>
+                                    <Grid item>Menor</Grid>
+                                </Grid>
+                            : ''}
+
+                            <Grid component="label" container justify="center" alignItems="center" spacing={1}>
+                                <Grid item>Diatonica</Grid>
+                                <Grid item>
+                                    <Switch color="primary" onChange={this.toggleEstado} checked={cromatica} name="cromatica" />
+                                </Grid>
+                                <Grid item>Cromática</Grid>
+                            </Grid>
+                        </> : ""}
+
+                        {menor ?
+                            <Grid container justify="center">
+                                <RadioGroup
+                                    row
+                                    defaultValue="Natural"
+                                    children={listaDeComplementos(this)}
+                                />
+                            </Grid>
+                        : ""}
+                    </Grid>
+
+                    {escala && !cromatica ? <>
+                        <Braco
+                            escala={escala}
+                            afinar={afinar}
+                            estender={estender}
+                        />
+                        <Container>
+                            <div className="container-btn">
                                 <input
-                                    placeholder="Ex.: A"
-                                    aria-label="Small" aria-describedby="inputGroup-sizing-sm"
-                                    className="form-control"
-                                    type="text"
-                                    onChange={ this.defineTom }
+                                    type="button"
+                                    name="estender"
+                                    title="Mudar tamanho do braço"
+                                    className="btn-editor arm"
+                                    onClick={this.toggleEstado}
+                                />
+                                <input
+                                    type="button"
+                                    name="afinar"
+                                    title="Habilitar Afinação"
+                                    className="btn-editor hand"
+                                    onClick={this.toggleEstado}
                                 />
                             </div>
-                            <div>
-                                <div className="form-check form-check-inline m-2">
-                                    <input className="form-check-input" value="1" type="radio" name="diatonica" id="flexRadioDefault1" checked={this.state.tipo == "1"} onChange={this.escolherTipo} />
-                                    <label className="form-check-label mr-2" htmlFor="diatonica">
-                                        Diatônica
-                                    </label>
-                                    <input className="form-check-input" value="0" type="radio" name="cromatica" id="flexRadioDefault2" checked={this.state.tipo == "0"} onChange={this.escolherTipo} />
-                                    <label className="form-check-label" htmlFor="cromatica">
-                                        Cromática
-                                    </label>
-                                </div>
-                            </div>
-                            {this.state.modo == "menor" ?
-                                <div>
-                                    <div className="form-check form-check-inline m-2">
-                                        <input className="form-check-input" value="natural" type="radio" name="natural" id="flexRadioDefault1" checked={this.state.complemento == "natural"} onChange={this.escolherComplemento} />
-                                        <label className="form-check-label mr-2" htmlFor="natural">
-                                            Natural
-                                        </label>
-                                        <input className="form-check-input" value="harmonica" type="radio" name="harmonica" id="flexRadioDefault2" checked={this.state.complemento == "harmonica"} onChange={this.escolherComplemento} />
-                                        <label className="form-check-label mr-2" htmlFor="harmonica">
-                                            Harmônica
-                                        </label>
-                                        <input className="form-check-input" value="melodica" type="radio" name="melodica" id="flexRadioDefault2" checked={this.state.complemento == "melodica"} onChange={this.escolherComplemento} />
-                                        <label className="form-check-label" htmlFor="melodica">
-                                            Melódica
-                                        </label>
-                                    </div>
-                                </div>
-                            : ""}
-                            {this.state.erro ?
-                            <span className="text-danger font-italic">*Escala Não reconhecida</span>
-                            :''}
-                            {this.state.escala ?
-                                    <div className="container-btn" style={{position: "relative", justifyContent: "center"}}>
-                                        <span
-                                            title="Mudar tamanho do braço"
-                                            className="btn-editor arm"
-                                            onClick={this.estender}
-                                        />
-                                        <span
-                                            title="Habilitar Afinação"
-                                            className="btn-editor hand"
-                                            onClick={this.afinar}
-                                        />
-                                    </div>
-                            : ""}
-                            {this.state.escala && parseInt(this.state.tipo) ?
-                                <div>
-                                    <Braco
-                                        escala={this.state.escala}
-                                        afinar={this.state.afinar}
-                                        estender={this.state.estender}
-                                    />
-                                </div>
-                            : ''}
-                            {this.state.escala ?
-                                <div className="d-flex justify-content-between pr-5 mb-5 mt-5" style={{ background: '#a6540d', borderRadius: '5px'}}>
-                                    {this.state.escala.map( (nota,index) => {
-                                        return (
-                                            <div className="p-2"
-                                                key={index}
-                                                style={{position: 'relative'}}
-                                            >
-                                                <p  style={{color: 'white',cursor: "pointer"}}
-                                                    onMouseOver={()=>this.highlight(nota.cifra)}
-                                                    onMouseLeave={()=>this.limpaHighlight()}
-                                                >{nota.cifra}</p>
-                                                {this.state.tipo == "1" ?
-                                                    <p
-                                                        title={this.state.intervalos[index].nome}
-                                                        style={{position: "absolute", top: '115%',left: "130%", minWidth: "33px"}}
-                                                    >{this.state.intervalos[index].valor}</p>
-                                                : ''}  
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </Container>
+                    </> : ''}
+
+                    {escala ?
+                        <Container>
+                            <Card className="container-intervalos">
+                                <Grid container direction="row" justify="space-around" className="notas">
+                                    {escala.map( (nota, index) => (
+                                        <Grid item key={index}>
+                                            <Typography
+                                                variant="body2"
+                                                onMouseOver={()=>this.highlight(nota.cifra)}
+                                                onMouseLeave={()=>this.limpaHighlight()}
+                                                children={nota.cifra}
+                                            />
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                                {!cromatica ?
+                                    <Grid container direction="row" justify="space-around"  className="valores">
+                                        {escala.map( (nota, index) => (
+                                            <Grid item key={index}>
+                                                <Typography
+                                                    variant="body2"
+                                                    title={intervalos[index].nome}
+                                                    children={intervalos[index].valor}
+                                                />
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                : ''}
+                            </Card>
+                        </Container>
+                    : ''}
+                </Card>
+            </Container>
          );
+
+        function listaDeComplementos(contexto) {
+            const complementos = ["Natural", "Harmônica","Melódica"];
+            return (
+                complementos.map((complemento, index) => (
+                    <Fragment key={index}>
+                        <FormControlLabel
+                            value={complemento}
+                            control={<Radio size="small" color="primary" />}
+                            label={<Box fontSize={14} fontFamily="Nunito" children={complemento}/>}
+                            onChange={(e)=>{
+                                e.preventDefault();
+
+                                const intervalos = escala.map( (nota, indice)=> (
+                                    contexto.intervalos.classifica([nota, escala[(indice + 1) % escala.length]])
+                                ));
+
+                                contexto.setState({
+                                    complemento: complemento,
+                                    escala: contexto.escala.formarEscala(contexto.state.tom, 1, complemento).notas,
+                                    intervalos
+                                })
+                            }}
+                        />
+                    </Fragment>
+                ))
+            );
+        }
+
+        function listaDeNotas(notas) {
+            return (
+                notas.map((nota, index)=> (
+                    <MenuItem
+                        key={index}
+                        value={nota.cifra}
+                        children={nota.cifra}
+                    />
+                ))
+            );
+        }
     }
 }
  

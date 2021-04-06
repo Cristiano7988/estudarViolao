@@ -112,9 +112,11 @@ export default class Escalas {
             if(tom.cifra == "C" || tom.cifra == "Am") {
                 switch (complemento) {
                     case "harmonica":
+                    case "Harmônica":
                         this.acidente.alteraNota(escala[escala.length-1], this.acidente.sustenido)
                         break;
                     case "melodica":
+                    case "Melódica":
                         this.acidente.alteraNota(escala[escala.length-1], this.acidente.sustenido)
                         this.acidente.alteraNota(escala[escala.length-2], this.acidente.sustenido)
                         break;
@@ -155,11 +157,13 @@ export default class Escalas {
 
             switch (complemento) {
                 case "harmonica":
+                case "Harmônica":
                     escala[escala.length-1].cifra.match(/[b]/g)
                         ? this.acidente.bequadro(escala[escala.length-1], this.acidente.bemol) 
                         : this.acidente.alteraNota(escala[escala.length-1], this.acidente.sustenido)
                     break;
                 case "melodica":
+                case "Melódica":
                     escala[escala.length-1].cifra.match(/[b]/g)
                         ? this.acidente.bequadro(escala[escala.length-1], this.acidente.bemol) 
                         : this.acidente.alteraNota(escala[escala.length-1], this.acidente.sustenido)

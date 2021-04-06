@@ -1,0 +1,49 @@
+.criador-de-escalas {
+    &, .folder {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+    .folder {
+        display: flex;
+        flex-direction: column;
+
+        .campo-tom {
+            padding-top: 1.5rem;
+            width: 100px;
+        }
+
+        .container-btn {
+            padding: unset;
+            position: relative;
+            justify-content: flex-end;
+            input {
+                border: none;
+            }
+        }
+
+        .container-acidentes {
+            align-self: flex-end;
+        }
+
+        .cromatica {
+            padding-bottom: 1.5rem;
+        }
+        
+        .container-intervalos {
+            cursor: default;
+                    
+            .notas {
+                color: white;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+                padding-right: 35px;
+                background: #a6540d;
+            }
+            .valores {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+                padding-left: 35px;
+            }
+        }
+    }
+}

@@ -11037,6 +11037,12 @@ body main .container .col-md-6 .card h1 {
 .braco .corda .afinacao .afinada {
   display: flex;
   flex-direction: column;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.braco .corda .afinacao .afinada:hover {
+  opacity: 1;
 }
 
 .braco .corda .afinacao span {
@@ -11110,11 +11116,15 @@ body main .container .col-md-6 .card h1 {
 }
 
 .seta.up {
-  border-width: 0px 5px 10px 5px;
+  border-width: 0px 3px 7px 3px;
 }
 
 .seta.down {
-  border-width: 10px 5px 0px 5px;
+  border-width: 7px 3px 0px 3px;
+}
+
+.seta:hover {
+  border-color: #3490dc white;
 }
 
 .container-btn {
@@ -11126,10 +11136,11 @@ body main .container .col-md-6 .card h1 {
 }
 
 .container-btn .btn-editor {
+  opacity: 0.9;
   display: inline-block;
   background: lightblue;
   margin: 2px;
-  border-radius: 50%;
+  border-radius: 5px;
   width: 40px;
   height: 40px;
   font-weight: bolder;
@@ -11138,6 +11149,14 @@ body main .container .col-md-6 .card h1 {
   background-size: 70%;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.container-btn .btn-editor:hover {
+  opacity: 1;
+}
+
+.container-btn .btn-editor:active {
+  background-color: #8cd0e7;
 }
 
 .container-btn .btn-editor.hand {
@@ -11297,5 +11316,57 @@ body main .container .col-md-6 .card h1 {
 .editor .container-btn .btn-editor,
 .editor .folder .container-btn .btn-editor {
   border: none;
+}
+
+.criador-de-escalas,
+.criador-de-escalas .folder {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.criador-de-escalas .folder {
+  display: flex;
+  flex-direction: column;
+}
+
+.criador-de-escalas .folder .campo-tom {
+  padding-top: 1.5rem;
+  width: 100px;
+}
+
+.criador-de-escalas .folder .container-btn {
+  padding: unset;
+  position: relative;
+  justify-content: flex-end;
+}
+
+.criador-de-escalas .folder .container-btn input {
+  border: none;
+}
+
+.criador-de-escalas .folder .container-acidentes {
+  align-self: flex-end;
+}
+
+.criador-de-escalas .folder .cromatica {
+  padding-bottom: 1.5rem;
+}
+
+.criador-de-escalas .folder .container-intervalos {
+  cursor: default;
+}
+
+.criador-de-escalas .folder .container-intervalos .notas {
+  color: white;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-right: 35px;
+  background: #a6540d;
+}
+
+.criador-de-escalas .folder .container-intervalos .valores {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 35px;
 }
 
