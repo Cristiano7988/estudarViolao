@@ -209,22 +209,10 @@ class CriadorDeEscalas extends Component {
                             </Grid>
 
                             {!cromatica ?
-                                <Grid component="label" container justify="center" alignItems="center" spacing={1}>
-                                    <Grid item>Maior</Grid>
-                                    <Grid item>
-                                        <Switch color="primary" onChange={this.toggleEstado} checked={menor ? menor : false} name="menor" />
-                                    </Grid>
-                                    <Grid item>Menor</Grid>
-                                </Grid>
+                                SwitchComponent(this, 'Maior', 'menor', menor)
                             : ''}
-
-                            <Grid component="label" container justify="center" alignItems="center" spacing={1}>
-                                <Grid item>Diatonica</Grid>
-                                <Grid item>
-                                    <Switch color="primary" onChange={this.toggleEstado} checked={cromatica} name="cromatica" />
-                                </Grid>
-                                <Grid item>Cromática</Grid>
-                            </Grid>
+                            
+                            {SwitchComponent(this, 'Diatônica', 'Cromática', cromatica)}
                         </> : ""}
 
                         {menor ?
@@ -298,6 +286,24 @@ class CriadorDeEscalas extends Component {
                 </Card>
             </Container>
          );
+
+        function SwitchComponent(contexto, defaultValue, newValue, estado) {
+            const name = newValue.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]|[^a-z]/g, "");
+            return (
+                <Grid component="label" container justify="center" alignItems="center" spacing={1}>
+                    <Grid item>{defaultValue}</Grid>
+                    <Grid item>
+                        <Switch
+                            color="primary"
+                            onChange={contexto.toggleEstado}
+                            checked={estado ? estado : false}
+                            name={name}
+                        />
+                    </Grid>
+                    <Grid item>{newValue}</Grid>
+                </Grid>
+            );
+        }
 
         function listaDeComplementos(contexto) {
             const complementos = ["Natural", "Harmônica","Melódica"];
