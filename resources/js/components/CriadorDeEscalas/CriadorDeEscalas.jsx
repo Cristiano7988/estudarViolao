@@ -180,7 +180,7 @@ class CriadorDeEscalas extends Component {
                     value={tom ? tom : ""}
                     onChange={this.handleChange}
                     label="Tom"
-                    children={<ListaDeNotas notas={notas} />}
+                    children={ListaDeNotas(notas)}
                   />
                 </FormControl>
               </Grid>
@@ -345,7 +345,7 @@ function ListaDeComplementos({contexto}) {
   );
 }
 
-function ListaDeNotas({notas}) {
+function ListaDeNotas(notas) {
   return (
     notas.map((nota, index)=> (
       <MenuItem
