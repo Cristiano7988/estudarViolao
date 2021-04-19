@@ -70,8 +70,8 @@ class Braco extends Component {
                     const notas = nota.split(" ");
 
                     notas.forEach(notaProcurada => {
-                        // Substitui [C#] por /\[C#\]$/
-                        notaProcurada = notaProcurada.replace(/\]/g, "\\]$")
+                        // Substitui [C#] por /\[C#\]/
+                        notaProcurada = notaProcurada.replace(/\]/g, "\\]")
                         const regex = new RegExp(`\\${notaProcurada}`);
 
                         let idOitava = this.props.estender
@@ -81,7 +81,7 @@ class Braco extends Component {
                         const oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);
                         const oitavaElemento = parseInt(idOitava / 12);
                         
-                        if(elemento.dataset.nota.match(regex) && oitavaElemento == oitavaArray) {
+                        if(regex.test(elemento.dataset.nota) && oitavaElemento == oitavaArray) {
                             elemento.classList.add('active');
                         }
                     });
