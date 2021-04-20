@@ -67,12 +67,14 @@ class Braco extends Component {
                         )
                     );
                 elementos.forEach(elemento => {
-                    const notas = nota.split(" ");
+                    const notas = nota instanceof Array
+                        ? nota
+                        : nota.split(" ");
 
                     notas.forEach(notaProcurada => {
                         // Substitui [C#] por /\[C#\]/
                         notaProcurada = notaProcurada.replace(/\]/g, "\\]")
-                        const regex = new RegExp(`\\${notaProcurada}`);
+                        const regex = new RegExp(`^\\${notaProcurada}`);
 
                         let idOitava = this.props.estender
                             ? elemento.dataset.idoitava
@@ -101,16 +103,26 @@ class Braco extends Component {
     
     verificaSaves(indice, idOitava, nota) {
         let apagar = false;
-        const cordas = this.state.braco.cordas;
+        const {cordas} = this.state.braco;
         const corda = cordas[indice-1];
         
         if(!corda) return false;
-            
+
         let notas = corda.notas.map( (notaVerificada, indiceArray) => {        
             const oitavaArray = parseInt(corda.oitavas[indiceArray] / 12);
             const oitavaElemento = parseInt(idOitava / 12);
 
-            if(notaVerificada == nota && oitavaArray == oitavaElemento) {
+            notaVerificada = notaVerificada instanceof Array
+                ? notaVerificada
+                : notaVerificada.split(" ");
+
+            const verificaHomonimos = notaVerificada.map(homonimo=>{
+                homonimo = homonimo.replace(/\]/g, "\\]");
+                const regex = new RegExp(`^\\${homonimo}`);
+                return regex.test(nota);
+            })
+
+            if(verificaHomonimos.filter(Boolean)[0] && oitavaArray == oitavaElemento) {
                 apagar = true;
                 return false;
             } else {
@@ -195,7 +207,7 @@ class Braco extends Component {
 
                 this.props.escala.every( nota => {
 
-                    let homonimos = new RegExp(`\\[${ nota.cifra }\\]`)
+                    let homonimos = new RegExp(`^\\[${ nota.cifra }\\]`)
 
                     if(casa.dataset.nota.match( homonimos )) {
                         casa.classList.add('active')
