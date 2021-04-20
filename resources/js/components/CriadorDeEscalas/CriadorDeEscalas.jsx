@@ -237,7 +237,7 @@ class CriadorDeEscalas extends Component {
             {escala && !cromatica ? <>
               <Braco
                 escala={escala}
-                afinar={afinar}
+                // afinar={afinar}
                 estender={estender}
               />
               <Container>
@@ -249,13 +249,13 @@ class CriadorDeEscalas extends Component {
                     className="btn-editor arm"
                     onClick={this.toggleEstado}
                   />
-                  <input
+                  {/* <input
                     type="button"
                     name="afinar"
                     title="Habilitar Afinação"
                     className="btn-editor hand"
                     onClick={this.toggleEstado}
-                  />
+                  /> */}
                 </div>
               </Container>
             </> : ''}

@@ -207,7 +207,7 @@ class Braco extends Component {
 
                 this.props.escala.every( nota => {
 
-                    let homonimos = new RegExp(`^\\[${ nota.cifra }\\]`)
+                    let homonimos = new RegExp(`\\[${ nota.cifra }\\]`)
 
                     if(casa.dataset.nota.match( homonimos )) {
                         casa.classList.add('active')
